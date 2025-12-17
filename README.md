@@ -41,7 +41,7 @@ This repository is used for:
 
 We take abuse seriously to keep the platform safe.
 
-📧 **Email:** abuse@indevs.in
+📧 **Email:** reportabuse@admin.indevs.in
 
 ---
 

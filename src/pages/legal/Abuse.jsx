@@ -32,7 +32,7 @@ export function Abuse() {
                     <p className="!mb-0 text-xl font-bold flex items-center gap-2 text-red-700">
                         <span></span>
                         <span className="opacity-75">Email:</span>
-                        <a href="mailto:abuse@indevs.in" className="!text-red-700 underline decoration-red-300 hover:decoration-red-700">abuse@indevs.in</a>
+                        <a href="mailto:reportabuse@admin.indevs.in" className="!text-red-700 underline decoration-red-300 hover:decoration-red-700">reportabuse@admin.indevs.in</a>
                     </p>
                 </div>
                 <p className="!mb-3 !text-red-900">
@@ -86,10 +86,10 @@ export function Abuse() {
             <h3>6. Contact</h3>
             <p>
                 For all abuse-related inquiries, reach us at:<br />
-                <a href="mailto:abuse@indevs.in" className="text-[#FF6B35] hover:underline">abuse@indevs.in</a>
+                <a href="mailto:reportabuse@admin.indevs.in" className="text-[#FF6B35] hover:underline">reportabuse@admin.indevs.in</a>
             </p>
             <p>
-                Please use this email only for abuse-related matters. For general questions or support, contact <a href="mailto:support@indevs.in" className="text-[#FF6B35] hover:underline">support@indevs.in</a> instead.
+                Please use this email only for abuse-related matters. For general questions or support, contact <a href="mailto:support@admin.indevs.in" className="text-[#FF6B35] hover:underline">support@admin.indevs.in</a> instead.
             </p>
             <p>
                 <strong>Indevs.in</strong> is committed to keeping the web safe, open, and trustworthy for all users. Together, we can maintain a secure environment for developers and learners around the world.

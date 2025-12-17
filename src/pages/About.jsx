@@ -225,23 +225,24 @@ export function About() {
                             Have questions, suggestions, or want to collaborate?
                         </p>
                         <div className="flex flex-col md:flex-row justify-center gap-8 mb-16">
-                            <a href="mailto:support@indevs.in" className="flex items-center justify-center gap-4 text-lg font-bold text-[#1A1A1A] bg-white px-8 py-4 border-2 border-[#1A1A1A] rounded-lg hover:shadow-[4px_4px_0px_0px_#FF6B35] transition-all">
+                            <a href="mailto:support@admin.indevs.in" className="flex items-center justify-center gap-4 text-lg font-bold text-[#1A1A1A] bg-white px-8 py-4 border-2 border-[#1A1A1A] rounded-lg hover:shadow-[4px_4px_0px_0px_#FF6B35] transition-all">
                                 <Mail className="w-6 h-6" />
-                                support@indevs.in
+                                support@admin.indevs.in
                             </a>
-                            <a href="mailto:abuse@indevs.in" className="flex items-center justify-center gap-4 text-lg font-bold text-[#1A1A1A] bg-white px-8 py-4 border-2 border-[#1A1A1A] rounded-lg hover:shadow-[4px_4px_0px_0px_#FFD23F] transition-all">
+                            <a href="mailto:reportabuse@admin.indevs.in" className="flex items-center justify-center gap-4 text-lg font-bold text-[#1A1A1A] bg-white px-8 py-4 border-2 border-[#1A1A1A] rounded-lg hover:shadow-[4px_4px_0px_0px_#FFD23F] transition-all">
                                 <Shield className="w-6 h-6" />
-                                abuse@indevs.in
+                                reportabuse@admin.indevs.in
                             </a>
                         </div>
 
                         <div className="bg-[#FFF8F0] border-2 border-[#E5E3DF] rounded-xl p-8 max-w-2xl mx-auto text-center">
                             <h3 className="font-bold text-[#1A1A1A] mb-4 uppercase tracking-widest text-sm">Official Communication Channels</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left max-w-md mx-auto mb-6">
-                                <div className="font-mono text-[#4A4A4A] text-sm">support@indevs.in</div>
-                                <div className="font-mono text-[#4A4A4A] text-sm">abuse@indevs.in</div>
+                                <div className="font-mono text-[#4A4A4A] text-sm">support@admin.indevs.in</div>
+                                <div className="font-mono text-[#4A4A4A] text-sm">reportabuse@admin.indevs.in</div>
+                                <div className="font-mono text-[#4A4A4A] text-sm">security@admin.indevs.in</div>
                                 <div className="font-mono text-[#4A4A4A] text-sm">sudheer@indevs.in</div>
-                                <div className="font-mono text-[#4A4A4A] text-sm">no-reply@indevs.in</div>
+                                <div className="font-mono text-[#4A4A4A] text-sm">no-reply@admin.indevs.in</div>
                             </div>
                             <p className="text-sm text-[#888] italic">
                                 We will never contact you from any other domain or prefix.

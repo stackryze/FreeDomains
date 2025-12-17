@@ -57,12 +57,12 @@ export function Privacy() {
                 To maintain the integrity of the platform, we reserve the right to review subdomains or associated data in response to verified abuse reports or suspected policy violations. If misuse or illegal activity is confirmed, Indevs.in may suspend, restrict, or permanently remove the subdomain and related data without prior notice. We strive to act responsibly and proportionately in all enforcement actions.
             </p>
             <p>
-                If you wish to report abuse, phishing, or malicious activity, please contact us at <a href="mailto:abuse@indevs.in" className="text-[#FF6B35] hover:underline">abuse@indevs.in</a> with sufficient details for verification.
+                If you wish to report abuse, phishing, or malicious activity, please contact us at <a href="mailto:reportabuse@admin.indevs.in" className="text-[#FF6B35] hover:underline">reportabuse@admin.indevs.in</a> with sufficient details for verification.
             </p>
 
             <h3>8. Your Rights</h3>
             <p>
-                Depending on your jurisdiction, you may have the right to request access to your personal data, request correction or deletion, or withdraw consent for processing. To exercise these rights, contact <a href="mailto:privacy@indevs.in" className="text-[#FF6B35] hover:underline">privacy@indevs.in</a> or <a href="mailto:support@indevs.in" className="text-[#FF6B35] hover:underline">support@indevs.in</a> with a clear description of your request. We aim to respond within 5–10 business days, subject to volunteer availability.
+                Depending on your jurisdiction, you may have the right to request access to your personal data, request correction or deletion, or withdraw consent for processing. To exercise these rights, contact <a href="mailto:privacy@admin.indevs.in" className="text-[#FF6B35] hover:underline">privacy@admin.indevs.in</a> or <a href="mailto:support@admin.indevs.in" className="text-[#FF6B35] hover:underline">support@admin.indevs.in</a> with a clear description of your request. We aim to respond within 5–10 business days, subject to volunteer availability.
             </p>
             <p>
                 We do not discriminate against users who exercise their privacy rights.
@@ -88,9 +88,10 @@ export function Privacy() {
                 If you have questions, concerns, or privacy-related requests, please contact us using the following channels:
             </p>
             <ul className="list-none pl-0 space-y-2">
-                <li>Privacy & Data Inquiries: <a href="mailto:privacy@indevs.in" className="text-[#FF6B35] hover:underline">privacy@indevs.in</a></li>
-                <li>General Support: <a href="mailto:support@indevs.in" className="text-[#FF6B35] hover:underline">support@indevs.in</a></li>
-                <li>Abuse Reports: <a href="mailto:abuse@indevs.in" className="text-[#FF6B35] hover:underline">abuse@indevs.in</a></li>
+                <li>Privacy & Data Inquiries: <a href="mailto:privacy@admin.indevs.in" className="text-[#FF6B35] hover:underline">privacy@admin.indevs.in</a></li>
+                <li>General Support: <a href="mailto:support@admin.indevs.in" className="text-[#FF6B35] hover:underline">support@admin.indevs.in</a></li>
+                <li>Security Issues: <a href="mailto:security@admin.indevs.in" className="text-[#FF6B35] hover:underline">security@admin.indevs.in</a></li>
+                <li>Abuse Reports: <a href="mailto:reportabuse@admin.indevs.in" className="text-[#FF6B35] hover:underline">reportabuse@admin.indevs.in</a></li>
             </ul>
             <p>
                 As a student-run initiative, our response times may vary, but we aim to reply to all legitimate inquiries within 5–7 business days.

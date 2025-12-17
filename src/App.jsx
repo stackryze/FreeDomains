@@ -55,7 +55,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Settings />} />
             <Route path="/donate" element={<Donate />} />
-            <Route path="/help" element={<div className="p-10"><h1 className="text-2xl font-bold">Help & Support</h1><p>Contact us at support@indevs.in</p></div>} />
+            <Route path="/help" element={<div className="p-10"><h1 className="text-2xl font-bold">Help & Support</h1><p>Contact us at support@admin.indevs.in</p></div>} />
           </Route>
 
 

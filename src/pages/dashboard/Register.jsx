@@ -197,7 +197,7 @@ export default function Register() {
                 {!canRegisterMore ? (
                     <p className="text-xs text-red-800 mt-2">
                         You've reached your registration limit. Please{' '}
-                        <a href="mailto:support@indevs.in" className="underline font-bold hover:text-red-900">
+                        <a href="mailto:support@admin.indevs.in" className="underline font-bold hover:text-red-900">
                             contact support
                         </a>{' '}
                         to request a limit increase.

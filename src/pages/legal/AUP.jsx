@@ -82,7 +82,7 @@ export function AUP() {
             </p>
             <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg my-8">
                 <p className="font-bold text-red-900 mb-2">To report abuse, please email:</p>
-                <a href="mailto:abuse@indevs.in" className="text-xl font-bold text-red-700 hover:underline">abuse@indevs.in</a>
+                <a href="mailto:reportabuse@admin.indevs.in" className="text-xl font-bold text-red-700 hover:underline">reportabuse@admin.indevs.in</a>
                 <p className="text-red-800 mt-2 text-sm">
                     Provide the full subdomain URL and a brief description of the suspected violation. All reports are reviewed within 24 hours.
                 </p>

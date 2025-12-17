@@ -22,10 +22,10 @@ export function Footer() {
 
                         <div className="space-y-0.5 mb-2">
                             <h5 className="text-[#FF6B35] font-bold text-xs uppercase tracking-wide mb-1">Verified Emails</h5>
-                            <p className="text-[#E5E3DF] text-xs font-mono">support@indevs.in</p>
-                            <p className="text-[#E5E3DF] text-xs font-mono">abuse@indevs.in</p>
+                            <p className="text-[#E5E3DF] text-xs font-mono">support@admin.indevs.in</p>
+                            <p className="text-[#E5E3DF] text-xs font-mono">reportabuse@admin.indevs.in</p>
                             <p className="text-[#E5E3DF] text-xs font-mono">sudheer@indevs.in <span className="text-[#6B6B6B]">(Founder)</span></p>
-                            <p className="text-[#E5E3DF] text-xs font-mono">no-reply@indevs.in</p>
+                            <p className="text-[#E5E3DF] text-xs font-mono">no-reply@admin.indevs.in</p>
                             <p className="text-[#6B6B6B] text-[10px] max-w-sm mt-2 italic leading-relaxed">
                                 Note: We don't send any messages from any other domains or prefixes whatsoever.
                             </p>
@@ -62,7 +62,7 @@ export function Footer() {
                                 <li><a href="https://github.com/sudheerbhuvana/indevs.in" target="_blank" rel="noreferrer" className="text-[#E5E3DF] hover:text-[#FF6B35] transition-colors">GitHub</a></li>
                                 <li><a href="https://github.com/sponsors/sudheerbhuvana" target="_blank" rel="noreferrer" className="text-[#E5E3DF] hover:text-[#FF6B35] transition-colors">Sponsor ❤️</a></li>
                                 <li><a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-[#E5E3DF] hover:text-[#FF6B35] transition-colors">Twitter</a></li>
-                                <li><a href="mailto:hello@indevs.in" className="text-[#E5E3DF] hover:text-[#FF6B35] transition-colors">Contact</a></li>
+                                <li><a href="mailto:support@admin.indevs.in" className="text-[#E5E3DF] hover:text-[#FF6B35] transition-colors">Contact</a></li>
                             </ul>
                         </div>
                     </div>

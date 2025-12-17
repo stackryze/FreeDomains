@@ -66,7 +66,7 @@ export default function Login() {
 
                 {error === 'banned' && (
                     <div className="mb-6 bg-red-50 border border-red-100 text-red-600 p-4 rounded-lg text-sm font-medium">
-                        Your account is banned for violating our terms of use. Please <a href="mailto:support@indevs.in" className="underline">contact support</a> if you think this is a mistake.
+                        Your account is banned for violating our terms of use. Please <a href="mailto:support@admin.indevs.in" className="underline">contact support</a> if you think this is a mistake.
                     </div>
                 )}
 
