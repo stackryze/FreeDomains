@@ -33,6 +33,15 @@ export default function Login() {
                     title = "Server Error";
                     description = "Something went wrong on our end. Please try later.";
                     break;
+                case 'github_account_too_new':
+                    const daysRequired = searchParams.get('days') || '7';
+                    title = "GitHub Account Too New";
+                    description = `Your GitHub account must be at least 7 days old. Please try again in ${daysRequired} day(s).`;
+                    break;
+                case 'no_public_email':
+                    title = "Public Email Required";
+                    description = "We need a public email from your GitHub account to create your account and send important notifications.";
+                    break;
             }
 
             toast({
@@ -68,7 +77,20 @@ export default function Login() {
                     </div>
                 )}
 
-                {error && error !== 'banned' && (
+                {error === 'no_public_email' && (
+                    <div className="mb-6 bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg text-sm">
+                        <p className="font-bold mb-2">📧 Public Email Required</p>
+                        <p className="mb-3">We need your email to send important account notifications and updates. Please make your email public on GitHub:</p>
+                        <ol className="list-decimal list-inside space-y-1 mb-3 text-left">
+                            <li>Go to <a href="https://github.com/settings/emails" target="_blank" rel="noopener noreferrer" className="underline font-medium">GitHub Email Settings</a></li>
+                            <li>Uncheck "Keep my email addresses private"</li>
+                            <li>Come back and try logging in again</li>
+                        </ol>
+                        <p className="text-xs text-blue-600">💡 <strong>Tip:</strong> Use a separate email for GitHub if you're worried about spam.</p>
+                    </div>
+                )}
+
+                {error && error !== 'banned' && error !== 'no_public_email' && (
                     <div className="mb-6 bg-red-50 border border-red-100 text-red-600 p-4 rounded-lg text-sm font-medium">
                         Login failed. Please try again.
                     </div>
