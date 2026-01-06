@@ -158,7 +158,7 @@ export default function DashboardLayout() {
 
                 <div className="flex flex-1 pt-16">
                     {/* Desktop Sidebar */}
-                    <aside className="w-64 bg-white border-r-2 border-[#E5E3DF] hidden md:flex md:flex-col fixed h-full z-10">
+                    <aside className="w-64 bg-white border-r-2 border-[#E5E3DF] hidden md:flex md:flex-col fixed top-16 h-[calc(100vh-4rem)] z-10">
                         <SidebarContent />
                     </aside>
 
