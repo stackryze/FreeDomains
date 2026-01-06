@@ -1,6 +1,6 @@
-import { ArrowRight, Loader2, CheckCircle, XCircle } from "lucide-react";
+import { ArrowRight, Loader2, CheckCircle, XCircle, Heart } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export function HeroSection() {
   const [domain, setDomain] = useState("");
@@ -185,6 +185,13 @@ export function HeroSection() {
                     <span className="font-bold">{domain}.indevs.in</span> is available!
                   </p>
                 )}
+              </div>
+
+              <div className="mt-6 pt-4 border-t-2 border-[#1A1A1A]/10 text-center">
+                <Link to="/donate" className="inline-flex items-center gap-2 text-xs font-bold text-[#FF6B35] hover:text-[#1A1A1A] hover:underline transition-colors">
+                  <Heart className="w-3 h-3 fill-[#FF6B35]" />
+                  Help us keep this free — Donate
+                </Link>
               </div>
             </div>
           </div>

@@ -166,7 +166,7 @@ export function PSLAnnouncement() {
                                 <p className="text-sm text-[#1A1A1A] font-bold mt-2">
                                     Thanks for being part of the community ❤️
                                 </p>
-                                <p className="text-xs text-[#888] mt-1">— Stackryze Team</p>
+                                <p className="text-xs text-[#888] mt-3">— Stackryze Team</p>
                             </div>
                         </div>
 
