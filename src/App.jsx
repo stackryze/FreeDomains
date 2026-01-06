@@ -18,7 +18,7 @@ import MyDomains from './pages/dashboard/Domains';
 import DNSRecords from './pages/dashboard/DNS';
 import Register from './pages/dashboard/Register';
 import Settings from './pages/dashboard/Settings';
-import Donate from './pages/dashboard/Donate';
+import { Donate } from './pages/Donate';
 import DomainDetail from './pages/dashboard/DomainDetail';
 import History from './pages/dashboard/History';
 
@@ -54,10 +54,12 @@ function App() {
             <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Settings />} />
-            <Route path="/donate" element={<Donate />} />
             <Route path="/help" element={<div className="p-10"><h1 className="text-2xl font-bold">Help & Support</h1><p>Contact us at support@stackryze.com</p></div>} />
           </Route>
 
+
+          {/* Public Donate Page */}
+          <Route path="/donate" element={<Donate />} />
 
           {/* Legal Pages */}
           <Route path="/terms" element={<Terms />} />
