@@ -1,63 +1,135 @@
 import { useState } from "react";
-import { Github, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "../hooks/use-toast";
+import { subdomainAPI } from "../lib/api";
+import { Loader2, CheckCircle } from "lucide-react";
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function Signup() {
     const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [captchaToken, setCaptchaToken] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const { toast } = useToast();
 
-    const handleGithubSignup = () => {
-        if (!name.trim()) return;
-        // In a real app, you might want to store the name in session/local storage 
-        // to attach it to the user after oauth callback, or pass it as state.
-        localStorage.setItem("signupName", name);
-        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-        window.location.href = `${API_URL}/auth/github`;
+    const handleSignup = async (e) => {
+        e.preventDefault();
+
+        if (!captchaToken) {
+            toast({
+                variant: "destructive",
+                title: "CAPTCHA Required",
+                description: "Please complete the verification check.",
+            });
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            await subdomainAPI.post('/auth/email/register', {
+                name,
+                email,
+                password,
+                captchaToken
+            });
+            navigate(`/verify-email?email=${encodeURIComponent(email)}`);
+        } catch (err) {
+            toast({
+                variant: "destructive",
+                title: "Registration Failed",
+                description: err.response?.data?.error || "Could not create account.",
+            });
+            setCaptchaToken(null); // Reset captcha on error usually required
+        } finally {
+            setIsLoading(false);
+        }
     };
+
+    if (isSuccess) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] px-4 font-sans">
+                <div className="w-full max-w-md bg-white border-2 border-[#E5E3DF] p-8 md:p-10 rounded-xl text-center">
+                    <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                    <h1 className="text-2xl font-bold text-[#1A1A1A] mb-2">Check your email</h1>
+                    <p className="text-[#4A4A4A] mb-6">
+                        We've sent a verification link to <strong>{email}</strong>. Please click the link to activate your account.
+                    </p>
+                    <Link to="/login" className="text-black font-medium hover:underline">
+                        Return to Login
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] px-4 font-sans">
-            {/* Logo */}
             <Link to="/" className="mb-8 flex items-center gap-3 group">
                 <img src="/stackryze_logo1.png" alt="Stackryze Logo" className="h-12 w-auto" />
                 <span className="text-2xl font-bold text-[#1A1A1A] tracking-tight">Stackryze Domains</span>
             </Link>
 
-            {/* Signup Card */}
             <div className="w-full max-w-md bg-white border-2 border-[#E5E3DF] p-8 md:p-10 rounded-xl text-center">
-                <h1 className="text-2xl font-bold text-[#1A1A1A] mb-2">Create your account</h1>
-                <p className="text-[#4A4A4A] mb-8">Join the developer community</p>
+                <h1 className="text-2xl font-bold text-[#1A1A1A] mb-2">Create Account</h1>
+                <p className="text-[#4A4A4A] mb-8">Sign up to register domains</p>
 
-                <div className="space-y-6">
-                    {/* Name Input */}
-                    <div className="text-left">
-                        <label htmlFor="name" className="block text-sm font-bold text-[#1A1A1A] mb-2">
-                            What should we call you?
-                        </label>
+                <form onSubmit={handleSignup} className="space-y-4 text-left">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                         <input
                             type="text"
-                            id="name"
-                            placeholder="Sudheer Bhuvana"
+                            required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full bg-[#FFF8F0] border-2 border-[#E5E3DF] rounded-lg px-4 py-3 text-[#1A1A1A] font-medium focus:outline-none focus:border-[#1A1A1A] transition-colors"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                            placeholder="John Doe"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                            placeholder="name@example.com"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input
+                            type="password"
+                            required
+                            minLength={8}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                            placeholder="Minimum 8 characters"
                         />
                     </div>
 
-                    {/* Signup Button */}
-                    <button
-                        onClick={handleGithubSignup}
-                        disabled={!name.trim()}
-                        className={`w-full flex items-center justify-center gap-3 bg-[#1A1A1A] text-white py-3 rounded-lg font-bold transition-all duration-200 ${!name.trim()
-                            ? "opacity-50 cursor-not-allowed"
-                            : "hover:shadow-[4px_4px_0px_0px_#FFD23F] hover:-translate-y-0.5"
-                            }`}
-                    >
-                        <Github className="w-5 h-5" />
-                        Sign up with GitHub
-                    </button>
-                </div>
+                    <div className="flex justify-center my-4 min-h-[65px]">
+                        <Turnstile
+                            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                            onSuccess={(token) => setCaptchaToken(token)}
+                            options={{ theme: 'light' }}
+                        />
+                    </div>
 
-                <div className="mt-8 pt-6 border-t border-[#E5E3DF]">
+                    <button
+                        type="submit"
+                        disabled={isLoading || !captchaToken}
+                        className="w-full bg-[#1A1A1A] text-white py-3 rounded-lg font-bold hover:shadow-[4px_4px_0px_0px_#FFD23F] transition-all duration-200 disabled:opacity-50"
+                    >
+                        {isLoading ? <span className="flex items-center justify-center gap-2"><Loader2 className="animate-spin w-4 h-4" /> creating...</span> : "Create Account"}
+                    </button>
+                </form>
+
+                <div className="mt-6 pt-6 border-t border-[#E5E3DF]">
                     <p className="text-sm text-[#4A4A4A]">
                         Already have an account?{" "}
                         <Link to="/login" className="font-bold text-[#1A1A1A] hover:underline">
@@ -66,10 +138,6 @@ export default function Signup() {
                     </p>
                 </div>
             </div>
-
-            <p className="mt-8 text-xs text-[#888]">
-                By joining, you agree to our <Link to="/terms" className="underline hover:text-[#1A1A1A]">Terms</Link> and <Link to="/privacy" className="underline hover:text-[#1A1A1A]">Privacy Policy</Link>.
-            </p>
         </div>
     );
 }

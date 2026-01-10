@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { subdomainAPI } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import { Globe, CheckCircle, XCircle, AlertCircle, Loader2, Sparkles, Info } from "lucide-react";
-import HCaptcha from "@hcaptcha/react-hcaptcha";
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function Register() {
     const [domain, setDomain] = useState("");
@@ -338,14 +338,17 @@ export default function Register() {
                                 </div>
                             </div>
 
-                            {/* hCaptcha */}
-                            <div className="flex justify-center">
-                                <HCaptcha
-                                    ref={captchaRef}
-                                    sitekey={import.meta.env.VITE_HCAPTCHA_SITE_KEY || "10000000-ffff-ffff-ffff-000000000001"}
-                                    onVerify={(token) => setCaptchaToken(token)}
+                            {/* Cloudflare Turnstile */}
+                            <div className="flex justify-center my-4 min-h-[65px]">
+                                <Turnstile
+                                    siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+                                    onSuccess={(token) => setCaptchaToken(token)}
                                     onExpire={() => setCaptchaToken(null)}
                                     onError={() => setCaptchaToken(null)}
+                                    options={{
+                                        theme: 'light',
+                                        size: 'normal',
+                                    }}
                                 />
                             </div>
                         </>

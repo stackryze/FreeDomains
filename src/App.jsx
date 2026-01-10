@@ -10,6 +10,9 @@ import { About } from './pages/About';
 
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgotPassword from './pages/ForgotPassword';
+import SetPassword from './pages/SetPassword';
 // import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
 import DashboardLayout from './layouts/DashboardLayout';
@@ -28,8 +31,24 @@ const Docs = () => <div className="p-10 min-h-screen bg-[#FFF8F0] pt-32"><h1 cla
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
+  const location = window.location.pathname;
+
   if (loading) return <div className="flex items-center justify-center min-h-screen bg-[#FFF8F0] font-bold text-xl">Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
+
+  // 1. Force Password Set Flow
+  if (user && !user.hasPassword) {
+    if (location !== '/set-password') {
+      return <Navigate to="/set-password" replace />;
+    }
+    return children; // Allow access to /set-password
+  }
+
+  // 2. Prevent access to Set Password if already set
+  if (user && user.hasPassword && location === '/set-password') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return children;
 };
 
@@ -44,6 +63,14 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          {/* Protected Routes including Set Password Force Flow */}
+          <Route element={<ProtectedRoute><div /></ProtectedRoute>}>
+            <Route path="/set-password" element={<SetPassword />} />
+          </Route>
+
           <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
             <Route path="/dashboard" element={<Overview />} />
             <Route path="/overview" element={<Overview />} />

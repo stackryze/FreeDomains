@@ -1,12 +1,17 @@
-import { Github } from "lucide-react";
+import { Github, Loader2 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { subdomainAPI } from "../lib/api";
 import { useToast } from "../hooks/use-toast";
 
 import { useAuth } from "../context/auth-context";
 
 export default function Login() {
-    const { login } = useAuth();
+    const { login, checkAuth } = useAuth(); // Assuming checkAuth is exposed, or we reload
+    const [activeTab, setActiveTab] = useState('github');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [searchParams] = useSearchParams();
     const error = searchParams.get('error');
     const { toast } = useToast();
@@ -42,6 +47,12 @@ export default function Login() {
                     title = "Public Email Required";
                     description = "We need a public email from your GitHub account to create your account and send important notifications.";
                     break;
+                case 'registration_closed_use_email':
+                    title = "GitHub Signups Paused";
+                    description = "New accounts must use Email/Password. Existing users can still login with GitHub.";
+                    // Automatically switch to email tab for convenience
+                    setActiveTab('email');
+                    break;
                 default:
                     title = "Login Failed";
                     description = error || "An unknown error occurred. Please try again.";
@@ -57,6 +68,27 @@ export default function Login() {
     }, [error, toast]);
 
     const handleGithubLogin = () => login("github");
+
+    const handleEmailLogin = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            const res = await subdomainAPI.post('/auth/email/login', { email, password });
+            if (res.data.success) {
+                // Check auth handles redirect likely, or we do it manually
+                // Force a reload or checkAuth to update context
+                window.location.href = '/dashboard';
+            }
+        } catch (err) {
+            toast({
+                variant: "destructive",
+                title: "Login Failed",
+                description: err.response?.data?.error || "Invalid credentials",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] px-4 font-sans">
@@ -101,13 +133,66 @@ export default function Login() {
                     </div>
                 )}
 
-                <button
-                    onClick={handleGithubLogin}
-                    className="w-full flex items-center justify-center gap-3 bg-[#1A1A1A] text-white py-3 rounded-lg font-bold hover:shadow-[4px_4px_0px_0px_#FFD23F] transition-all duration-200"
-                >
-                    <Github className="w-5 h-5" />
-                    Login with GitHub
-                </button>
+                {/* Tabs */}
+                <div className="flex border-b border-gray-200 mb-6">
+                    <button
+                        className={`flex-1 pb-2 text-sm font-medium ${activeTab === 'github' ? 'border-b-2 border-black text-black' : 'text-gray-500 hover:text-black'}`}
+                        onClick={() => setActiveTab('github')}
+                    >
+                        GitHub
+                    </button>
+                    <button
+                        className={`flex-1 pb-2 text-sm font-medium ${activeTab === 'email' ? 'border-b-2 border-black text-black' : 'text-gray-500 hover:text-black'}`}
+                        onClick={() => setActiveTab('email')}
+                    >
+                        Email
+                    </button>
+                </div>
+
+                {activeTab === 'github' ? (
+                    <button
+                        onClick={handleGithubLogin}
+                        className="w-full flex items-center justify-center gap-3 bg-[#1A1A1A] text-white py-3 rounded-lg font-bold hover:shadow-[4px_4px_0px_0px_#FFD23F] transition-all duration-200"
+                    >
+                        <Github className="w-5 h-5" />
+                        Login with GitHub
+                    </button>
+                ) : (
+                    <form onSubmit={handleEmailLogin} className="space-y-4 text-left">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input
+                                type="email"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                                placeholder="name@example.com"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input
+                                type="password"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                                placeholder="••••••••"
+                            />
+                        </div>
+                        <div className="text-right">
+                            <Link to="/forgot-password" class="text-xs text-gray-500 hover:underline">Forgot Password?</Link>
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full bg-[#1A1A1A] text-white py-3 rounded-lg font-bold hover:shadow-[4px_4px_0px_0px_#FFD23F] transition-all duration-200 disabled:opacity-50"
+                        >
+                            {isLoading ? <span className="flex items-center justify-center gap-2"><Loader2 className="animate-spin w-4 h-4" /> Logging in...</span> : "Login"}
+                        </button>
+                    </form>
+                )}
 
                 <div className="mt-8 pt-6 border-t border-[#E5E3DF]">
                     <p className="text-sm text-[#4A4A4A]">
