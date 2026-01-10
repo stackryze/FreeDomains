@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Toaster } from "./components/ui/toaster";
 import { AuthProvider, useAuth } from './context/auth-context';
 import { Landing } from './pages/Landing';
@@ -41,7 +41,6 @@ const ProtectedRoute = ({ children }) => {
     if (location !== '/set-password') {
       return <Navigate to="/set-password" replace />;
     }
-    return children; // Allow access to /set-password
   }
 
   // 2. Prevent access to Set Password if already set
@@ -49,7 +48,7 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  return children;
+  return children ? children : <Outlet />;
 };
 
 function App() {
@@ -67,7 +66,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
           {/* Protected Routes including Set Password Force Flow */}
-          <Route element={<ProtectedRoute><div /></ProtectedRoute>}>
+          <Route element={<ProtectedRoute />}>
             <Route path="/set-password" element={<SetPassword />} />
           </Route>
 
