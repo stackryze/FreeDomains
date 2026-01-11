@@ -36,7 +36,7 @@ export default function ForgotPassword() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] px-4 font-sans">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] px-4 font-sans" style={{ paddingTop: 'var(--incident-height, 0px)' }}>
             <div className="w-full max-w-md bg-white border-2 border-[#E5E3DF] p-8 rounded-xl text-center">
                 <h1 className="text-2xl font-bold mb-2">Reset Password</h1>
                 <p className="text-gray-600 mb-6">Enter your email to receive a reset link</p>

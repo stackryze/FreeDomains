@@ -103,7 +103,7 @@ export default function VerifyEmail() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] px-4 font-sans">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] px-4 font-sans" style={{ paddingTop: 'var(--incident-height, 0px)' }}>
             <Link to="/" className="mb-8 flex items-center gap-3 group">
                 <img src="/stackryze_logo1.png" alt="Stackryze Logo" className="h-12 w-auto" />
                 <span className="text-2xl font-bold text-[#1A1A1A] tracking-tight">Stackryze Domains</span>

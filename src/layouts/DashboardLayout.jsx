@@ -146,7 +146,7 @@ export default function DashboardLayout() {
                 {/* Mobile Hamburger Button */}
                 <button
                     onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="md:hidden fixed top-20 left-4 z-50 p-2 bg-white border-2 border-[#E5E3DF] rounded-lg shadow-lg hover:bg-[#FFF8F0] transition-colors"
+                    className="md:hidden fixed top-[calc(5rem+var(--incident-height,0px))] left-4 z-50 p-2 bg-white border-2 border-[#E5E3DF] rounded-lg shadow-lg hover:bg-[#FFF8F0] transition-colors"
                     aria-label="Toggle menu"
                 >
                     {sidebarOpen ? (
@@ -164,15 +164,15 @@ export default function DashboardLayout() {
                     />
                 )}
 
-                <div className="flex flex-1 pt-16">
+                <div className="flex flex-1 pt-[calc(4rem+var(--incident-height,0px))]">
                     {/* Desktop Sidebar */}
-                    <aside className="w-64 bg-white border-r-2 border-[#E5E3DF] hidden md:flex md:flex-col fixed top-16 h-[calc(100vh-4rem)] z-10">
+                    <aside className="w-64 bg-white border-r-2 border-[#E5E3DF] hidden md:flex md:flex-col fixed top-[calc(4rem+var(--incident-height,0px))] h-[calc(100vh-4rem-var(--incident-height,0px))] z-10">
                         <SidebarContent />
                     </aside>
 
                     {/* Mobile Sidebar */}
                     <aside
-                        className={`fixed top-0 left-0 h-full w-64 bg-white border-r-2 border-[#E5E3DF] z-40 transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                        className={`fixed top-[var(--incident-height,0px)] left-0 h-[calc(100vh-var(--incident-height,0px))] w-64 bg-white border-r-2 border-[#E5E3DF] z-40 transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                             }`}
                     >
                         {/* Mobile sidebar header with close button */}

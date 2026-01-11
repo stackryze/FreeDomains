@@ -16,7 +16,7 @@ export function About() {
             <Header />
 
             {/* Hero Section */}
-            <section className="pt-32 pb-20 px-6">
+            <section className="pt-[calc(8rem+var(--incident-height,0px))] pb-20 px-6">
                 <div className="max-w-4xl mx-auto text-center">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1A1A] text-white text-xs font-bold uppercase tracking-widest mb-6">
                         <Heart className="w-3 h-3 text-[#FF6B35]" />

@@ -7,7 +7,7 @@ export function Donate() {
         <div className="min-h-screen bg-[#1A1A1A] font-sans">
             <Header />
 
-            <main className="pt-24 pb-12 px-4">
+            <main className="pt-[calc(6rem+var(--incident-height,0px))] pb-12 px-4">
                 <div className="max-w-3xl mx-auto">
                     {/* Hero + CTA */}
                     <div className="text-center mb-8">

@@ -8,7 +8,7 @@ export function Header() {
   const isDashboard = location.pathname.startsWith("/dashboard");
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#FFF8F0] border-b border-[#E5E3DF] w-full">
+    <header className="fixed top-[var(--incident-height,0px)] left-0 right-0 z-50 bg-[#FFF8F0] border-b border-[#E5E3DF] w-full">
       <div className="w-full px-6 md:px-12 lg:px-16 h-16 flex items-center justify-between">
 
         {/* Left Side: Logo */}

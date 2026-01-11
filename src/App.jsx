@@ -7,6 +7,7 @@ import { Privacy } from './pages/legal/Privacy';
 import { AUP } from './pages/legal/AUP';
 import { Abuse } from './pages/legal/Abuse';
 import { About } from './pages/About';
+import { IncidentAnnouncement } from './components/IncidentAnnouncement';
 
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -56,6 +57,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <IncidentAnnouncement />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/docs" element={<Docs />} />

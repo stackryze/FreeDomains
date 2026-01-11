@@ -78,7 +78,7 @@ export default function SetPassword() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] px-4 font-sans">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF8F0] px-4 font-sans" style={{ paddingTop: 'var(--incident-height, 0px)' }}>
             <div className="w-full max-w-md bg-white border-2 border-[#E5E3DF] p-8 md:p-10 rounded-xl text-center">
                 <ShieldAlert className="w-16 h-16 text-orange-500 mx-auto mb-4" />
                 <h1 className="text-2xl font-bold text-[#1A1A1A] mb-2">Secure Your Account</h1>
