@@ -55,6 +55,13 @@ export default function Register() {
             return;
         }
 
+        // Check for non-ASCII characters (Punycode/IDN not supported)
+        if (!/^[\x00-\x7F]*$/.test(domainLower)) {
+            setErrorMsg("Internationalized domains (non-ASCII characters) are not supported. Please use only English letters, numbers, and hyphens.");
+            setIsAvailable(false);
+            return;
+        }
+
         if (!/^[a-z0-9-]+$/.test(domainLower)) {
             setErrorMsg("Only lowercase letters, numbers, and hyphens allowed");
             setIsAvailable(false);
