@@ -58,7 +58,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <IncidentAnnouncement />
+
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/docs" element={<Docs />} />
