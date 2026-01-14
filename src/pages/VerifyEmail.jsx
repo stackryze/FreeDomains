@@ -62,7 +62,7 @@ export default function VerifyEmail() {
             }, 500);
 
         } catch (err) {
-            const errorMessage = err.response?.data?.error || err.message || "Invalid code.";
+            const errorMessage = err.data?.error || err.message || "Invalid code.";
 
             if (errorMessage.includes('expired')) {
                 toast({
@@ -95,7 +95,7 @@ export default function VerifyEmail() {
             toast({
                 variant: "destructive",
                 title: "Failed to Resend",
-                description: err.response?.data?.error || "Please try again later.",
+                description: err.data?.error || "Please try again later.",
             });
         } finally {
             setIsResending(false);
