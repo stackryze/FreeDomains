@@ -121,29 +121,29 @@ export default function DomainDetail() {
         : null;
 
     return (
-        <div className="max-w-5xl mx-auto space-y-6">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
             {/* Header */}
-            <div className="flex items-start justify-between gap-4">
-                <div className="flex items-start gap-4 min-w-0 flex-1">
-                    <Button variant="outline" asChild className="border-2 mt-1">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                <div className="flex items-start gap-2 sm:gap-4 min-w-0 flex-1 w-full">
+                    <Button variant="outline" asChild className="border-2 flex-shrink-0">
                         <Link to="/my-domains">
-                            <ArrowLeft className="w-4 h-4 mr-2" />
-                            Back
+                            <ArrowLeft className="w-4 h-4 sm:mr-2" />
+                            <span className="hidden sm:inline">Back</span>
                         </Link>
                     </Button>
-                    <div className="min-w-0 flex-1 mr-4">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-[#1A1A1A] flex items-start gap-2" title={`${domain.name}.indevs.in`}>
-                            <Globe className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0 mt-1" />
-                            <span className="break-words">{domain.name}.indevs.in</span>
+                    <div className="min-w-0 flex-1">
+                        <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-[#1A1A1A] flex items-start gap-2 break-all" title={`${domain.name}.indevs.in`}>
+                            <Globe className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 flex-shrink-0 mt-0.5 sm:mt-1" />
+                            <span className="leading-tight">{domain.name}<wbr />.indevs.in</span>
                         </h1>
-                        <p className="text-[#4A4A4A] text-sm mt-1">Domain ID: {domain._id}</p>
+                        <p className="text-[#4A4A4A] text-xs sm:text-sm mt-1 truncate" title={`Domain ID: ${domain._id}`}>Domain ID: {domain._id}</p>
                     </div>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 w-full sm:w-auto">
                     <Button
                         onClick={handleRenew}
                         disabled={isRenewing || (daysUntilExpiry && daysUntilExpiry > 60) || domain.status === 'Pending Deletion'}
-                        className="bg-[#e6f4ea] text-[#1e8e3e] hover:bg-[#d4edda] border-2 border-[#ceead6] font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bg-[#e6f4ea] text-[#1e8e3e] hover:bg-[#d4edda] border-2 border-[#ceead6] font-bold disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto text-sm"
                         title={
                             domain.status === 'Pending Deletion'
                                 ? 'Cannot renew - deletion pending'
@@ -156,14 +156,14 @@ export default function DomainDetail() {
                         {isRenewing ? 'Renewing...' : 'Renew Domain'}
                     </Button>
                     {daysUntilExpiry && daysUntilExpiry > 60 && domain.status !== 'Pending Deletion' && (
-                        <div className="flex items-center text-sm text-[#888]">
-                            <Clock className="w-4 h-4 mr-2" />
+                        <div className="flex items-center text-xs sm:text-sm text-[#888] mt-2">
+                            <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                             Renewal available in {daysUntilExpiry - 60} days
                         </div>
                     )}
                     {domain.status === 'Pending Deletion' && (
-                        <div className="flex items-center text-sm text-amber-600 font-medium">
-                            <AlertCircle className="w-4 h-4 mr-2" />
+                        <div className="flex items-center text-xs sm:text-sm text-amber-600 font-medium mt-2">
+                            <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                             Deletion request under review
                         </div>
                     )}
@@ -249,48 +249,50 @@ export default function DomainDetail() {
             )}
 
             {/* DNS Configuration */}
-            <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-8">
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                        <Globe className="w-6 h-6 text-[#1A1A1A]" />
-                        <h2 className="text-2xl font-bold text-[#1A1A1A]">DNS Configuration</h2>
-                    </div>
-                    {domain.status !== 'Pending Deletion' && (
-                        <Button
-                            onClick={() => {
-                                if (isEditingDNS) {
-                                    // Cancel editing - reset values
-                                    if (domain.recordType === 'NS' && domain.recordValue) {
-                                        const ns = domain.recordValue.split(',').map(n => n.trim());
-                                        setNs1(ns[0] || '');
-                                        setNs2(ns[1] || '');
+            <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 sm:p-6 md:p-8">
+                <div className="flex flex-col gap-3 mb-6">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                            <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-[#1A1A1A] flex-shrink-0" />
+                            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1A1A1A] truncate">DNS Configuration</h2>
+                        </div>
+                        {domain.status !== 'Pending Deletion' && (
+                            <Button
+                                onClick={() => {
+                                    if (isEditingDNS) {
+                                        // Cancel editing - reset values
+                                        if (domain.recordType === 'NS' && domain.recordValue) {
+                                            const ns = domain.recordValue.split(',').map(n => n.trim());
+                                            setNs1(ns[0] || '');
+                                            setNs2(ns[1] || '');
+                                        }
+                                        setIsEditingDNS(false);
+                                    } else {
+                                        setIsEditingDNS(true);
                                     }
-                                    setIsEditingDNS(false);
-                                } else {
-                                    setIsEditingDNS(true);
-                                }
-                            }}
-                            variant={isEditingDNS ? "destructive" : "outline"}
-                            size="sm"
-                            className="font-bold"
-                        >
-                            {isEditingDNS ? (
-                                <>
-                                    <XCircle className="w-4 h-4 mr-2" />
-                                    Cancel
-                                </>
-                            ) : (
-                                <>
-                                    <SettingsIcon className="w-4 h-4 mr-2" />
-                                    Edit
-                                </>
-                            )}
-                        </Button>
-                    )}
+                                }}
+                                variant={isEditingDNS ? "outline" : "default"}
+                                size="sm"
+                                className={`font-bold flex-shrink-0 ${isEditingDNS ? 'border-red-500 text-red-600 hover:bg-red-50' : 'bg-[#1A1A1A] text-white hover:bg-[#333]'}`}
+                            >
+                                {isEditingDNS ? (
+                                    <>
+                                        <XCircle className="w-4 h-4 mr-2" />
+                                        Cancel
+                                    </>
+                                ) : (
+                                    <>
+                                        <SettingsIcon className="w-4 h-4 mr-2" />
+                                        Edit
+                                    </>
+                                )}
+                            </Button>
+                        )}
+                    </div>
                 </div>
 
                 <div className="space-y-6">
-                    <div className="bg-[#FFF8F0] border border-[#E5E3DF] rounded-lg p-6">
+                    <div className={`border rounded-lg p-6 transition-colors ${isEditingDNS ? 'bg-blue-50 border-blue-200' : 'bg-[#FFF8F0] border-[#E5E3DF]'}`}>
                         <h3 className="font-bold text-[#1A1A1A] mb-2">Nameservers (NS Records)</h3>
                         <p className="text-sm text-[#4A4A4A] mb-4">
                             Custom nameservers allow you to manage your DNS records via external providers like Cloudflare or Route53.
@@ -303,7 +305,7 @@ export default function DomainDetail() {
                                     value={ns1}
                                     onChange={(e) => setNs1(e.target.value)}
                                     placeholder="ns1.cloudflare.com"
-                                    className="font-mono"
+                                    className={`font-mono transition-all ${isEditingDNS ? 'bg-white border-blue-300 focus:border-blue-500' : 'bg-gray-100 cursor-not-allowed'}`}
                                     readOnly={!isEditingDNS}
                                 />
                             </div>
@@ -313,7 +315,7 @@ export default function DomainDetail() {
                                     value={ns2}
                                     onChange={(e) => setNs2(e.target.value)}
                                     placeholder="ns2.cloudflare.com"
-                                    className="font-mono"
+                                    className={`font-mono transition-all ${isEditingDNS ? 'bg-white border-blue-300 focus:border-blue-500' : 'bg-gray-100 cursor-not-allowed'}`}
                                     readOnly={!isEditingDNS}
                                 />
                             </div>
@@ -378,29 +380,31 @@ export default function DomainDetail() {
             </div>
 
             {/* Danger Zone - Only show if not already pending deletion */}
-            {domain.status !== 'Pending Deletion' && (
-                <div className="bg-white border-2 border-red-200 rounded-xl p-8">
-                    <div className="flex items-center gap-2 mb-6">
-                        <AlertCircle className="w-6 h-6 text-red-600" />
-                        <h2 className="text-xl font-bold text-red-600">Danger Zone</h2>
-                    </div>
-                    <div className="bg-red-50 border-2 border-red-200 rounded-lg p-6">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                            <div className="flex-1">
-                                <p className="font-bold text-red-900 mb-1">Request Deletion</p>
-                                <p className="text-sm text-red-700">Submit this domain for deletion. An admin will review your request.</p>
+            {
+                domain.status !== 'Pending Deletion' && (
+                    <div className="bg-white border-2 border-red-200 rounded-xl p-8">
+                        <div className="flex items-center gap-2 mb-6">
+                            <AlertCircle className="w-6 h-6 text-red-600" />
+                            <h2 className="text-xl font-bold text-red-600">Danger Zone</h2>
+                        </div>
+                        <div className="bg-red-50 border-2 border-red-200 rounded-lg p-6">
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div className="flex-1">
+                                    <p className="font-bold text-red-900 mb-1">Request Deletion</p>
+                                    <p className="text-sm text-red-700">Submit this domain for deletion. An admin will review your request.</p>
+                                </div>
+                                <button
+                                    onClick={() => setDeleteDialogOpen(true)}
+                                    className="bg-red-600 text-white hover:bg-red-700 font-bold px-6 py-2.5 rounded-md whitespace-nowrap w-full md:w-auto transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <Trash className="w-4 h-4" />
+                                    Delete Domain
+                                </button>
                             </div>
-                            <button
-                                onClick={() => setDeleteDialogOpen(true)}
-                                className="bg-red-600 text-white hover:bg-red-700 font-bold px-6 py-2.5 rounded-md whitespace-nowrap w-full md:w-auto transition-colors flex items-center justify-center gap-2"
-                            >
-                                <Trash className="w-4 h-4" />
-                                Delete Domain
-                            </button>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
@@ -424,6 +428,6 @@ export default function DomainDetail() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </div>
+        </div >
     );
 }

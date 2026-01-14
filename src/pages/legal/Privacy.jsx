@@ -2,7 +2,7 @@ import { LegalLayout } from "@/layouts/LegalLayout";
 
 export function Privacy() {
     return (
-        <LegalLayout title="Privacy Policy" date="January 7, 2026">
+        <LegalLayout title="Privacy Policy" date="January 13, 2026">
             <p className="lead">
                 Welcome to <strong>Stackryze Domains</strong>, a free subdomain service operated by <strong>Stackryze</strong>, a registered MSME (Micro, Small and Medium Enterprise) in India. This Privacy Policy describes how we collect, use, store, and protect your information when you use our services.
             </p>
@@ -10,7 +10,7 @@ export function Privacy() {
                 This policy is governed by and construed in accordance with the laws of India.
             </p>
             <p>
-                We believe privacy is a fundamental right and collect only what is necessary to operate this service securely.
+                We believe privacy is a fundamental right and collect only what is reasonably necessary to operate this service securely. Certain information such as full address is collected to deter abuse, establish jurisdiction, and support legal compliance.
             </p>
             <p>
                 By using Stackryze Domains, you agree to the practices described below. If you do not agree with this policy, please discontinue use of the platform.
@@ -24,11 +24,16 @@ export function Privacy() {
             <h3>2. Information We Collect</h3>
             <p><strong>Information You Provide:</strong></p>
             <ul>
-                <li>Name, email address, and contact details</li>
+                <li>Username, display name, legal full name, email address, phone number (with country code), and full address</li>
                 <li>Chosen subdomain and optional project descriptions</li>
                 <li>DNS configuration data (nameservers, records)</li>
-                <li>GitHub account information (if using OAuth authentication) — we only access basic account information (such as username and email) as permitted by GitHub OAuth scopes</li>
+                <li>GitHub account information (if using OAuth authentication). <strong>GitHub OAuth scopes used:</strong> read:user, user:email. We receive only: username, email, and public profile information. We do NOT access private repositories or code. You can revoke this access anytime via GitHub settings.</li>
             </ul>
+
+            <p><strong>KYC and Identity Verification:</strong></p>
+            <p>
+                In cases of abuse, legal requirements, or elevated risk, Stackryze may request additional identity verification information, including government-issued identification or proof of address. Such data is collected strictly for verification and abuse prevention purposes.
+            </p>
 
             <p><strong>Automatically Collected Information:</strong></p>
             <ul>
@@ -36,13 +41,28 @@ export function Privacy() {
                 <li>DNS query logs and request timestamps</li>
                 <li>System access logs for security and abuse prevention</li>
             </ul>
-
-            <p><strong>Cookies and Storage:</strong></p>
             <p>
-                We use minimal essential cookies for session persistence and authentication. We do NOT use advertising or tracking cookies. We do NOT engage in behavioral profiling or third-party analytics.
+                We log DNS query activity, domain creation metadata, and nameserver propagation to ensure stability and investigate abuse. These logs are stored securely and not shared publicly.
+            </p>
+
+            <p><strong>Cookies and Third-Party Services:</strong></p>
+            <p>
+                We use essential cookies for session persistence and authentication. We also use:
+            </p>
+            <ul>
+                <li><strong>Google Analytics (gtag.js):</strong> For website traffic analysis and usage statistics. Google Analytics may collect information about your device, browsing behavior, and interactions with our service. This data is subject to <a href="https://policies.google.com/privacy" className="text-[#FF6B35] hover:underline" target="_blank" rel="noopener noreferrer">Google's Privacy Policy</a>.</li>
+            </ul>
+            <p>
+                We do NOT use advertising cookies or engage in behavioral profiling for marketing purposes.
             </p>
 
             <h3>3. How We Use Information</h3>
+            <p><strong>Legal Basis for Processing:</strong></p>
+            <ul>
+                <li><strong>Contract Performance:</strong> Account management, domain registration, and DNS services</li>
+                <li><strong>Legitimate Interest:</strong> Fraud prevention, abuse detection, and service security</li>
+                <li><strong>Legal Obligation:</strong> Compliance with applicable laws and court orders</li>
+            </ul>
             <p>
                 We collect and use your information solely for:
             </p>
@@ -59,25 +79,25 @@ export function Privacy() {
 
             <h3>4. Data Storage and Security</h3>
             <p>
-                User data is hosted on enterprise-grade infrastructure including Oracle Cloud and DigitalOcean, with industry-standard encryption and access controls.
+                User data is stored in MongoDB databases hosted on secure cloud infrastructure (see Section 10 for server locations). We use industry-standard encryption and access controls to safeguard your information.
             </p>
             <p>
-                Security disclaimer: While we employ reasonable security measures, no online platform can guarantee absolute protection. By using our service, you acknowledge that data breaches, unauthorized access, or loss may occur despite our best efforts, and Stackryze shall not be liable for such events.
+                <strong>Data Breach Notification:</strong> In the event of a data breach affecting your personal information, we will notify affected users via email within 72 hours of discovery where legally required, and provide information about the incident and remediation steps.
             </p>
 
             <h3>5. Data Retention</h3>
             <ul>
-                <li><strong>Active Subdomains:</strong> Data retained while subdomain is active</li>
+                <li><strong>Active Accounts:</strong> Data retained for as long as you actively use our service</li>
+                <li><strong>Inactive/Deleted Accounts:</strong> User data is retained for 90 days after account deletion or last activity, then permanently erased without recovery options</li>
                 <li><strong>Technical Logs:</strong> Automatically deleted within 30 days, except where longer retention is required by law or active investigations</li>
-                <li><strong>Deleted Accounts:</strong> Data permanently erased without recovery options</li>
             </ul>
             <p>
-                Once deleted, data CANNOT be restored. We do not maintain backups of deleted user data.
+                Once the 90-day retention period expires, data CANNOT be restored. We do not maintain backups of deleted user data beyond this period.
             </p>
 
             <h3>6. Data Sharing and Disclosure</h3>
             <p>
-                We do not sell or rent personal information. However, we may disclose data when:
+                We do not sell or rent personal information. We disclose data when:
             </p>
             <ul>
                 <li>Required by Indian law, court orders, or government authorities</li>
@@ -85,6 +105,20 @@ export function Privacy() {
                 <li>Required to protect Stackryze's legal rights and interests</li>
                 <li>Shared with trusted service providers under confidentiality agreements</li>
             </ul>
+
+            <h3>6.1. Third-Party Service Providers</h3>
+            <p>
+                We use the following services to operate our platform:
+            </p>
+            <ul>
+                <li><strong>MongoDB Atlas:</strong> Database hosting</li>
+                <li><strong>Oracle Cloud, DigitalOcean, Hetzner:</strong> Infrastructure and server hosting</li>
+                <li><strong>Google Analytics:</strong> Website usage statistics</li>
+                <li><strong>GitHub:</strong> OAuth authentication</li>
+            </ul>
+            <p>
+                These providers have access to your data only as necessary to perform their functions.
+            </p>
 
             <h3>7. Abuse Handling and Enforcement</h3>
             <p>
@@ -101,7 +135,7 @@ export function Privacy() {
 
             <h3>8. User Rights</h3>
             <p>
-                Subject to applicable Indian law, you may request:
+                All users, regardless of location, may request:
             </p>
             <ul>
                 <li>Access to your personal data</li>
@@ -109,7 +143,20 @@ export function Privacy() {
                 <li>Deletion of your account and data</li>
             </ul>
             <p>
-                Contact <a href="mailto:privacy@stackryze.com" className="text-[#FF6B35] hover:underline">privacy@stackryze.com</a> or <a href="mailto:support@stackryze.com" className="text-[#FF6B35] hover:underline">support@stackryze.com</a> to exercise these rights. Response time: 5–10 business days.
+                These rights are subject to applicable Indian law and the legal requirements of your jurisdiction. Contact <a href="mailto:privacy@stackryze.com" className="text-[#FF6B35] hover:underline">privacy@stackryze.com</a> or <a href="mailto:support@stackryze.com" className="text-[#FF6B35] hover:underline">support@stackryze.com</a> to exercise these rights. Requests may require verification of account ownership before processing. Response time: 5–10 business days.
+            </p>
+
+            <h3>8.1. For European Union Users</h3>
+            <p>
+                EU residents have additional rights under GDPR:
+            </p>
+            <ul>
+                <li>Right to data portability (receive your data in JSON format)</li>
+                <li>Right to restrict processing</li>
+                <li>Right to object to processing</li>
+            </ul>
+            <p>
+                To exercise these rights, contact <a href="mailto:privacy@stackryze.com" className="text-[#FF6B35] hover:underline">privacy@stackryze.com</a>.
             </p>
 
             <h3>9. Children's Privacy</h3>
@@ -119,18 +166,23 @@ export function Privacy() {
 
             <h3>10. International Data Transfers</h3>
             <p>
-                Our infrastructure may involve servers in India and other jurisdictions where our cloud providers operate. By using our service, you consent to data transfer, storage, and processing in these regions under Indian law.
+                Our infrastructure includes servers in:
+            </p>
+            <ul>
+                <li>India (Oracle Cloud Hyderabad, DigitalOcean Bangalore)</li>
+                <li>Germany (Hetzner)</li>
+            </ul>
+            <p>
+                Data is processed in these jurisdictions. By using our service, you consent to data transfer, storage, and processing in these regions. We implement appropriate safeguards including encryption in transit and at rest, and access controls.
             </p>
 
             <h3>11. Limitation of Liability for Data Incidents</h3>
             <p>
-                To the maximum extent permitted by Indian law:
+                While we implement industry-standard security measures, we cannot guarantee absolute protection against all threats. To the extent permitted by applicable law, Stackryze's liability for data incidents is limited to direct damages and does not include indirect, consequential, or punitive damages.
             </p>
-            <ul>
-                <li>Stackryze shall not be liable for data breaches, unauthorized access, or loss of data</li>
-                <li>Stackryze shall not be liable for damages arising from privacy incidents</li>
-                <li>Users acknowledge and accept the inherent risks of online data storage</li>
-            </ul>
+            <p>
+                This limitation does not apply where prohibited by law, including in cases of gross negligence or willful misconduct.
+            </p>
 
             <h3>12. Governing Law and Jurisdiction</h3>
             <p>
@@ -156,9 +208,8 @@ export function Privacy() {
             </p>
             <ul>
                 <li>You have read and understood this Privacy Policy</li>
-                <li>Data collection is minimal and used solely for service operation</li>
+                <li>You consent to the data collection and processing practices described above</li>
                 <li>No absolute security guarantee exists for online platforms</li>
-                <li>Stackryze is not liable for data incidents or privacy breaches</li>
                 <li>Indian law governs all data processing and privacy matters</li>
             </ul>
         </LegalLayout>

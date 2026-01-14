@@ -248,14 +248,14 @@ export default function Register() {
                             <Globe className="w-4 h-4" />
                             Choose Your Domain Name
                         </label>
-                        <div className="flex items-stretch gap-0">
-                            <div className="flex-1 relative">
+                        <div className="flex flex-col sm:flex-row items-stretch gap-0">
+                            <div className="relative w-full">
                                 <Input
                                     type="text"
                                     value={domain}
                                     onChange={(e) => setDomain(e.target.value)}
                                     placeholder="your-awesome-project"
-                                    className="font-mono text-xl h-14 pr-12 rounded-r-none border-r-0 focus:z-10"
+                                    className="font-mono text-xl h-14 pr-12 rounded-t-lg rounded-b-none sm:rounded-l-lg sm:rounded-r-none border-b-0 sm:border-b sm:border-r-0 focus:z-10 w-full"
                                 />
                                 {isChecking && (
                                     <Loader2 className="w-5 h-5 text-gray-400 animate-spin absolute right-3 top-1/2 -translate-y-1/2" />
@@ -267,7 +267,7 @@ export default function Register() {
                                     <XCircle className="w-5 h-5 text-red-600 absolute right-3 top-1/2 -translate-y-1/2" />
                                 )}
                             </div>
-                            <div className="bg-gray-100 border-2 border-l-0 border-[#E5E3DF] rounded-r-lg px-6 flex items-center">
+                            <div className="bg-gray-100 border-2 border-t sm:border-t sm:border-l-0 border-[#E5E3DF] rounded-b-lg rounded-t-none sm:rounded-r-lg sm:rounded-l-none px-4 sm:px-6 flex items-center justify-center sm:justify-start h-12 sm:h-14 -mt-[1px] sm:mt-0">
                                 <span className="text-xl font-bold text-[#1A1A1A] whitespace-nowrap">.indevs.in</span>
                             </div>
                         </div>

@@ -9,7 +9,7 @@ export function Header() {
 
   return (
     <header className="fixed top-[var(--incident-height,0px)] left-0 right-0 z-50 bg-[#FFF8F0] border-b border-[#E5E3DF] w-full">
-      <div className="w-full px-6 md:px-12 lg:px-16 h-16 flex items-center justify-between">
+      <div className="w-full px-4 sm:px-6 md:px-12 lg:px-16 h-16 flex items-center justify-between">
 
         {/* Left Side: Logo */}
         <div className="flex items-center">
@@ -18,8 +18,8 @@ export function Header() {
               <img src="/stackryze_logo1.png" alt="Stackryze Logo" className="h-8 sm:h-10 md:h-12 w-auto" />
               <span className="text-sm sm:text-lg md:text-2xl font-bold text-[#1A1A1A] tracking-tight">Stackryze Domains</span>
             </div>
-            <div className="h-6 sm:h-8 w-[1px] bg-[#E5E3DF]"></div>
-            <div className="flex items-baseline gap-0.5">
+            <div className="hidden md:block h-6 sm:h-8 w-[1px] bg-[#E5E3DF]"></div>
+            <div className="hidden md:flex items-baseline gap-0.5">
               <div className="flex items-center font-extrabold text-xl sm:text-2xl md:text-3xl tracking-tighter gap-0.5 [-webkit-text-stroke:0.5px_#1A1A1A] sm:[-webkit-text-stroke:1px_#1A1A1A]">
                 <span className="text-[#FF6B35]">IN</span>
                 <span className="text-white">DE</span>
@@ -60,10 +60,11 @@ export function Header() {
           {user ? (
             <a
               href="/overview"
-              className="bg-[#1A1A1A] text-white px-4 py-2 md:px-6 md:py-2.5 font-bold uppercase text-xs md:text-sm tracking-widest border-2 border-[#1A1A1A] hover:bg-[#FFD23F] hover:text-[#1A1A1A] transition-all duration-150 shadow-[4px_4px_0px_0px_#1A1A1A] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] flex items-center gap-2"
+              className="bg-[#1A1A1A] text-white px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-2.5 font-bold uppercase text-xs md:text-sm tracking-widest border-2 border-[#1A1A1A] hover:bg-[#FFD23F] hover:text-[#1A1A1A] transition-all duration-150 shadow-[4px_4px_0px_0px_#1A1A1A] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] flex items-center gap-2"
+              title="Dashboard"
             >
               <LayoutDashboard className="w-4 h-4" />
-              Dashboard
+              <span className="hidden sm:inline">Dashboard</span>
             </a>
           ) : (
             <a

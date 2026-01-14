@@ -2,7 +2,7 @@ import { LegalLayout } from "@/layouts/LegalLayout";
 
 export function Terms() {
     return (
-        <LegalLayout title="Terms of Service" date="January 7, 2026">
+        <LegalLayout title="Terms of Service" date="January 13, 2026">
             <p className="lead">
                 Welcome to <strong>Stackryze Domains</strong> (operating as "Indevs.in"), a free subdomain service provided by <strong>Stackryze</strong>, a registered MSME (Micro, Small and Medium Enterprise) in India. These Terms of Service ("Terms") govern your use of our platform and services.
             </p>
@@ -23,7 +23,20 @@ export function Terms() {
 
             <h3>2. Service Description</h3>
             <p>
-                Stackryze Domains provides free subdomain registration under the .indevs.in namespace for developers, students, and creators worldwide. The service is offered on a best-effort basis without any guarantees of uptime, availability, or continuity.
+                Stackryze Domains provides free subdomain registration under the .indevs.in namespace for developers, students, and creators worldwide.
+            </p>
+            <p>
+                <strong>Non-Commercial Nature:</strong>
+            </p>
+            <ul>
+                <li>This is a FREE service with ZERO revenue or fees</li>
+                <li>Operated by students as a community contribution</li>
+                <li>No commercial SLA or uptime guarantees</li>
+                <li>Operated on donated time and minimal budget</li>
+                <li>Service may be discontinued at any time if financially unsustainable</li>
+            </ul>
+            <p>
+                The service is provided on a best-effort basis. We do our best to maintain reliability, but make no guarantees.
             </p>
             <p>
                 Indevs.in is a service name and namespace operated by Stackryze and does not represent a separate legal entity. All legal obligations and contractual relationships are with Stackryze.
@@ -41,7 +54,7 @@ export function Terms() {
                 <li>Guarantees of uptime, reliability, or data permanence</li>
                 <li>Accuracy, completeness, or timeliness of the service</li>
                 <li>DNS propagation, resolution, or availability</li>
-                <li>Protection from third-party actions, legal claims, or abuse complaints</li>
+                <li>Protection from third-party actions, legal claims, or abuse complaints beyond our reasonable control</li>
             </ul>
             <p>
                 Your subdomain may be suspended, deleted, or become unavailable at any time due to technical issues, legal requirements, abuse reports, or policy changes.
@@ -52,13 +65,16 @@ export function Terms() {
                 To the maximum extent permitted by Indian law:
             </p>
             <ul>
-                <li>Stackryze shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from your use of the service</li>
+                <li>Stackryze shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the service</li>
                 <li>Stackryze shall not be liable for any loss of data, revenue, profits, business opportunities, or reputation</li>
                 <li>Stackryze shall not be liable for any claims, damages, or losses caused by user content, third-party actions, or service interruptions</li>
                 <li>Stackryze's aggregate liability shall not exceed the total fees paid by the user for the service, which for this free service is INR 0 (zero rupees)</li>
             </ul>
             <p>
                 This limitation applies regardless of the legal theory (contract, tort, negligence, strict liability, or otherwise) and even if Stackryze has been advised of the possibility of such damages.
+            </p>
+            <p>
+                Nothing in these Terms excludes liability where such exclusion is prohibited by applicable law.
             </p>
 
             <h3>5. User Responsibility and Liability</h3>
@@ -73,15 +89,15 @@ export function Terms() {
                 <li>Security and access control of your subdomain and DNS configuration</li>
             </ul>
             <p>
-                Stackryze is not responsible for monitoring, reviewing, or controlling user content. You acknowledge that Stackryze acts solely as a technical service provider and is not liable for user-generated content or activities.
+                Stackryze is not responsible for user content. You acknowledge that Stackryze acts as a technical service provider and is not liable for user-generated content or activities.
             </p>
             <p>
-                Stackryze has no obligation to proactively monitor content but reserves the right to do so for security, legal, or operational reasons.
+                Stackryze monitors for security and abuse but has no obligation to proactively review all content.
             </p>
 
             <h3>6. User Indemnification</h3>
             <p>
-                You agree to defend, indemnify, and hold harmless Stackryze, its officers, directors, employees, and affiliates from and against all claims, damages, obligations, losses, liabilities, costs, and expenses (including attorney fees) arising from:
+                You agree to defend, indemnify, and hold harmless Stackryze from all claims, damages, obligations, losses, liabilities, costs, and expenses (including attorney fees) arising from:
             </p>
             <ul>
                 <li>Your use or misuse of the service</li>
@@ -109,16 +125,16 @@ export function Terms() {
                 <li>Violating intellectual property rights or trademarks</li>
             </ul>
             <p>
-                Stackryze reserves the right to immediately suspend or permanently terminate any subdomain that violates this policy, without prior notice or opportunity to cure, at our sole discretion.
+                Stackryze reserves the right to immediately suspend or permanently terminate any subdomain that violates this policy, without prior notice or opportunity to cure, at our reasonable discretion.
             </p>
 
             <h3>8. Immediate Termination Rights</h3>
             <p>
-                Stackryze may, at its sole discretion and without liability:
+                Stackryze may, without liability:
             </p>
             <ul>
                 <li>Suspend, modify, or terminate any subdomain immediately</li>
-                <li>Deny service to any user at its sole discretion</li>
+                <li>Deny service to any user at its reasonable discretion</li>
                 <li>Remove or refuse any content or subdomain request</li>
                 <li>Cooperate with law enforcement and legal authorities</li>
                 <li>Share user data when required by Indian law or court orders</li>
@@ -160,10 +176,20 @@ export function Terms() {
                 <li>Legal Inquiries: <a href="mailto:legal@stackryze.com" className="text-[#FF6B35] hover:underline">legal@stackryze.com</a></li>
             </ul>
             <p>
-                Response times may vary but we aim to respond within 5–7 business days.
+                We aim to respond within 5–7 business days.
             </p>
 
-            <h3>14. Acknowledgment and Acceptance</h3>
+            <h3>14. No Partnership or Agency</h3>
+            <p>
+                Nothing in these Terms creates any partnership, agency, or joint venture between you and Stackryze.
+            </p>
+
+            <h3>15. Changes to Terms</h3>
+            <p>
+                Stackryze may update or modify these Terms from time to time. Continued use of the service after such changes constitutes acceptance of the updated Terms.
+            </p>
+
+            <h3>16. Acknowledgment and Acceptance</h3>
             <p>
                 By using Stackryze Domains (Indevs.in), you acknowledge that:
             </p>

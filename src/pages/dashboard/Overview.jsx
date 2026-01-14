@@ -73,11 +73,11 @@ export default function Overview() {
     }
 
     return (
-        <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
+        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
             {/* Header */}
-            <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-[#1A1A1A] mb-2">Dashboard Overview</h1>
-                <p className="text-sm sm:text-base text-[#4A4A4A]">Manage your subdomains and monitor activity</p>
+            <div className="pr-2">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#1A1A1A] mb-1 sm:mb-2">Dashboard Overview</h1>
+                <p className="text-xs sm:text-sm md:text-base text-[#4A4A4A]">Manage your subdomains and monitor activity</p>
             </div>
 
             {/* Stats Grid */}

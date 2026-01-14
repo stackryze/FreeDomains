@@ -24,6 +24,7 @@ import Register from './pages/dashboard/Register';
 import Settings from './pages/dashboard/Settings';
 import { Donate } from './pages/Donate';
 import DomainDetail from './pages/dashboard/DomainDetail';
+import Help from './pages/dashboard/Help';
 import History from './pages/dashboard/History';
 
 // Placeholder pages
@@ -84,7 +85,7 @@ function App() {
             <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/profile" element={<Settings />} />
-            <Route path="/help" element={<div className="p-10"><h1 className="text-2xl font-bold">Help & Support</h1><p>Contact us at support@stackryze.com</p></div>} />
+            <Route path="/help" element={<Help />} />
           </Route>
 
 

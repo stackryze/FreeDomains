@@ -198,7 +198,7 @@ export default function MyDomains() {
                                                 {domain.name}.indevs.in
                                             </span>
                                         </div>
-                                        <span className="text-xs text-[#888] font-mono mt-1">ID: {domain._id}</span>
+                                        <span className="text-xs text-[#888] font-mono mt-1 truncate max-w-full block" title={`ID: ${domain._id}`}>ID: {domain._id}</span>
 
                                         {/* Mobile Status View */}
                                         <div className="md:hidden mt-2 space-y-2">
@@ -247,26 +247,26 @@ export default function MyDomains() {
                                         </div>
                                     </div>
                                 </td>
-                                <td className="p-4 md:p-6 text-right whitespace-nowrap">
-                                    <div className="flex justify-end gap-2">
+                                <td className="p-2 sm:p-4 md:p-6 text-right">
+                                    <div className="flex justify-end gap-1 sm:gap-2 flex-wrap">
                                         <Button
                                             size="sm"
                                             onClick={() => handleRenew(domain)}
                                             disabled={isRenewing || loading || domain.status === 'Pending Deletion'}
-                                            className="h-9 px-3 bg-[#e6f4ea] text-[#1e8e3e] hover:bg-[#d4edda] border border-[#ceead6] font-bold shadow-none hover:shadow-sm transition-all disabled:opacity-50"
+                                            className="h-7 sm:h-8 md:h-9 px-2 sm:px-3 bg-[#e6f4ea] text-[#1e8e3e] hover:bg-[#d4edda] border border-[#ceead6] font-bold shadow-none hover:shadow-sm transition-all disabled:opacity-50 text-[10px] sm:text-xs md:text-sm whitespace-nowrap"
                                             title={domain.status === 'Pending Deletion' ? 'Cannot renew - deletion pending' : 'Renew Domain'}
                                         >
-                                            <RefreshCw className="w-4 h-4 mr-2" />
+                                            <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                                             Renew
                                         </Button>
                                         <Button
                                             variant="outline"
                                             size="sm"
                                             asChild
-                                            className="h-9 px-3 font-bold border-2 hover:bg-[#1A1A1A] hover:text-[#FFD23F] transition-all"
+                                            className="h-7 sm:h-8 md:h-9 px-2 sm:px-3 font-bold border-2 hover:bg-[#1A1A1A] hover:text-[#FFD23F] transition-all text-[10px] sm:text-xs md:text-sm whitespace-nowrap"
                                         >
                                             <Link to={`/domains/${domain._id}`}>
-                                                <SettingsIcon className="w-4 h-4 mr-2" />
+                                                <SettingsIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                                                 Manage
                                             </Link>
                                         </Button>

@@ -189,7 +189,7 @@ export default function DashboardLayout() {
                     </aside>
 
                     {/* Main Content */}
-                    <main className="flex-1 md:ml-64 p-4 sm:p-6 md:p-10 mb-20 overflow-y-auto min-h-[calc(100vh-64px)]">
+                    <main className="flex-1 md:ml-64 p-4 sm:p-6 md:p-10 pt-16 md:pt-6 mb-20 overflow-y-auto min-h-[calc(100vh-64px)]">
                         <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-500">
                             <Outlet />
                         </div>
