@@ -202,7 +202,7 @@ export function HeroSection() {
               </p>
               <div className="flex justify-center items-center gap-8">
                 <img
-                  src="/Cloudflare_Logo.svg.png"
+                  src="/Cloudflare_Logo.png"
                   alt="Cloudflare"
                   className="h-8 md:h-10 w-auto object-contain"
                 />
