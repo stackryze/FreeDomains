@@ -55,10 +55,6 @@ export default function Settings() {
                         </div>
                         <div className="flex items-center gap-3">
                             <Mail className="w-5 h-5 text-[#888]" />
-                            <span className="font-mono text-[#1A1A1A] font-bold">sudheer@stackryze.com</span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <Mail className="w-5 h-5 text-[#888]" />
                             <span className="font-mono text-[#1A1A1A] font-bold">security@stackryze.com</span>
                         </div>
                         <div className="flex items-center gap-3">

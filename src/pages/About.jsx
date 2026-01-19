@@ -103,7 +103,6 @@ export function About() {
                             <div className="font-mono text-[#4A4A4A] text-sm">support@stackryze.com</div>
                             <div className="font-mono text-[#4A4A4A] text-sm">reportabuse@stackryze.com</div>
                             <div className="font-mono text-[#4A4A4A] text-sm">security@stackryze.com</div>
-                            <div className="font-mono text-[#4A4A4A] text-sm">sudheer@stackryze.com</div>
                             <div className="font-mono text-[#4A4A4A] text-sm">no-reply@stackryze.com</div>
                         </div>
                         <p className="text-sm text-[#888] italic">

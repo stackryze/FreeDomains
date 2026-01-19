@@ -33,7 +33,6 @@ export function Footer() {
                             <h5 className="text-[#FF6B35] font-bold text-sm uppercase tracking-wide mb-1">Verified Emails</h5>
                             <p className="text-[#E5E3DF] text-sm font-mono">support@stackryze.com</p>
                             <p className="text-[#E5E3DF] text-sm font-mono">reportabuse@stackryze.com</p>
-                            <p className="text-[#E5E3DF] text-sm font-mono">sudheer@stackryze.com <span className="text-[#6B6B6B]">(Founder)</span></p>
                             <p className="text-[#E5E3DF] text-sm font-mono">no-reply@stackryze.com</p>
                             <p className="text-[#6B6B6B] text-xs max-w-sm mt-2 italic leading-relaxed">
                                 Note: We don't send any messages from any other domains or prefixes whatsoever.
