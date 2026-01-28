@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { Shield, Mail, Edit2, Check, X, Loader2 } from "lucide-react";
-import api from "@/lib/api";
+import { subdomainAPI } from "@/lib/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner"; // Assuming sonner is used, typical in shadcn/vite apps, else fallback to alert or custom
 
@@ -26,7 +26,7 @@ export default function Settings() {
 
         try {
             setLoading(true);
-            const res = await api.post('/auth/email/change-email', { newEmail });
+            const res = await subdomainAPI.post('/auth/email/change-email', { newEmail });
 
             if (res.data.success) {
                 toast.success(res.data.message);
