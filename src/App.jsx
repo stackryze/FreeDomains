@@ -41,6 +41,12 @@ const ProtectedRoute = ({ children }) => {
   if (loading) return <div className="flex items-center justify-center min-h-screen bg-[#FFF8F0] font-bold text-xl">Loading...</div>;
   if (!user) return <Navigate to={`/login${search}`} replace />; // Preserve ?error=... params
 
+  // SPECIAL: Allow access to /change-email for noreply users regardless of other checks
+  // This is critical for the noreply email fix - users need to change their email first
+  if (location === '/change-email') {
+    return children ? children : <Outlet />;
+  }
+
   // 1. Force Password Set Flow
   if (user && !user.hasPassword) {
     if (location !== '/set-password') {
