@@ -16,6 +16,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 export default function Register() {
     const [domain, setDomain] = useState("");
     const [rootDomain, setRootDomain] = useState("indevs.in");
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isChecking, setIsChecking] = useState(false);
     const [isAvailable, setIsAvailable] = useState(null);
     const [errorMsg, setErrorMsg] = useState("");
@@ -351,16 +352,34 @@ export default function Register() {
                                     <XCircle className="w-5 h-5 text-red-600 absolute right-3 top-1/2 -translate-y-1/2" />
                                 )}
                             </div>
-                            <div className="bg-gray-100 border-2 border-t sm:border-t sm:border-l-0 border-[#E5E3DF] rounded-b-lg rounded-t-none sm:rounded-r-lg sm:rounded-l-none px-2 flex items-center justify-center sm:justify-start h-12 sm:h-14 -mt-[1px] sm:mt-0 min-w-[140px]">
-                                <select
-                                    value={rootDomain}
-                                    onChange={(e) => setRootDomain(e.target.value)}
-                                    className="bg-transparent text-xl font-bold text-[#1A1A1A] focus:outline-none cursor-pointer w-full text-center sm:text-left p-1"
+                            <div className="relative h-12 sm:h-14 -mt-[1px] sm:mt-0 min-w-[155px]">
+                                <button
+                                    type="button"
+                                    onClick={() => setDropdownOpen(o => !o)}
+                                    onBlur={() => setTimeout(() => setDropdownOpen(false), 150)}
+                                    className="w-full h-full flex items-center justify-between gap-2 px-4 bg-[#1A1A1A] text-white text-base font-bold focus:outline-none cursor-pointer border-2 border-[#1A1A1A] rounded-b-lg rounded-t-none sm:rounded-r-lg sm:rounded-l-none border-t sm:border-t sm:border-l-0"
                                 >
-                                    {availableDomains.map(d => (
-                                        <option key={d} value={d}>.{d}</option>
-                                    ))}
-                                </select>
+                                    <span className="font-mono">.{rootDomain}</span>
+                                    <svg className={`w-4 h-4 text-white flex-shrink-0 transition-transform duration-150 ${dropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
+                                </button>
+                                {dropdownOpen && (
+                                    <div className="absolute top-[calc(100%+4px)] left-0 right-0 z-50 border-2 border-[#1A1A1A] rounded-xl overflow-hidden shadow-[4px_4px_0px_0px_#1A1A1A]">
+                                        {availableDomains.map(d => (
+                                            <button
+                                                key={d}
+                                                type="button"
+                                                onMouseDown={() => { setRootDomain(d); setDropdownOpen(false); }}
+                                                className={`w-full text-left px-4 py-3 font-mono font-bold text-sm transition-colors ${
+                                                    d === rootDomain
+                                                        ? 'bg-[#1A1A1A] text-white'
+                                                        : 'bg-white text-[#1A1A1A] hover:bg-gray-50'
+                                                }`}
+                                            >
+                                                .{d}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
