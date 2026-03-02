@@ -15,7 +15,8 @@ import {
     Server,
     Menu,
     X,
-    Clock
+    Clock,
+    Search
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 
@@ -93,6 +94,13 @@ export default function DashboardLayout() {
                     icon={Clock}
                     label="History"
                     active={isActive("/history")}
+                    onClick={() => setSidebarOpen(false)}
+                />
+                <SidebarItem
+                    to="/whois"
+                    icon={Search}
+                    label="WHOIS Lookup"
+                    active={isActive("/whois")}
                     onClick={() => setSidebarOpen(false)}
                 />
                 <div className="pt-4 border-t border-[#E5E3DF] my-2"></div>

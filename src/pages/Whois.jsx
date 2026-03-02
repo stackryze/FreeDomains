@@ -79,16 +79,16 @@ export function Whois() {
             <Header />
 
             {/* Hero */}
-            <section className="pt-[calc(8rem+var(--incident-height,0px))] pb-12 px-6">
+            <section className="pt-[calc(6rem+var(--incident-height,0px))] pb-8 px-6">
                 <div className="max-w-3xl mx-auto text-center">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1A1A] text-white text-xs font-bold uppercase tracking-widest mb-6">
                         <Globe className="w-3 h-3 text-[#FF6B35]" />
                         <span>Domain WHOIS</span>
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-[#1A1A1A] mb-4 leading-tight">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#1A1A1A] mb-2 leading-tight">
                         WHOIS Lookup
                     </h1>
-                    <p className="text-lg text-[#4A4A4A] max-w-xl mx-auto">
+                    <p className="text-sm text-[#4A4A4A] max-w-xl mx-auto">
                         Look up registration details for any domain on the{" "}
                         <span className="font-bold text-[#1A1A1A]">Stackryze</span> free
                         domain registry.
@@ -99,20 +99,20 @@ export function Whois() {
             {/* Search Bar */}
             <section className="pb-8 px-6">
                 <div className="max-w-2xl mx-auto">
-                    <form onSubmit={handleSearch} className="flex gap-0 shadow-[4px_4px_0px_0px_#1A1A1A] border-2 border-[#1A1A1A] rounded-none overflow-hidden">
+                    <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 bg-white p-2 border-2 border-[#E5E3DF] rounded-2xl shadow-sm focus-within:border-[#1A1A1A] focus-within:shadow-[3px_3px_0px_0px_#1A1A1A] transition-all">
                         <input
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="e.g. myproject.indevs.in or mybrand.sryze.cc"
-                            className="flex-1 px-4 py-3 text-[#1A1A1A] bg-white font-mono text-sm outline-none placeholder:text-[#aaa] border-none"
+                            className="flex-1 px-4 py-3 text-[#1A1A1A] bg-transparent font-mono text-sm outline-none placeholder:text-[#aaa] w-full"
                             disabled={loading}
                             autoFocus
                         />
                         <button
                             type="submit"
                             disabled={loading || !query.trim()}
-                            className="flex items-center gap-2 px-5 py-3 bg-[#1A1A1A] text-white font-bold text-sm uppercase tracking-wide hover:bg-[#FF6B35] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex items-center justify-center gap-2 px-6 py-3 bg-[#1A1A1A] text-white font-bold text-sm rounded-xl hover:bg-[#FF6B35] transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                         >
                             {loading ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -131,14 +131,13 @@ export function Whois() {
                 </div>
             </section>
 
-            {/* Error */}
             {error && (
                 <section className="px-6 pb-8">
-                    <div className="max-w-2xl mx-auto bg-white border-2 border-red-400 rounded-lg p-5 flex gap-3 items-start shadow-[3px_3px_0px_0px_#f87171]">
-                        <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <div className="max-w-2xl mx-auto bg-red-50 border-2 border-red-200 rounded-2xl p-5 flex gap-3 items-start">
+                        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                         <div>
-                            <p className="font-bold text-[#1A1A1A] text-sm mb-1">Lookup Failed</p>
-                            <p className="text-sm text-[#4A4A4A]">{error}</p>
+                            <p className="font-bold text-red-900 text-sm mb-1">Lookup Failed</p>
+                            <p className="text-sm text-red-700">{error}</p>
                         </div>
                     </div>
                 </section>
@@ -146,7 +145,7 @@ export function Whois() {
 
             {/* WHOIS Result */}
             {result && (
-                <section className="px-6 pb-10">
+                <section className="px-6 pb-6">
                     <div className="max-w-2xl mx-auto">
                         {/* Result header */}
                         <div className="flex items-center justify-between mb-2">
@@ -155,7 +154,7 @@ export function Whois() {
                             </h2>
                             <button
                                 onClick={handleCopy}
-                                className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 border-2 border-[#1A1A1A] bg-white hover:bg-[#1A1A1A] hover:text-white transition-colors"
+                                className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 bg-white border-2 border-[#E5E3DF] rounded-xl text-[#4A4A4A] hover:border-[#1A1A1A] hover:text-[#1A1A1A] transition-all"
                             >
                                 {copied ? (
                                     <>
@@ -172,7 +171,7 @@ export function Whois() {
                         </div>
 
                         {/* Classic WHOIS output block */}
-                        <div className="bg-[#1A1A1A] border-2 border-[#1A1A1A] shadow-[6px_6px_0px_0px_#FF6B35] font-mono text-sm overflow-x-auto">
+                        <div className="bg-[#1A1A1A] rounded-2xl font-mono text-sm overflow-hidden shadow-lg border-2 border-[#222]">
                             {/* Domain name banner */}
                             <div className="px-5 pt-4 pb-2 border-b border-[#333]">
                                 <span className="text-[#FFD23F] font-bold text-xs uppercase tracking-widest">
@@ -219,8 +218,8 @@ export function Whois() {
             )}
 
             {/* Terms of Use */}
-            <section className="pb-20 px-6">
-                <div className="max-w-2xl mx-auto border-2 border-[#E5E3DF] bg-white p-6">
+            <section className="pb-10 px-6">
+                <div className="max-w-2xl mx-auto border-2 border-[#E5E3DF] bg-white rounded-2xl p-4">
                     <h3 className="text-xs font-bold uppercase tracking-widest text-[#888] mb-3">
                         Terms of Use
                     </h3>

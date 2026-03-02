@@ -144,10 +144,10 @@ export default function MyDomains() {
 
     return (
         <div className="max-w-5xl mx-auto">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-10 gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4">
                 <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-[#1A1A1A] capitalize">My Domains</h1>
-                    <p className="text-sm sm:text-base text-[#4A4A4A] mt-1">Manage your active domains and configurations.</p>
+                    <h1 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] capitalize">My Domains</h1>
+                    <p className="text-xs sm:text-sm text-[#4A4A4A] mt-1">Manage your active domains and configurations.</p>
                 </div>
                 <Button
                     onClick={refresh}
@@ -192,8 +192,8 @@ export default function MyDomains() {
             )}
 
             {/* Domain Usage Indicator */}
-            <div className="mb-6 border-2 rounded-xl p-5 bg-blue-50 border-blue-200">
-                <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 border-2 rounded-xl p-4 bg-blue-50 border-blue-200">
+                <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                         <Info className="w-5 h-5 text-blue-600" />
                         <span className="font-bold text-sm text-blue-900">
@@ -201,7 +201,7 @@ export default function MyDomains() {
                         </span>
                     </div>
                     <Link to="/register">
-                        <Button size="sm" className="bg-[#FFD23F] hover:bg-[#FFB800] text-[#1A1A1A] font-bold">
+                        <Button size="sm" className="bg-[#1A1A1A] hover:bg-[#FF6B35] text-white font-bold shadow-sm transition-colors">
                             <Plus className="w-4 h-4 mr-2" />
                             Register New
                         </Button>
@@ -277,14 +277,14 @@ export default function MyDomains() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl border-2 border-[#E5E3DF] overflow-hidden shadow-sm">
+            <div className="bg-white border-2 border-[#E5E3DF] rounded-2xl overflow-hidden shadow-sm">
                 <table className="w-full text-left border-collapse">
-                    <thead className="bg-[#f9f9f9] border-b-2 border-[#E5E3DF]">
+                    <thead className="bg-[#FFF8F0] border-b-2 border-[#E5E3DF]">
                         <tr>
-                            <th className="p-4 md:p-6 text-xs font-bold text-[#888] uppercase tracking-wider w-full md:w-5/12">Domain Information</th>
-                            <th className="p-4 md:p-6 text-xs font-bold text-[#888] uppercase tracking-wider hidden md:table-cell md:w-3/12">Nameservers</th>
-                            <th className="p-4 md:p-6 text-xs font-bold text-[#888] uppercase tracking-wider hidden md:table-cell md:w-2/12">Status / Expiry</th>
-                            <th className="p-4 md:p-6 text-right w-auto md:w-2/12"></th>
+                            <th className="p-3 md:p-4 text-xs font-bold text-[#888] uppercase tracking-wider w-full md:w-5/12">Domain Information</th>
+                            <th className="p-3 md:p-4 text-xs font-bold text-[#888] uppercase tracking-wider hidden md:table-cell md:w-3/12">Nameservers</th>
+                            <th className="p-3 md:p-4 text-xs font-bold text-[#888] uppercase tracking-wider hidden md:table-cell md:w-2/12">Status / Expiry</th>
+                            <th className="p-3 md:p-4 text-right w-auto md:w-2/12"></th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-[#E5E3DF]">
@@ -297,10 +297,10 @@ export default function MyDomains() {
                             </tr>
                         ) : subdomains.map((domain) => (
                             <tr key={domain._id} className="group hover:bg-gray-50 transition-colors">
-                                <td className="p-4 md:p-6 overflow-hidden">
+                                <td className="p-3 md:p-4 overflow-hidden">
                                     <div className="flex flex-col min-w-0">
-                                        <div className="font-bold text-[#1A1A1A] text-base sm:text-lg flex items-start gap-2 max-w-full">
-                                            <Globe className="w-4 h-4 flex-shrink-0 mt-1.5" />
+                                        <div className="font-bold text-[#1A1A1A] text-sm sm:text-base flex items-center gap-1.5 max-w-full">
+                                            <Globe className="w-3.5 h-3.5 flex-shrink-0" />
                                             <span className="break-words">
                                                 {domain.name}.{domain.domain || 'indevs.in'}
                                             </span>
@@ -326,7 +326,7 @@ export default function MyDomains() {
                                         })()}
                                     </div>
                                 </td>
-                                <td className="p-4 md:p-6 hidden md:table-cell overflow-hidden">
+                                <td className="p-3 md:p-4 hidden md:table-cell overflow-hidden">
                                     <div className="flex flex-col gap-1">
                                         {domain.recordType === 'NS' && domain.recordValue ? (
                                             domain.recordValue.split(',').map((ns, idx) => (
@@ -345,22 +345,22 @@ export default function MyDomains() {
                                         )}
                                     </div>
                                 </td>
-                                <td className="p-4 md:p-6 whitespace-nowrap hidden md:table-cell">
-                                    <div className="space-y-2">
+                                <td className="p-3 md:p-4 whitespace-nowrap hidden md:table-cell">
+                                    <div className="space-y-1.5">
                                         <StatusBadge status={domain.status} />
-                                        <div className="flex items-center gap-1.5 text-xs text-[#4A4A4A] font-medium">
+                                        <div className="flex items-center gap-1.5 text-[11px] text-[#4A4A4A] font-medium">
                                             <Clock className="w-3.5 h-3.5" />
                                             Expires: <span className="font-mono">{domain.expiresAt ? new Date(domain.expiresAt).toLocaleDateString('en-GB') : 'N/A'}</span>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="p-2 sm:p-4 md:p-6 text-right">
-                                    <div className="flex justify-end gap-1 sm:gap-2 flex-wrap">
+                                <td className="p-2 sm:p-3 md:p-4 text-right align-middle">
+                                    <div className="flex justify-end items-center gap-1.5 flex-wrap">
                                         <Button
                                             size="sm"
                                             onClick={() => handleRenew(domain)}
                                             disabled={isRenewing || loading || domain.status === 'Pending Deletion'}
-                                            className="h-7 sm:h-8 md:h-9 px-2 sm:px-3 bg-[#e6f4ea] text-[#1e8e3e] hover:bg-[#d4edda] border border-[#ceead6] font-bold shadow-none hover:shadow-sm transition-all disabled:opacity-50 text-[10px] sm:text-xs md:text-sm whitespace-nowrap"
+                                            className="h-7 md:h-8 px-2.5 bg-[#e6f4ea] text-[#1e8e3e] hover:bg-[#d4edda] border border-[#ceead6] font-bold shadow-none hover:shadow-sm transition-all disabled:opacity-50 text-[10px] md:text-xs whitespace-nowrap"
                                             title={domain.status === 'Pending Deletion' ? 'Cannot renew - deletion pending' : 'Renew Domain'}
                                         >
                                             <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
@@ -370,10 +370,10 @@ export default function MyDomains() {
                                             variant="outline"
                                             size="sm"
                                             asChild
-                                            className="h-7 sm:h-8 md:h-9 px-2 sm:px-3 font-bold border-2 hover:bg-[#1A1A1A] hover:text-[#FFD23F] transition-all text-[10px] sm:text-xs md:text-sm whitespace-nowrap"
+                                            className="h-7 md:h-8 px-2.5 font-bold border-2 border-[#E5E3DF] hover:border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all text-[10px] md:text-xs whitespace-nowrap bg-white text-[#4A4A4A]"
                                         >
                                             <Link to={`/domains/${domain._id}`}>
-                                                <SettingsIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                                <SettingsIcon className="w-3 h-3 md:w-3.5 md:h-3.5 mr-1.5" />
                                                 Manage
                                             </Link>
                                         </Button>
@@ -463,7 +463,7 @@ export default function MyDomains() {
                                                 setSelectedDomain({ ...selectedDomain, nameservers: newNs });
                                             }}
                                             placeholder="ns1.topdns.com"
-                                            className="font-mono text-sm bg-gray-50"
+                                            className="font-mono text-sm bg-gray-50 placeholder:text-gray-400 placeholder:opacity-75"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -476,7 +476,7 @@ export default function MyDomains() {
                                                 setSelectedDomain({ ...selectedDomain, nameservers: newNs });
                                             }}
                                             placeholder="ns2.topdns.com"
-                                            className="font-mono text-sm bg-gray-50"
+                                            className="font-mono text-sm bg-gray-50 placeholder:text-gray-400 placeholder:opacity-75"
                                         />
                                     </div>
                                 </div>

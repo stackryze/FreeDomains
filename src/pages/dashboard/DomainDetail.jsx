@@ -168,35 +168,14 @@ export default function DomainDetail() {
                         </Link>
                     </Button>
                     <div className="min-w-0 flex-1">
-                        <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-[#1A1A1A] flex items-start gap-2 break-all" title={`${domain.name}.${domain.domain || 'indevs.in'}`}>
-                            <Globe className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 flex-shrink-0 mt-0.5 sm:mt-1" />
+                        <h1 className="text-base sm:text-xl md:text-2xl font-bold text-[#1A1A1A] flex items-center gap-2 break-all" title={`${domain.name}.${domain.domain || 'indevs.in'}`}>
+                            <Globe className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
                             <span className="leading-tight">{domain.name}<wbr />.{domain.domain || 'indevs.in'}</span>
                         </h1>
-                        <p className="text-[#4A4A4A] text-xs sm:text-sm mt-1 truncate" title={`Domain ID: ${domain._id}`}>Domain ID: {domain._id}</p>
+                        <p className="text-[#4A4A4A] text-[10px] sm:text-xs mt-1 truncate" title={`Domain ID: ${domain._id}`}>Domain ID: {domain._id}</p>
                     </div>
                 </div>
                 <div className="flex-shrink-0 w-full sm:w-auto">
-                    <Button
-                        onClick={handleRenew}
-                        disabled={isRenewing || (daysUntilExpiry && daysUntilExpiry > 60) || domain.status === 'Pending Deletion'}
-                        className="bg-[#e6f4ea] text-[#1e8e3e] hover:bg-[#d4edda] border-2 border-[#ceead6] font-bold disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto text-sm"
-                        title={
-                            domain.status === 'Pending Deletion'
-                                ? 'Cannot renew - deletion pending'
-                                : daysUntilExpiry && daysUntilExpiry > 60
-                                    ? `Renewal available when less than 60 days remain(${daysUntilExpiry} days remaining)`
-                                    : ''
-                        }
-                    >
-                        <RefreshCw className={`w-4 h-4 mr-2 ${isRenewing ? 'animate-spin' : ''}`} />
-                        {isRenewing ? 'Renewing...' : 'Renew Domain'}
-                    </Button>
-                    {daysUntilExpiry && daysUntilExpiry > 60 && domain.status !== 'Pending Deletion' && (
-                        <div className="flex items-center text-xs sm:text-sm text-[#888] mt-2">
-                            <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                            Renewal available in {daysUntilExpiry - 60} days
-                        </div>
-                    )}
                     {domain.status === 'Pending Deletion' && (
                         <div className="flex items-center text-xs sm:text-sm text-amber-600 font-medium mt-2">
                             <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
@@ -207,51 +186,78 @@ export default function DomainDetail() {
             </div>
 
             {/* Status Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Left Column - Domain Info */}
-                <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-6 space-y-4">
-                    <div>
-                        <p className="text-xs font-bold text-[#888] uppercase mb-1">Status</p>
-                        <p className={`text-xl font-extrabold ${domain.status === 'Active' ? 'text-[#1e8e3e]' :
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 space-y-2">
+                    <div className="flex justify-between items-center">
+                        <p className="text-[10px] font-bold text-[#888] uppercase">Status</p>
+                        <p className={`text-base font-extrabold ${domain.status === 'Active' ? 'text-[#1e8e3e]' :
                             domain.status === 'Pending Deletion' ? 'text-amber-600' :
                                 'text-[#b06000]'
                             }`}>
                             {domain.status}
                         </p>
-                        {domain.status === 'Pending Deletion' && (
-                            <p className="text-xs text-amber-700 mt-2">
-                                Your deletion request is being reviewed
-                            </p>
-                        )}
                     </div>
+                    {domain.status === 'Pending Deletion' && (
+                        <p className="text-[10px] text-amber-700 mt-1">
+                            Your deletion request is being reviewed
+                        </p>
+                    )}
 
-                    <div className="border-t border-[#E5E3DF] pt-4">
-                        <p className="text-xs font-bold text-[#888] uppercase mb-1">Registered On</p>
+                    <div className="border-t border-[#E5E3DF] pt-2 flex justify-between items-center">
+                        <p className="text-[10px] font-bold text-[#888] uppercase">Registered On</p>
                         <p className="text-sm text-[#1A1A1A] font-medium">
-                            {domain.createdAt ? new Date(domain.createdAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
+                            {domain.createdAt ? new Date(domain.createdAt).toLocaleDateString('en-GB') : 'N/A'}
                         </p>
                     </div>
 
-                    <div className="border-t border-[#E5E3DF] pt-4">
-                        <p className="text-xs font-bold text-[#888] uppercase mb-1">Registration Period</p>
+                    <div className="border-t border-[#E5E3DF] pt-2 flex justify-between items-center">
+                        <p className="text-[10px] font-bold text-[#888] uppercase">Registration Period</p>
                         <p className="text-sm text-[#1A1A1A] font-medium">1 Year (Fixed)</p>
                     </div>
                 </div>
 
                 {/* Right Column - Expiry Info */}
-                <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-6">
-                    <p className="text-xs font-bold text-[#888] uppercase mb-2">Expires On</p>
-                    <p className="text-3xl font-extrabold text-[#1A1A1A] mb-2">
-                        {domain.expiresAt ? new Date(domain.expiresAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Never'}
-                    </p>
+                <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 flex flex-col justify-center">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <p className="text-[10px] font-bold text-[#888] uppercase">Expires On</p>
+                            <p className="text-xl font-extrabold text-[#1A1A1A]">
+                                {domain.expiresAt ? new Date(domain.expiresAt).toLocaleDateString('en-GB') : 'Never'}
+                            </p>
+                        </div>
+                        <div className="flex flex-col items-end gap-1.5">
+                             <Button
+                                onClick={handleRenew}
+                                disabled={isRenewing || (daysUntilExpiry && daysUntilExpiry > 60) || domain.status === 'Pending Deletion'}
+                                className="bg-[#e6f4ea] text-[#1e8e3e] hover:bg-[#d4edda] border border-[#ceead6] font-bold h-7 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto text-[10px] px-2.5 shadow-none"
+                                title={
+                                    domain.status === 'Pending Deletion'
+                                        ? 'Cannot renew - deletion pending'
+                                        : (daysUntilExpiry && daysUntilExpiry > 60) ? 'Check back closer to expiry' : 'Renew Domain'
+                                }
+                            >
+                                <RefreshCw className={`w-3 h-3 justify-center ${isRenewing ? 'animate-spin mr-1' : 'mr-1'}`} />
+                                {isRenewing ? 'Renewing...' : 'Renew'}
+                            </Button>
+                            {daysUntilExpiry && daysUntilExpiry > 60 && (
+                                <p className="text-[10px] text-[#888] flex items-center gap-1 font-medium">
+                                    <Clock className="w-3 h-3" />
+                                    Renewal in {daysUntilExpiry - 60} days
+                                </p>
+                            )}
+                        </div>
+                    </div>
 
                     {daysUntilExpiry && daysUntilExpiry <= 60 && daysUntilExpiry > 0 && (
                         <div className={`mt-4 p-3 rounded-lg ${daysUntilExpiry <= 30 ? 'bg-red-50 border-l-4 border-red-500' : 'bg-amber-50 border-l-4 border-amber-500'}`}>
-                            <p className={`text-sm font-bold ${daysUntilExpiry <= 30 ? 'text-red-900' : 'text-amber-900'} `}>
-                                {daysUntilExpiry <= 30 ? '⚠️' : '🔔'} {daysUntilExpiry} days remaining
-                            </p>
-                            <p className={`text-xs mt-1 ${daysUntilExpiry <= 30 ? 'text-red-700' : 'text-amber-700'} `}>
-                                {daysUntilExpiry <= 30 ? 'Renew soon to avoid expiration' : 'You can renew your domain now'}
+                            <div className="flex items-center gap-2">
+                                <AlertCircle className={`w-4 h-4 ${daysUntilExpiry <= 30 ? 'text-red-500' : 'text-amber-500'}`} />
+                                <p className={`text-xs font-bold ${daysUntilExpiry <= 30 ? 'text-red-800' : 'text-amber-800'}`}>
+                                    Domain expires in {daysUntilExpiry} days
+                                </p>
+                            </div>
+                            <p className={`text-xs mt-1 ${daysUntilExpiry <= 30 ? 'text-red-700' : 'text-amber-700'}`}>
+                                Renew now to keep {domain.name}.{domain.domain || 'indevs.in'} active.
                             </p>
                         </div>
                     )}
@@ -285,12 +291,12 @@ export default function DomainDetail() {
             )}
 
             {/* DNS Configuration */}
-            <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 sm:p-6 md:p-8">
-                <div className="flex flex-col gap-3 mb-6">
+            <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 sm:p-5 md:p-6 mb-4">
+                <div className="flex flex-col gap-2 mb-4">
                     <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                            <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-[#1A1A1A] flex-shrink-0" />
-                            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1A1A1A] truncate">DNS Configuration</h2>
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <Globe className="w-5 h-5 text-[#1A1A1A] flex-shrink-0" />
+                            <h2 className="text-lg sm:text-xl font-bold text-[#1A1A1A] truncate">DNS Configuration</h2>
                         </div>
                         {domain.status !== 'Pending Deletion' && (
                             <Button
@@ -340,7 +346,7 @@ export default function DomainDetail() {
                                 <Input
                                     value={ns1}
                                     onChange={(e) => setNs1(e.target.value)}
-                                    placeholder="ns1.cloudflare.com"
+                               
                                     className={`font-mono transition-all ${isEditingDNS ? 'bg-white border-blue-300 focus:border-blue-500' : 'bg-gray-100 cursor-not-allowed'}`}
                                     readOnly={!isEditingDNS}
                                 />
@@ -350,7 +356,7 @@ export default function DomainDetail() {
                                 <Input
                                     value={ns2}
                                     onChange={(e) => setNs2(e.target.value)}
-                                    placeholder="ns2.cloudflare.com"
+                                  
                                     className={`font-mono transition-all ${isEditingDNS ? 'bg-white border-blue-300 focus:border-blue-500' : 'bg-gray-100 cursor-not-allowed'}`}
                                     readOnly={!isEditingDNS}
                                 />
@@ -416,14 +422,14 @@ export default function DomainDetail() {
             </div>
 
             {/* DNS Verification Section */}
-            <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 sm:p-6 md:p-8">
-                <div className="flex items-center gap-2 sm:gap-3 mb-6">
-                    <KeyRound className="w-5 h-5 sm:w-6 sm:h-6 text-[#F59E0B]" />
-                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-[#1A1A1A]">DNS Verification</h2>
+            <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 sm:p-5 md:p-6 mb-4">
+                <div className="flex items-center gap-2 mb-4">
+                    <KeyRound className="w-5 h-5 text-[#F59E0B]" />
+                    <h2 className="text-lg sm:text-xl font-bold text-[#1A1A1A]">DNS Verification</h2>
                 </div>
-
-                <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-5 sm:p-6 space-y-4">
-                    <p className="text-sm text-[#4A4A4A]">
+                
+                <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 space-y-3">
+                    <p className="text-xs sm:text-sm text-[#4A4A4A]">
                         If you want to manage this domain's DNS records on <a href="https://dns.stackryze.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-semibold">dns.stackryze.com</a>, 
                         you need to verify ownership. Add the zone on the DNS platform, copy the verification code it gives you, and paste it here.
                     </p>
@@ -506,12 +512,12 @@ export default function DomainDetail() {
             {/* Danger Zone - Only show if not already pending deletion */}
             {
                 domain.status !== 'Pending Deletion' && (
-                    <div className="bg-white border-2 border-red-200 rounded-xl p-8">
-                        <div className="flex items-center gap-2 mb-6">
-                            <AlertCircle className="w-6 h-6 text-red-600" />
-                            <h2 className="text-xl font-bold text-red-600">Danger Zone</h2>
+                    <div className="bg-white border-2 border-red-200 rounded-xl p-4 sm:p-5 md:p-6 mb-6">
+                        <div className="flex items-center gap-2 mb-4">
+                            <AlertCircle className="w-5 h-5 text-red-600" />
+                            <h2 className="text-lg font-bold text-red-600">Danger Zone</h2>
                         </div>
-                        <div className="bg-red-50 border-2 border-red-200 rounded-lg p-6">
+                        <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                 <div className="flex-1">
                                     <p className="font-bold text-red-900 mb-1">Request Deletion</p>

@@ -89,6 +89,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/complete-profile" element={<CompleteProfile />} />
+          <Route path="/whois" element={<Whois />} />
 
           {/* Protected Routes including Set Password Force Flow */}
           <Route element={<ProtectedRoute />}>
