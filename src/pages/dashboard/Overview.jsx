@@ -1,158 +1,289 @@
-import { Globe, Plus, Settings, Clock, AlertCircle, CheckCircle, TrendingUp } from "lucide-react";
+import { Globe, Plus, Settings, Clock, CheckCircle, ArrowRight, Search, History, Shield } from "lucide-react";
 import { useDashboard } from "@/context/dashboard-context";
+import { useAuth } from "@/context/auth-context";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-
-const StatCard = ({ icon: Icon, label, value, color, bgColor, to }) => (
-    <Link
-        to={to || "/my-domains"}
-        className="bg-white p-5 sm:p-6 rounded-xl border-2 border-[#E5E3DF] hover:border-[#1A1A1A] transition-all hover:shadow-md group active:scale-[0.98]"
-    >
-        <div className="flex items-start justify-between mb-3 sm:mb-4">
-            <div className={`p-2.5 sm:p-3 ${bgColor} rounded-lg`}>
-                <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${color}`} />
-            </div>
-        </div>
-        <h3 className="text-3xl sm:text-4xl font-extrabold text-[#1A1A1A] mb-1">{value}</h3>
-        <p className="text-xs sm:text-sm font-bold text-[#4A4A4A] uppercase tracking-wide">{label}</p>
-    </Link>
-);
-
-const QuickAction = ({ icon: Icon, label, description, to, variant = "default" }) => (
-    <Link
-        to={to}
-        className={`p-5 sm:p-6 rounded-xl border-2 transition-all hover:shadow-md active:scale-[0.98] ${variant === "primary"
-            ? "bg-[#1A1A1A] text-white border-[#1A1A1A] hover:bg-[#333]"
-            : "bg-white border-[#E5E3DF] hover:border-[#1A1A1A]"
-            }`}
-    >
-        <div className="flex items-start gap-3 sm:gap-4">
-            <div className={`p-2.5 sm:p-3 rounded-lg flex-shrink-0 ${variant === "primary" ? "bg-white/20" : "bg-[#FFF8F0]"
-                }`}>
-                <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${variant === "primary" ? "text-white" : "text-[#1A1A1A]"}`} />
-            </div>
-            <div className="flex-1">
-                <h4 className={`text-base sm:text-lg font-bold mb-1 ${variant === "primary" ? "text-white" : "text-[#1A1A1A]"}`}>
-                    {label}
-                </h4>
-                <p className={`text-xs sm:text-sm ${variant === "primary" ? "text-white/80" : "text-[#4A4A4A]"}`}>
-                    {description}
-                </p>
-            </div>
-        </div>
-    </Link>
-);
 
 export default function Overview() {
     const { subdomains, loading } = useDashboard();
+    const { user } = useAuth();
 
-    // Calculate stats
+    const totalCount = subdomains.length;
     const activeCount = subdomains.filter(d => d.status === "Active").length;
-    // const pendingCount = subdomains.filter(d => d.status === "Pending").length;
-
-    // Domains expiring within 30 days
     const expiringCount = subdomains.filter(d => {
         if (!d.expiresAt) return false;
-        const daysUntilExpiry = Math.ceil((new Date(d.expiresAt) - new Date()) / (1000 * 60 * 60 * 24));
-        return daysUntilExpiry > 0 && daysUntilExpiry <= 30;
+        const days = Math.ceil((new Date(d.expiresAt) - new Date()) / 864e5);
+        return days > 0 && days <= 30;
     }).length;
+    const expiredCount = subdomains.filter(d => d.status === "Expired").length;
+
+    // Most recently created domains (up to 3)
+    const recentDomains = [...subdomains]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 3);
+
+    const greeting = () => {
+        const h = new Date().getHours();
+        if (h < 12) return "Good morning";
+        if (h < 17) return "Good afternoon";
+        return "Good evening";
+    };
 
     if (loading && subdomains.length === 0) {
         return (
-            <div className="max-w-5xl mx-auto">
-                <div className="animate-pulse space-y-6">
-                    <div className="h-8 bg-gray-200 rounded w-32"></div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {[1, 2, 3].map(i => (
-                            <div key={i} className="h-32 bg-gray-200 rounded-xl"></div>
-                        ))}
-                    </div>
+            <div className="max-w-5xl animate-pulse space-y-6">
+                <div className="h-8 bg-[#E5E3DF] rounded-lg w-48" />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[...Array(4)].map((_, i) => <div key={i} className="h-28 bg-[#E5E3DF] rounded-2xl" />)}
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-[#E5E3DF] rounded-2xl" />)}
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
-            {/* Header */}
-            <div className="pr-2">
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#1A1A1A] mb-1 sm:mb-2">Dashboard Overview</h1>
-                <p className="text-xs sm:text-sm md:text-base text-[#4A4A4A]">Manage your subdomains and monitor activity</p>
-            </div>
+        <div className="max-w-5xl space-y-6">
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                <StatCard
-                    icon={Globe}
-                    label="Total Domains"
-                    value={subdomains.length}
-                    color="text-[#1e8e3e]"
-                    bgColor="bg-[#e6f4ea]"
-                />
-                <StatCard
-                    icon={CheckCircle}
-                    label="Active"
-                    value={activeCount}
-                    color="text-[#1e8e3e]"
-                    bgColor="bg-[#e6f4ea]"
-                />
-                <StatCard
-                    icon={Clock}
-                    label="Expiring Soon"
-                    value={expiringCount}
-                    color="text-[#b06000]"
-                    bgColor="bg-[#fff4e6]"
-                />
-            </div>
-
-            {/* Quick Actions */}
-            <div>
-                <h2 className="text-lg sm:text-xl font-bold text-[#1A1A1A] mb-4">Quick Actions</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <QuickAction
-                        icon={Plus}
-                        label="Register New Domain"
-                        description="Claim a new domain (indevs.in or sryze.cc)"
-                        to="/register"
-                        variant="primary"
-                    />
-                    <QuickAction
-                        icon={Globe}
-                        label="Manage Domains"
-                        description="View and manage your existing domains"
-                        to="/my-domains"
-                    />
-                    <QuickAction
-                        icon={Settings}
-                        label="DNS Configuration"
-                        description="Learn about NS delegation and DNS setup"
-                        to="/dns"
-                    />
-                    <QuickAction
-                        icon={TrendingUp}
-                        label="Account Settings"
-                        description="Update your profile and preferences"
-                        to="/settings"
-                    />
-                </div>
-            </div>
-
-            {/* Welcome message for new users */}
-            {subdomains.length === 0 && !loading && (
-                <div className="bg-gradient-to-br from-[#FFF8F0] to-[#FFE8D6] rounded-xl border-2 border-[#E5E3DF] p-6 sm:p-8 text-center">
-                    <Globe className="w-12 h-12 sm:w-16 sm:h-16 text-[#FF6B35] mx-auto mb-4" />
-                    <h3 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] mb-3">Welcome to Indevs! 🎉</h3>
-                    <p className="text-sm sm:text-base text-[#4A4A4A] mb-6 max-w-md mx-auto">
-                        Get started by registering your first domain. It's free and takes less than a minute!
+            {/* ── Greeting header ── */}
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+                <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#FF6B35] mb-1">Dashboard</p>
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#1A1A1A] leading-tight">
+                        {greeting()}, {user?.name?.split(" ")[0] || "there"} 👋
+                    </h1>
+                    <p className="text-sm text-[#888] mt-1">
+                        {totalCount === 0 ? "Register your first free domain to get started." : `You have ${totalCount} domain${totalCount > 1 ? "s" : ""} on Stackryze.`}
                     </p>
-                    <Button asChild className="bg-[#1A1A1A] text-white hover:bg-[#333] font-bold w-full sm:w-auto">
-                        <Link to="/register">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Register Your First Domain
+                </div>
+                <Link
+                    to="/register"
+                    className="inline-flex items-center gap-2 self-start sm:self-auto px-4 py-2.5 bg-[#1A1A1A] text-white text-sm font-bold rounded-xl hover:bg-[#FF6B35] transition-colors shadow-[3px_3px_0px_0px_#FFD23F]"
+                >
+                    <Plus className="w-4 h-4" />
+                    Register Domain
+                </Link>
+            </div>
+
+            {/* ── Stat cards ── */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <StatCard
+                    value={totalCount}
+                    label="Total"
+                    sub="domains"
+                    accent="#1A1A1A"
+                    dot="#FFD23F"
+                    to="/my-domains"
+                />
+                <StatCard
+                    value={activeCount}
+                    label="Active"
+                    sub="running"
+                    accent="#1e8e3e"
+                    dot="#4ade80"
+                    to="/my-domains"
+                />
+                <StatCard
+                    value={expiringCount}
+                    label="Expiring"
+                    sub="within 30 days"
+                    accent={expiringCount > 0 ? "#b45309" : "#888"}
+                    dot={expiringCount > 0 ? "#fbbf24" : "#D1D5DB"}
+                    to="/my-domains"
+                    warn={expiringCount > 0}
+                />
+                <StatCard
+                    value={expiredCount}
+                    label="Expired"
+                    sub="domains"
+                    accent={expiredCount > 0 ? "#c5221f" : "#888"}
+                    dot={expiredCount > 0 ? "#f87171" : "#D1D5DB"}
+                    to="/my-domains"
+                />
+            </div>
+
+            {/* ── KYC / GitHub verification status ── */}
+            {user?.githubVerified ? (
+                <div className="flex items-center gap-3 px-4 py-3 bg-green-50 border-2 border-green-200 rounded-xl">
+                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-green-800">KYC Verified</p>
+                        <p className="text-xs text-green-600">GitHub identity verified — you have access to sryze.cc domains &amp; higher limits</p>
+                    </div>
+                    <span className="shrink-0 text-xs font-bold px-2.5 py-1 bg-green-600 text-white rounded-full">Verified</span>
+                </div>
+            ) : (
+                <Link
+                    to="/github-kyc"
+                    className="group flex items-center gap-3 px-4 py-3 bg-amber-50 border-2 border-amber-200 rounded-xl hover:border-amber-400 transition-colors"
+                >
+                    <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                        <Shield className="w-4 h-4 text-amber-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-amber-900">KYC Not Verified</p>
+                        <p className="text-xs text-amber-700">Complete GitHub verification to unlock sryze.cc domains and extra limits</p>
+                    </div>
+                    <span className="shrink-0 text-xs font-bold px-2.5 py-1 border-2 border-amber-400 text-amber-700 rounded-full group-hover:bg-amber-400 group-hover:text-white transition-colors">
+                        Verify →
+                    </span>
+                </Link>
+            )}
+
+            {/* ── Main grid ── */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                {/* Manage Domains */}
+                <ActionCard
+                    to="/my-domains"
+                    icon={Globe}
+                    iconBg="bg-[#e6f4ea]"
+                    iconColor="text-[#1e8e3e]"
+                    title="Manage Domains"
+                    desc="View, renew, or delete your existing domains"
+                />
+
+                {/* DNS Config */}
+                <ActionCard
+                    to="/dns"
+                    icon={Settings}
+                    iconBg="bg-[#FFF0E6]"
+                    iconColor="text-[#FF6B35]"
+                    title="DNS Configuration"
+                    desc="Set up NS delegation and manage DNS records"
+                />
+
+                {/* WHOIS Lookup */}
+                <ActionCard
+                    to="/whois"
+                    icon={Search}
+                    iconBg="bg-[#F0F4FF]"
+                    iconColor="text-[#4F6EF7]"
+                    title="WHOIS Lookup"
+                    desc="Look up registration info for any domain"
+                    external={false}
+                />
+
+                {/* History */}
+                <ActionCard
+                    to="/history"
+                    icon={History}
+                    iconBg="bg-[#FFF8E6]"
+                    iconColor="text-[#b45309]"
+                    title="Activity History"
+                    desc="Track changes, renewals, and domain events"
+                />
+            </div>
+
+            {/* ── Recent domains ── */}
+            {recentDomains.length > 0 && (
+                <div>
+                    <div className="flex items-center justify-between mb-3">
+                        <h2 className="text-sm font-bold uppercase tracking-widest text-[#4A4A4A]">Recent Domains</h2>
+                        <Link to="/my-domains" className="text-xs font-bold text-[#888] hover:text-[#FF6B35] flex items-center gap-1 transition-colors">
+                            View all <ArrowRight className="w-3 h-3" />
                         </Link>
-                    </Button>
+                    </div>
+                    <div className="space-y-2">
+                        {recentDomains.map(d => (
+                            <Link
+                                key={d._id}
+                                to={`/domains/${d._id}`}
+                                className="flex items-center justify-between px-4 py-3 bg-white border-2 border-[#E5E3DF] rounded-xl hover:border-[#1A1A1A] transition-all group"
+                            >
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <div className="w-8 h-8 rounded-lg bg-[#FFF8F0] border border-[#E5E3DF] flex items-center justify-center flex-shrink-0">
+                                        <Globe className="w-4 h-4 text-[#FF6B35]" />
+                                    </div>
+                                    <span className="font-mono font-bold text-sm text-[#1A1A1A] truncate">
+                                        {d.name}.{d.domain}
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-3 flex-shrink-0">
+                                    <StatusPill status={d.status} />
+                                    <ArrowRight className="w-3.5 h-3.5 text-[#ccc] group-hover:text-[#1A1A1A] transition-colors" />
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* ── Empty state ── */}
+            {totalCount === 0 && !loading && (
+                <div className="bg-gradient-to-br from-[#FFF8F0] to-[#FFE8D6] rounded-2xl border-2 border-[#FFD23F] p-8 text-center">
+                    <div className="w-14 h-14 bg-[#FF6B35] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[3px_3px_0px_0px_#1A1A1A]">
+                        <Globe className="w-7 h-7 text-white" />
+                    </div>
+                    <h3 className="text-xl font-extrabold text-[#1A1A1A] mb-2">Register your first domain 🎉</h3>
+                    <p className="text-sm text-[#4A4A4A] mb-5 max-w-sm mx-auto">
+                        It's free, instant, and takes under a minute. Get a personal <strong>.indevs.in</strong> or <strong>.sryze.cc</strong> subdomain.
+                    </p>
+                    <Link
+                        to="/register"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1A1A1A] text-white font-bold text-sm rounded-xl hover:bg-[#FF6B35] transition-colors shadow-[3px_3px_0px_0px_#FFD23F]"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Register Now — It's Free
+                    </Link>
                 </div>
             )}
         </div>
+    );
+}
+
+function StatCard({ value, label, sub, accent, dot, to, warn }) {
+    return (
+        <Link
+            to={to}
+            className={`bg-white border-2 border-[#E5E3DF] rounded-2xl p-4 md:p-5 hover:border-[#1A1A1A] transition-all hover:shadow-[3px_3px_0px_0px_#1A1A1A] group ${warn ? "border-amber-200" : ""}`}
+        >
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
+                    <span className="text-xs font-bold uppercase tracking-widest text-[#888]">{label}</span>
+                </div>
+                <ArrowRight className="w-3 h-3 text-[#ccc] group-hover:text-[#1A1A1A] transition-colors" />
+            </div>
+            <p className="text-3xl md:text-4xl font-extrabold leading-none" style={{ color: accent }}>{value}</p>
+            <p className="text-xs text-[#aaa] mt-1">{sub}</p>
+        </Link>
+    );
+}
+
+function ActionCard({ to, icon: Icon, iconBg, iconColor, title, desc }) {
+    return (
+        <Link
+            to={to}
+            className="bg-white border-2 border-[#E5E3DF] rounded-2xl p-5 flex items-center gap-4 hover:border-[#1A1A1A] transition-all hover:shadow-[3px_3px_0px_0px_#1A1A1A] group"
+        >
+            <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0`}>
+                <Icon className={`w-5 h-5 ${iconColor}`} />
+            </div>
+            <div className="flex-1 min-w-0">
+                <p className="font-bold text-sm text-[#1A1A1A]">{title}</p>
+                <p className="text-xs text-[#888] mt-0.5 truncate">{desc}</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-[#ccc] group-hover:text-[#1A1A1A] transition-colors flex-shrink-0" />
+        </Link>
+    );
+}
+
+function StatusPill({ status }) {
+    const map = {
+        Active:          { bg: "bg-green-50",  text: "text-green-700",  dot: "bg-green-500" },
+        Expired:         { bg: "bg-red-50",    text: "text-red-600",    dot: "bg-red-400" },
+        Suspended:       { bg: "bg-red-50",    text: "text-red-600",    dot: "bg-red-400" },
+        "Pending Deletion": { bg: "bg-amber-50", text: "text-amber-700", dot: "bg-amber-400" },
+        "Pending DNS":   { bg: "bg-blue-50",   text: "text-blue-700",   dot: "bg-blue-400" },
+    };
+    const s = map[status] || { bg: "bg-gray-100", text: "text-gray-500", dot: "bg-gray-400" };
+    return (
+        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${s.bg} ${s.text}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
+            {status}
+        </span>
     );
 }

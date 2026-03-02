@@ -47,7 +47,7 @@ export function Footer() {
                             <h4 className="font-bold text-base mb-3 text-white">Platform</h4>
                             <ul className="space-y-2 text-sm">
                                 <li><a href="https://domain-docs.stackryze.com" target="_blank" className="text-[#E5E3DF] hover:text-[#FF6B35] transition-colors">Documentation</a></li>
-
+                                <li><a href="/whois" className="text-[#E5E3DF] hover:text-[#FF6B35] transition-colors">WHOIS Lookup</a></li>
                                 <li><a href="/about" className="text-[#E5E3DF] hover:text-[#FF6B35] transition-colors">About</a></li>
                             </ul>
                         </div>

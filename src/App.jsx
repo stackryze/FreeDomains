@@ -25,6 +25,7 @@ import DNSRecords from './pages/dashboard/DNS';
 import Register from './pages/dashboard/Register';
 import Settings from './pages/dashboard/Settings';
 import { Donate } from './pages/Donate';
+import { Whois } from './pages/Whois';
 import DomainDetail from './pages/dashboard/DomainDetail';
 import Help from './pages/dashboard/Help';
 import History from './pages/dashboard/History';
@@ -112,6 +113,9 @@ function App() {
 
           {/* Public Donate Page */}
           <Route path="/donate" element={<Donate />} />
+
+          {/* WHOIS Lookup Page */}
+          <Route path="/whois" element={<Whois />} />
 
           {/* Legal Pages */}
           <Route path="/terms" element={<Terms />} />
