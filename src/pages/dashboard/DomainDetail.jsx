@@ -527,7 +527,7 @@ export default function DomainDetail() {
 
             {/* Danger Zone - Only show if not already pending deletion or suspended */}
             {
-                domain.status !== 'Pending Deletion' && domain.status !== 'Suspended' && (
+                domain.status !== 'Pending Deletion' && (
                     <div className="bg-white border-2 border-red-200 rounded-xl p-4 sm:p-5 md:p-6 mb-6">
                         <div className="flex items-center gap-2 mb-4">
                             <AlertCircle className="w-5 h-5 text-red-600" />
