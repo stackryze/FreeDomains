@@ -290,6 +290,22 @@ export default function DomainDetail() {
                 </div>
             )}
 
+            {/* Show lock notice for Suspended Status */}
+            {domain.status === 'Suspended' && (
+                <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
+                    <div className="flex items-start gap-3">
+                        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                            <p className="text-sm font-bold text-red-900 mb-1">Domain Suspended</p>
+                            <p className="text-sm text-red-800">
+                                This domain has been suspended by an administrator and cannot be modified. DNS resolution is disabled.
+                                Please contact support if you believe this is an error.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* DNS Configuration */}
             <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 sm:p-5 md:p-6 mb-4">
                 <div className="flex flex-col gap-2 mb-4">
@@ -298,7 +314,7 @@ export default function DomainDetail() {
                             <Globe className="w-5 h-5 text-[#1A1A1A] flex-shrink-0" />
                             <h2 className="text-lg sm:text-xl font-bold text-[#1A1A1A] truncate">DNS Configuration</h2>
                         </div>
-                        {domain.status !== 'Pending Deletion' && (
+                        {domain.status !== 'Pending Deletion' && domain.status !== 'Suspended' && (
                             <Button
                                 onClick={() => {
                                     if (isEditingDNS) {
@@ -454,7 +470,7 @@ export default function DomainDetail() {
                         )}
                         <Button
                             onClick={() => setDnsVerifyOpen(true)}
-                            disabled={domain.status === 'Pending Deletion'}
+                            disabled={domain.status === 'Pending Deletion' || domain.status === 'Suspended'}
                             className="bg-[#F59E0B] text-black hover:bg-[#D97706] font-bold flex-shrink-0"
                         >
                             <KeyRound className="w-4 h-4 mr-2" />
@@ -509,9 +525,9 @@ export default function DomainDetail() {
                 </AlertDialogContent>
             </AlertDialog>
 
-            {/* Danger Zone - Only show if not already pending deletion */}
+            {/* Danger Zone - Only show if not already pending deletion or suspended */}
             {
-                domain.status !== 'Pending Deletion' && (
+                domain.status !== 'Pending Deletion' && domain.status !== 'Suspended' && (
                     <div className="bg-white border-2 border-red-200 rounded-xl p-4 sm:p-5 md:p-6 mb-6">
                         <div className="flex items-center gap-2 mb-4">
                             <AlertCircle className="w-5 h-5 text-red-600" />
