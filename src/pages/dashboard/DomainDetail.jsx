@@ -160,9 +160,17 @@ export default function DomainDetail() {
         <div className="max-w-5xl space-y-4 sm:space-y-5">
             {/* Header */}
             <div>
-                <Link to="/my-domains" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6B7280] hover:text-[#111827] mb-3 transition-colors">
-                    <ArrowLeft className="w-3.5 h-3.5" /> Back to My Domains
-                </Link>
+                <div className="flex items-center justify-between mb-3">
+                    <Link
+                        to="/my-domains"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-[#374151] border-[1px] border-[#D1D5DB] rounded-lg hover:border-[#9CA3AF] hover:bg-[#F9FAFB] transition-colors"
+                    >
+                        <ArrowLeft className="w-3.5 h-3.5" /> Back to My Domains
+                    </Link>
+                    <span className="font-mono text-[10px] text-[#6B7280] bg-[#F3F4F6] border-[1px] border-[#E5E7EB] px-2.5 py-1 rounded-md" title={`Domain ID: ${domain._id}`}>
+                        ID: {domain._id}
+                    </span>
+                </div>
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                     <div className="min-w-0">
                         <p className="text-xs font-bold uppercase tracking-widest text-[#FF6B35] mb-1">Domain Detail</p>
