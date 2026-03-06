@@ -60,7 +60,7 @@ export function FeatureCards() {
             <div
               key={idx}
               className={`
-                bg-white border-4 border-[#1A1A1A] rounded-2xl p-8 lg:p-10 h-full
+                bg-white border-4 border-[#1A1A1A] rounded-xl p-6 h-full
                 hover:translate-x-1 hover:translate-y-1 hover:shadow-none
                 transition-all duration-150 flex flex-col justify-between
               `}
@@ -74,7 +74,7 @@ export function FeatureCards() {
                     {feature.number}
                   </span>
                   <div
-                    className="w-14 h-14 flex items-center justify-center border-2 border-[#1A1A1A] rounded-xl"
+                    className="w-14 h-14 flex items-center justify-center border-2 border-[#1A1A1A] rounded-lg"
                     style={{ backgroundColor: feature.bg }}
                   >
                     <feature.icon className="w-7 h-7 text-[#1A1A1A]" />

@@ -118,22 +118,22 @@ export function HeroSection() {
 
           {/* Right: Search */}
           <div className="w-full">
-            <div className="bg-white border-4 border-[#1A1A1A] p-6 shadow-[8px_8px_0px_0px_#FF6B35] w-full">
+            <div className="bg-white border-4 border-[#1A1A1A] rounded-2xl p-6 shadow-[8px_8px_0px_0px_#FF6B35] w-full">
               <label className="block text-xs font-bold uppercase mb-4 text-[#1A1A1A]">
                 Check Availability
               </label>
 
               <div className="space-y-3">
-                <div className="flex border-2 border-[#1A1A1A] relative">
+                <div className="flex border-2 border-[#1A1A1A] rounded-xl overflow-hidden relative">
                   <input
                     type="text"
                     placeholder="yourname"
                     value={domain}
                     onChange={(e) => setDomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
                     onKeyPress={handleKeyPress}
-                    className="flex-1 px-3 py-3 text-base md:text-lg font-mono min-w-0"
+                    className="flex-1 px-3 py-3 text-base md:text-lg font-mono min-w-0 border-none focus:outline-none"
                   />
-                  <span className="px-3 py-3 bg-[#E5E3DF] text-[#6B6B6B] font-mono text-xs md:text-sm whitespace-nowrap flex items-center">
+                  <span className="px-3 py-3 bg-[#E5E3DF] text-[#6B6B6B] font-mono text-xs md:text-sm whitespace-nowrap flex items-center border-l-2 border-[#1A1A1A]">
                     .indevs.in
                   </span>
                   {isChecking && (
@@ -146,7 +146,7 @@ export function HeroSection() {
                 <button
                   onClick={handleClaimClick}
                   disabled={isChecking || (domain.length > 0 && domain.length < 3)}
-                  className="w-full bg-[#FFD23F] text-[#1A1A1A] py-3 px-4 font-bold uppercase text-xs hover:bg-[#1A1A1A] hover:text-[#FFD23F] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[#FFD23F] text-[#1A1A1A] rounded-xl py-3 px-4 font-bold uppercase text-xs hover:bg-[#1A1A1A] hover:text-[#FFD23F] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isChecking ? (
                     <>
