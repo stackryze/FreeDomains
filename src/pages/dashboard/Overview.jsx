@@ -191,19 +191,19 @@ export default function Overview() {
                             <Link
                                 key={d._id}
                                 to={`/domains/${d._id}`}
-                                className="flex items-center justify-between px-4 py-3 bg-white border-2 border-[#E5E3DF] rounded-xl hover:border-[#1A1A1A] transition-all group"
+                                className="flex items-center justify-between px-4 py-3 bg-white border-[1px] border-[#D1D5DB] rounded-xl hover:border-[#9CA3AF] transition-colors group"
                             >
                                 <div className="flex items-center gap-3 min-w-0">
-                                    <div className="w-8 h-8 rounded-lg bg-[#FFF8F0] border border-[#E5E3DF] flex items-center justify-center flex-shrink-0">
-                                        <Globe className="w-4 h-4 text-[#FF6B35]" />
+                                    <div className="w-8 h-8 rounded-lg bg-[#F9FAFB] border-[1px] border-[#E5E7EB] flex items-center justify-center flex-shrink-0">
+                                        <Globe className="w-4 h-4 text-[#4B5563]" />
                                     </div>
-                                    <span className="font-mono font-bold text-sm text-[#1A1A1A] truncate">
+                                    <span className="font-mono font-bold text-sm text-[#111827] truncate">
                                         {d.name}.{d.domain}
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-3 flex-shrink-0">
                                     <StatusPill status={d.status} />
-                                    <ArrowRight className="w-3.5 h-3.5 text-[#ccc] group-hover:text-[#1A1A1A] transition-colors" />
+                                    <ArrowRight className="w-4 h-4 text-[#9CA3AF] group-hover:text-[#4B5563] group-hover:translate-x-1 transition-all" />
                                 </div>
                             </Link>
                         ))}
@@ -238,17 +238,17 @@ function StatCard({ value, label, sub, accent, dot, to, warn }) {
     return (
         <Link
             to={to}
-            className={`bg-white border-2 border-[#E5E3DF] rounded-2xl p-4 md:p-5 hover:border-[#1A1A1A] transition-all hover:shadow-[3px_3px_0px_0px_#1A1A1A] group ${warn ? "border-amber-200" : ""}`}
+            className={`bg-white border-[1px] border-[#D1D5DB] rounded-2xl p-4 md:p-5 hover:border-[#9CA3AF] transition-colors group ${warn ? "border-amber-300" : ""}`}
         >
             <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
-                    <span className="text-xs font-bold uppercase tracking-widest text-[#888]">{label}</span>
+                <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
+                    <span className="text-sm font-semibold uppercase tracking-wider text-[#4B5563]">{label}</span>
                 </div>
-                <ArrowRight className="w-3 h-3 text-[#ccc] group-hover:text-[#1A1A1A] transition-colors" />
+                <ArrowRight className="w-4 h-4 text-[#9CA3AF] group-hover:text-[#4B5563] transition-colors" />
             </div>
-            <p className="text-3xl md:text-4xl font-extrabold leading-none" style={{ color: accent }}>{value}</p>
-            <p className="text-xs text-[#aaa] mt-1">{sub}</p>
+            <p className="text-3xl md:text-4xl font-bold leading-none mt-3" style={{ color: accent }}>{value}</p>
+            <p className="text-sm text-[#6B7280] mt-1">{sub}</p>
         </Link>
     );
 }
@@ -257,16 +257,16 @@ function ActionCard({ to, icon: Icon, iconBg, iconColor, title, desc }) {
     return (
         <Link
             to={to}
-            className="bg-white border-2 border-[#E5E3DF] rounded-2xl p-5 flex items-center gap-4 hover:border-[#1A1A1A] transition-all hover:shadow-[3px_3px_0px_0px_#1A1A1A] group"
+            className="bg-white border-[1px] border-[#D1D5DB] rounded-2xl p-5 flex items-center gap-4 hover:border-[#9CA3AF] transition-colors group"
         >
-            <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0`}>
-                <Icon className={`w-5 h-5 ${iconColor}`} />
+            <div className={`w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0`}>
+                <Icon className={`w-6 h-6 ${iconColor}`} />
             </div>
             <div className="flex-1 min-w-0">
-                <p className="font-bold text-sm text-[#1A1A1A]">{title}</p>
-                <p className="text-xs text-[#888] mt-0.5 truncate">{desc}</p>
+                <p className="font-bold text-base text-[#111827]">{title}</p>
+                <p className="text-sm text-[#4B5563] mt-0.5 truncate">{desc}</p>
             </div>
-            <ArrowRight className="w-4 h-4 text-[#ccc] group-hover:text-[#1A1A1A] transition-colors flex-shrink-0" />
+            <ArrowRight className="w-5 h-5 text-[#9CA3AF] group-hover:text-[#4B5563] group-hover:translate-x-1 transition-all flex-shrink-0" />
         </Link>
     );
 }
