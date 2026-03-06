@@ -157,28 +157,23 @@ export default function DomainDetail() {
         : null;
 
     return (
-        <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
+        <div className="max-w-5xl space-y-4 sm:space-y-5">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
-                <div className="flex items-start gap-2 sm:gap-4 min-w-0 flex-1 w-full">
-                    <Button variant="outline" asChild className="border-2 flex-shrink-0">
-                        <Link to="/my-domains">
-                            <ArrowLeft className="w-4 h-4 sm:mr-2" />
-                            <span className="hidden sm:inline">Back</span>
-                        </Link>
-                    </Button>
-                    <div className="min-w-0 flex-1">
-                        <h1 className="text-base sm:text-xl md:text-2xl font-bold text-[#1A1A1A] flex items-center gap-2 break-all" title={`${domain.name}.${domain.domain || 'indevs.in'}`}>
-                            <Globe className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" />
-                            <span className="leading-tight">{domain.name}<wbr />.{domain.domain || 'indevs.in'}</span>
+            <div>
+                <Link to="/my-domains" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6B7280] hover:text-[#111827] mb-3 transition-colors">
+                    <ArrowLeft className="w-3.5 h-3.5" /> Back to My Domains
+                </Link>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                    <div className="min-w-0">
+                        <p className="text-xs font-bold uppercase tracking-widest text-[#FF6B35] mb-1">Domain Detail</p>
+                        <h1 className="text-2xl md:text-3xl font-extrabold text-[#111827] flex items-center gap-2 break-all leading-tight" title={`${domain.name}.${domain.domain || 'indevs.in'}`}>
+                            <Globe className="w-6 h-6 flex-shrink-0" />
+                            <span>{domain.name}<wbr />.{domain.domain || 'indevs.in'}</span>
                         </h1>
-                        <p className="text-[#4A4A4A] text-[10px] sm:text-xs mt-1 truncate" title={`Domain ID: ${domain._id}`}>Domain ID: {domain._id}</p>
                     </div>
-                </div>
-                <div className="flex-shrink-0 w-full sm:w-auto">
                     {domain.status === 'Pending Deletion' && (
-                        <div className="flex items-center text-xs sm:text-sm text-amber-600 font-medium mt-2">
-                            <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                        <div className="flex items-center gap-1.5 text-xs text-amber-600 font-semibold mt-1">
+                            <AlertCircle className="w-3.5 h-3.5" />
                             Deletion request under review
                         </div>
                     )}
@@ -187,7 +182,7 @@ export default function DomainDetail() {
 
             {/* Status Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 space-y-2">
+                <div className="bg-white border-[1px] border-[#D1D5DB] rounded-xl p-4 space-y-2">
                     <div className="flex justify-between items-center">
                         <p className="text-[10px] font-bold text-[#888] uppercase">Status</p>
                         <p className={`text-base font-extrabold ${domain.status === 'Active' ? 'text-[#1e8e3e]' :
@@ -217,7 +212,7 @@ export default function DomainDetail() {
                 </div>
 
                 {/* Right Column - Expiry Info */}
-                <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 flex flex-col justify-center">
+                <div className="bg-white border-[1px] border-[#D1D5DB] rounded-xl p-4 flex flex-col justify-center">
                     <div className="flex justify-between items-center">
                         <div>
                             <p className="text-[10px] font-bold text-[#888] uppercase">Expires On</p>
@@ -307,7 +302,7 @@ export default function DomainDetail() {
             )}
 
             {/* DNS Configuration */}
-            <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 sm:p-5 md:p-6 mb-4">
+            <div className="bg-white border-[1px] border-[#D1D5DB] rounded-xl p-4 sm:p-5 md:p-6 mb-4">
                 <div className="flex flex-col gap-2 mb-4">
                     <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -438,13 +433,13 @@ export default function DomainDetail() {
             </div>
 
             {/* DNS Verification Section */}
-            <div className="bg-white border-2 border-[#E5E3DF] rounded-xl p-4 sm:p-5 md:p-6 mb-4">
+            <div className="bg-white border-[1px] border-[#D1D5DB] rounded-xl p-4 sm:p-5 md:p-6 mb-4">
                 <div className="flex items-center gap-2 mb-4">
                     <KeyRound className="w-5 h-5 text-[#F59E0B]" />
                     <h2 className="text-lg sm:text-xl font-bold text-[#1A1A1A]">DNS Verification</h2>
                 </div>
                 
-                <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 space-y-3">
+                <div className="bg-amber-50 border-[1px] border-amber-200 rounded-lg p-4 space-y-3">
                     <p className="text-xs sm:text-sm text-[#4A4A4A]">
                         If you want to manage this domain's DNS records on <a href="https://dns.stackryze.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-semibold">dns.stackryze.com</a>, 
                         you need to verify ownership. Add the zone on the DNS platform, copy the verification code it gives you, and paste it here.
@@ -482,7 +477,7 @@ export default function DomainDetail() {
 
             {/* DNS Verification Dialog */}
             <AlertDialog open={dnsVerifyOpen} onOpenChange={setDnsVerifyOpen}>
-                <AlertDialogContent className="bg-white border-2 border-[#E5E3DF]">
+                <AlertDialogContent className="bg-white border-[1px] border-[#D1D5DB]">
                     <AlertDialogHeader>
                         <AlertDialogTitle className="flex items-center gap-2">
                             <KeyRound className="w-5 h-5 text-[#F59E0B]" />
@@ -528,12 +523,12 @@ export default function DomainDetail() {
             {/* Danger Zone - Only show if not already pending deletion or suspended */}
             {
                 domain.status !== 'Pending Deletion' && (
-                    <div className="bg-white border-2 border-red-200 rounded-xl p-4 sm:p-5 md:p-6 mb-6">
+                    <div className="bg-white border-[1px] border-red-200 rounded-xl p-4 sm:p-5 md:p-6 mb-6">
                         <div className="flex items-center gap-2 mb-4">
-                            <AlertCircle className="w-5 h-5 text-red-600" />
-                            <h2 className="text-lg font-bold text-red-600">Danger Zone</h2>
+                            <AlertCircle className="w-5 h-5 text-red-500" />
+                            <h2 className="text-sm font-semibold text-red-600 uppercase tracking-wider">Danger Zone</h2>
                         </div>
-                        <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+                        <div className="bg-red-50 border-[1px] border-red-200 rounded-lg p-4">
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                 <div className="flex-1">
                                     <p className="font-bold text-red-900 mb-1">Request Deletion</p>
@@ -554,7 +549,7 @@ export default function DomainDetail() {
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                <AlertDialogContent className="bg-white border-2 border-[#E5E3DF]">
+                <AlertDialogContent className="bg-white border-[1px] border-[#D1D5DB]">
                     <AlertDialogHeader>
                         <AlertDialogTitle>Delete Domain?</AlertDialogTitle>
                         <AlertDialogDescription>

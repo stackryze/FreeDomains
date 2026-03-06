@@ -143,29 +143,30 @@ export default function MyDomains() {
     };
 
     return (
-        <div className="max-w-5xl mx-auto">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4">
+        <div className="max-w-5xl">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
                 <div>
-                    <h1 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] capitalize">My Domains</h1>
-                    <p className="text-xs sm:text-sm text-[#4A4A4A] mt-1">Manage your active domains and configurations.</p>
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#FF6B35] mb-1">Account</p>
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#111827] leading-tight">My Domains</h1>
+                    <p className="text-sm text-[#6B7280] mt-1">Manage your active domains and configurations.</p>
                 </div>
-                <Button
+                <button
                     onClick={refresh}
                     disabled={loading}
-                    className="bg-[#1A1A1A] text-white hover:bg-[#333] font-bold w-full sm:w-auto"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-white border-[1px] border-[#D1D5DB] text-[#374151] font-semibold text-sm rounded-lg hover:border-[#9CA3AF] transition-colors disabled:opacity-50 self-start sm:self-auto"
                 >
-                    <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    {loading ? 'Refreshing...' : 'Refresh List'}
-                </Button>
+                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                    {loading ? 'Refreshing…' : 'Refresh'}
+                </button>
             </div>
 
             {/* Pending GitHub Verification Banner */}
             {pendingVerification && (
-                <div className="mb-6 border-2 rounded-xl p-5 bg-yellow-50 border-yellow-300">
-                    <div className="flex items-start gap-4">
-                        <Shield className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <div className="mb-5 border-[1px] rounded-xl p-4 bg-amber-50 border-amber-200">
+                    <div className="flex items-start gap-3">
+                        <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                         <div className="flex-1">
-                            <h3 className="font-bold text-yellow-900 text-lg mb-1">
+                            <h3 className="font-semibold text-amber-900 text-sm mb-1">
                                 GitHub Verification Pending
                             </h3>
                             <p className="text-sm text-yellow-800 mb-3">
@@ -192,16 +193,16 @@ export default function MyDomains() {
             )}
 
             {/* Domain Usage Indicator */}
-            <div className="mb-4 border-2 rounded-xl p-4 bg-blue-50 border-blue-200">
+            <div className="mb-5 border-[1px] rounded-xl p-4 bg-white border-[#D1D5DB]">
                 <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                        <Info className="w-5 h-5 text-blue-600" />
-                        <span className="font-bold text-sm text-blue-900">
+                        <Info className="w-4 h-4 text-[#6B7280]" />
+                        <span className="font-semibold text-sm text-[#111827]">
                             Domain Limits
                         </span>
                     </div>
                     <Link to="/register">
-                        <Button size="sm" className="bg-[#1A1A1A] hover:bg-[#FF6B35] text-white font-bold shadow-sm transition-colors">
+                        <Button size="sm" className="bg-[#111827] hover:bg-[#374151] text-white font-semibold shadow-none transition-colors">
                             <Plus className="w-4 h-4 mr-2" />
                             Register New
                         </Button>
@@ -218,10 +219,10 @@ export default function MyDomains() {
                         return (
                             <>
                                 <div className="flex items-center justify-between mb-1">
-                                    <span className="text-xs font-semibold text-blue-900">indevs.in Domains</span>
-                                    <span className="text-xs text-blue-800">{indevsCount} / {indevsLimit}</span>
+                                    <span className="text-xs font-semibold text-[#374151]">indevs.in Domains</span>
+                                    <span className="text-xs text-[#6B7280]">{indevsCount} / {indevsLimit}</span>
                                 </div>
-                                <div className="w-full bg-white rounded-full h-2">
+                                <div className="w-full bg-[#E5E7EB] rounded-full h-2">
                                     <div
                                         className={`h-2 rounded-full transition-all ${
                                             indevsPercent >= 100 ? 'bg-red-600'
@@ -258,12 +259,12 @@ export default function MyDomains() {
                 {/* Sryze.cc Usage */}
                 <div>
                     <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-semibold text-blue-900">sryze.cc Domains</span>
-                        <span className="text-xs text-blue-800">
+                        <span className="text-xs font-semibold text-[#374151]">sryze.cc Domains</span>
+                        <span className="text-xs text-[#6B7280]">
                             {subdomains?.filter(s => s.domain === 'sryze.cc').length || 0} / {user?.sryzeDomainsLimit || 1}
                         </span>
                     </div>
-                    <div className="w-full bg-white rounded-full h-2">
+                    <div className="w-full bg-[#E5E7EB] rounded-full h-2">
                         <div
                             className={`h-2 rounded-full transition-all ${((subdomains?.filter(s => s.domain === 'sryze.cc').length || 0) / (user?.sryzeDomainsLimit || 1) * 100) >= 100
                                     ? 'bg-red-600'
@@ -277,17 +278,17 @@ export default function MyDomains() {
                 </div>
             </div>
 
-            <div className="bg-white border-2 border-[#E5E3DF] rounded-2xl overflow-hidden shadow-sm">
+            <div className="bg-white border-[1px] border-[#D1D5DB] rounded-xl overflow-hidden">
                 <table className="w-full text-left border-collapse">
-                    <thead className="bg-[#FFF8F0] border-b-2 border-[#E5E3DF]">
+                    <thead className="bg-[#F9FAFB] border-b border-[#E5E7EB]">
                         <tr>
-                            <th className="p-3 md:p-4 text-xs font-bold text-[#888] uppercase tracking-wider w-full md:w-5/12">Domain Information</th>
-                            <th className="p-3 md:p-4 text-xs font-bold text-[#888] uppercase tracking-wider hidden md:table-cell md:w-3/12">Nameservers</th>
-                            <th className="p-3 md:p-4 text-xs font-bold text-[#888] uppercase tracking-wider hidden md:table-cell md:w-2/12">Status / Expiry</th>
+                            <th className="p-3 md:p-4 text-xs font-bold text-[#6B7280] uppercase tracking-wider w-full md:w-5/12">Domain Information</th>
+                            <th className="p-3 md:p-4 text-xs font-bold text-[#6B7280] uppercase tracking-wider hidden md:table-cell md:w-3/12">Nameservers</th>
+                            <th className="p-3 md:p-4 text-xs font-bold text-[#6B7280] uppercase tracking-wider hidden md:table-cell md:w-2/12">Status / Expiry</th>
                             <th className="p-3 md:p-4 text-right w-auto md:w-2/12"></th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#E5E3DF]">
+                    <tbody className="divide-y divide-[#F3F4F6]">
                         {loading && subdomains.length === 0 ? (
                             <tr>
                                 <td colSpan={4} className="p-10 text-center text-[#888]">
@@ -370,7 +371,7 @@ export default function MyDomains() {
                                             variant="outline"
                                             size="sm"
                                             asChild
-                                            className="h-7 md:h-8 px-2.5 font-bold border-2 border-[#E5E3DF] hover:border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all text-[10px] md:text-xs whitespace-nowrap bg-white text-[#4A4A4A]"
+                                            className="h-7 md:h-8 px-2.5 font-bold border-[1px] border-[#D1D5DB] hover:border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all text-[10px] md:text-xs whitespace-nowrap bg-white text-[#4A4A4A]"
                                         >
                                             <Link to={`/domains/${domain._id}`}>
                                                 <SettingsIcon className="w-3 h-3 md:w-3.5 md:h-3.5 mr-1.5" />
@@ -410,7 +411,7 @@ export default function MyDomains() {
             </div >
 
             <Dialog open={manageOpen} onOpenChange={setManageOpen}>
-                <DialogContent className="bg-white border-2 border-[#E5E3DF] max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogContent className="bg-white border-[1px] border-[#D1D5DB] max-w-2xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle className="text-2xl font-bold flex items-center gap-2">
                             <Globe className="w-6 h-6" />
@@ -422,14 +423,14 @@ export default function MyDomains() {
                     <div className="py-4 space-y-8">
                         {/* Status Overview */}
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-[#FFF8F0] border border-[#E5E3DF] rounded-lg p-4">
+                            <div className="bg-[#FFF8F0] border-[1px] border-[#D1D5DB] rounded-lg p-4">
                                 <h5 className="font-bold text-[#1A1A1A] text-sm mb-1">HTTPS Security</h5>
                                 <div className="flex items-center gap-2 text-xs font-medium text-[#1e8e3e]">
                                     <div className="w-2 h-2 rounded-full bg-[#1e8e3e] animate-pulse"></div>
                                     Active (Let's Encrypt)
                                 </div>
                             </div>
-                            <div className="bg-[#FFF8F0] border border-[#E5E3DF] rounded-lg p-4">
+                            <div className="bg-[#FFF8F0] border-[1px] border-[#D1D5DB] rounded-lg p-4">
                                 <h5 className="font-bold text-[#1A1A1A] text-sm mb-1">Expiration</h5>
                                 <div className="flex items-center gap-2 text-xs font-medium text-[#b06000]">
                                     <Clock className="w-3 h-3" />
@@ -447,7 +448,7 @@ export default function MyDomains() {
                                 <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-gray-100 rounded text-gray-500">Advanced</span>
                             </div>
 
-                            <div className="border-2 border-[#E5E3DF] rounded-xl p-5 space-y-4 hover:border-[#aaa] transition-colors focus-within:border-[#1A1A1A]">
+                            <div className="border-[1px] border-[#D1D5DB] rounded-xl p-5 space-y-4 hover:border-[#aaa] transition-colors focus-within:border-[#1A1A1A]">
                                 <p className="text-sm text-[#4A4A4A]">
                                     Custom nameservers allow you to manage your DNS records via external providers.
                                     Leave blank to use default <b>Stackryze</b> nameservers.
@@ -550,7 +551,7 @@ export default function MyDomains() {
             </Dialog>
 
             <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
-                <AlertDialogContent className="bg-white border-2 border-[#E5E3DF]">
+                <AlertDialogContent className="bg-white border-[1px] border-[#D1D5DB]">
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>

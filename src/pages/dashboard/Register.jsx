@@ -245,38 +245,32 @@ export default function Register() {
     };
 
     return (
-        <div className="max-w-3xl mx-auto">
-            {/* Hero Header */}
-            <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 bg-[#FFD23F] px-4 py-2 rounded-full mb-4">
-                    <Sparkles className="w-4 h-4 text-[#1A1A1A]" />
-                    <span className="text-sm font-bold text-[#1A1A1A] uppercase tracking-wider">Free Forever</span>
-                </div>
-                <h1 className="text-4xl md:text-5xl font-extrabold text-[#1A1A1A] mb-3">
-                    Claim Your Domain
-                </h1>
-                <p className="text-lg text-[#4A4A4A]">
-                    Get your unique subdomain in seconds
-                </p>
+        <div className="max-w-3xl">
+            {/* Header */}
+            <div className="mb-7">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#FF6B35] mb-1">Account</p>
+                <h1 className="text-2xl md:text-3xl font-extrabold text-[#111827] leading-tight">Register a Domain</h1>
+                <p className="text-sm text-[#6B7280] mt-1">Claim your free subdomain in seconds — valid for 1 year.</p>
             </div>
 
             {/* Domain Usage Indicator */}
-            <div className={`mb-6 border-2 rounded-xl p-5 ${!canRegisterMore ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200'
-                }`}>
+            <div className={`mb-5 border-[1px] rounded-xl p-4 ${
+                !canRegisterMore ? 'bg-red-50 border-red-200' : 'bg-white border-[#D1D5DB]'
+            }`}>
                 <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                        <Info className={`w-5 h-5 ${!canRegisterMore ? 'text-red-600' : 'text-blue-600'}`} />
-                        <span className={`font-bold text-sm ${!canRegisterMore ? 'text-red-900' : 'text-blue-900'}`}>
+                        <Info className={`w-4 h-4 ${!canRegisterMore ? 'text-red-500' : 'text-[#6B7280]'}`} />
+                        <span className={`font-semibold text-sm ${!canRegisterMore ? 'text-red-800' : 'text-[#111827]'}`}>
                             {rootDomain} Usage: {domainsRegistered} / {domainLimit}
                         </span>
                     </div>
                     {!canRegisterMore && (
-                        <span className="text-xs font-bold text-red-600 uppercase">Limit Reached</span>
+                        <span className="text-xs font-semibold text-red-600 uppercase">Limit Reached</span>
                     )}
                 </div>
 
                 {/* Progress Bar */}
-                <div className="w-full bg-white rounded-full h-2.5 mb-2">
+                <div className="w-full bg-[#E5E7EB] rounded-full h-2.5 mb-2">
                     <div
                         className={`h-2.5 rounded-full transition-all ${usagePercentage >= 100 ? 'bg-red-600' : usagePercentage >= 80 ? 'bg-amber-500' : 'bg-green-600'
                             }`}
@@ -305,7 +299,7 @@ export default function Register() {
             </div>
 
             {/* Registration Card */}
-            <div className="bg-white p-8 md:p-10 rounded-2xl border-2 border-[#E5E3DF] shadow-lg">
+            <div className="bg-white p-6 md:p-8 rounded-xl border-[1px] border-[#D1D5DB]">
                 {!canRegisterMore && (
                     <Alert className="mb-6 border-red-200 bg-red-50">
                         <AlertCircle className="h-4 w-4 text-red-600" />
@@ -363,7 +357,7 @@ export default function Register() {
                                     <svg className={`w-4 h-4 text-white flex-shrink-0 transition-transform duration-150 ${dropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
                                 </button>
                                 {dropdownOpen && (
-                                    <div className="absolute top-[calc(100%+4px)] left-0 right-0 z-50 border-2 border-[#1A1A1A] rounded-xl overflow-hidden shadow-[4px_4px_0px_0px_#1A1A1A]">
+                                    <div className="absolute top-[calc(100%+4px)] left-0 right-0 z-50 border-2 border-[#1A1A1A] rounded-xl overflow-hidden ">
                                         {availableDomains.map(d => (
                                             <button
                                                 key={d}
@@ -428,7 +422,7 @@ export default function Register() {
 
                         const isSryze = rootDomain === 'sryze.cc';
                         return (
-                            <div className="bg-[#FFF8F0] border-2 border-[#E5E3DF] rounded-xl p-6">
+                            <div className="bg-[#FFF8F0] border-[1px] border-[#D1D5DB] rounded-xl p-6">
                                 <div className="flex items-start gap-4">
                                     <div className="w-10 h-10 rounded-full bg-[#FFD23F]/20 border-2 border-[#FFD23F] flex items-center justify-center flex-shrink-0 mt-0.5">
                                         <span className="text-xl">⭐</span>
@@ -457,7 +451,7 @@ export default function Register() {
                                                 href="https://github.com/stackryze/FreeDomains"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center justify-center gap-2 bg-[#FFD23F] text-[#1A1A1A] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-[#FFB800] transition-all shadow-[3px_3px_0px_0px_#1A1A1A] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]"
+                                                className="inline-flex items-center justify-center gap-2 bg-[#FFD23F] text-[#1A1A1A] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-[#FFB800] transition-all  hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]"
                                             >
                                                 ⭐ Star the Repo ↗
                                             </a>
@@ -482,15 +476,15 @@ export default function Register() {
                        (rootDomain === 'indevs.in' && !canRegisterMore && !user?.githubVerified)) && (
                         <>
                             {/* Registration Period Info */}
-                            <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-5">
+                            <div className="bg-[#F9FAFB] border-[1px] border-[#E5E7EB] rounded-xl p-4">
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm font-bold text-blue-900">Registration Period:</span>
-                                        <span className="text-sm font-extrabold text-blue-900">1 Year</span>
+                                        <span className="text-sm font-semibold text-[#4B5563]">Registration Period:</span>
+                                        <span className="text-sm font-bold text-[#111827]">1 Year</span>
                                     </div>
-                                    <div className="flex items-center justify-between border-t border-blue-200 pt-3">
-                                        <span className="text-sm font-bold text-blue-900">Expires On:</span>
-                                        <span className="text-sm font-mono font-bold text-blue-900">
+                                    <div className="flex items-center justify-between border-t border-[#E5E7EB] pt-3">
+                                        <span className="text-sm font-semibold text-[#4B5563]">Expires On:</span>
+                                        <span className="text-sm font-mono font-bold text-[#111827]">
                                             {new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', {
                                                 year: 'numeric',
                                                 month: 'short',
@@ -507,7 +501,7 @@ export default function Register() {
                             </div>
 
                             {/* Terms Acceptance */}
-                            <div className="bg-[#FFF8F0] border-2 border-[#E5E3DF] rounded-xl p-6">
+                            <div className="bg-[#FFF8F0] border-[1px] border-[#D1D5DB] rounded-xl p-6">
                                 <div className="flex items-start gap-4">
                                     <Checkbox
                                         id="tos"
@@ -553,7 +547,7 @@ export default function Register() {
                             (rootDomain === 'sryze.cc' && !user?.githubVerified) ||
                             (rootDomain === 'indevs.in' && !canRegisterMore && !user?.githubVerified)
                         }
-                        className="w-full bg-[#FFD23F] hover:bg-[#FFB800] text-[#1A1A1A] font-extrabold py-6 text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[4px_4px_0px_0px_#1A1A1A] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] disabled:shadow-none"
+                        className="w-full bg-[#FFD23F] hover:bg-[#FFB800] text-[#1A1A1A] font-extrabold py-6 text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed  hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] disabled:shadow-none"
                     >
                         {isSubmitting ? (
                             <>
