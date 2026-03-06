@@ -83,6 +83,17 @@ export default function Login() {
         setIsLoading(true);
         try {
             const res = await subdomainAPI.post('/auth/email/login', { email, password });
+            
+            // Check if 2FA is required
+            if (res.requires2FA) {
+                toast({
+                    title: "2FA Required",
+                    description: "Redirecting to verification...",
+                });
+                window.location.href = `/verify-2fa?email=${encodeURIComponent(res.email || email)}`;
+                return;
+            }
+            
             if (res.success) {
                 // Force full page reload to refresh auth context
                 window.location.href = '/dashboard';

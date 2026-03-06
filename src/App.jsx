@@ -12,6 +12,7 @@ import { IncidentAnnouncement } from './components/IncidentAnnouncement';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import VerifyEmail from './pages/VerifyEmail';
+import Verify2FA from './pages/Verify2FA';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import SetPassword from './pages/SetPassword';
@@ -86,6 +87,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/verify-2fa" element={<Verify2FA />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/complete-profile" element={<CompleteProfile />} />
