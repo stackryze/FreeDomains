@@ -24,6 +24,7 @@ Our goal is simple: remove cost and complexity from getting online.
 ---
 
 ## 🌍 Available Domains
+>Note:Domain availability may change over time.check the dashboard for the latest extensions.
 
 - **.indevs.in**
 - **.sryze.cc**
@@ -61,6 +62,12 @@ Supported by organizations that believe in open-source and developer communities
 ---
 
 ## 🚀 Get Started
+## Quick Start
+1.Visit  https://domain.stackryze.com   
+2.Sign in with GitHub.
+3.Search for an available domain.
+4.configure DNS records.
+5.Connecting your hosting provider.
 
 **Dashboard:** https://domain.stackryze.com   
 **GitHub:** https://github.com/stackryze/FreeDomains/issues  
