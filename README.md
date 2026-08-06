@@ -29,6 +29,7 @@ Our goal is simple: remove cost and complexity from getting online.
 - **.sryze.cc**
 - **.ryzedns.org**
 - **.nx.kg**
+- **.ryzn.pro**
 *More extensions coming soon.*
 
 ---
