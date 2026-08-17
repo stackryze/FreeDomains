@@ -16,7 +16,7 @@ export default function DomainDetail() {
     const { toast } = useToast();
 
     const [domain, setDomain] = useState(null);
-    const [nameservers, setNameservers] = useState(["ns1.stackryze.com", "ns2.stackryze.com"]);
+    const [nameservers, setNameservers] = useState(["ns1.stackryze.com", "ns2.stackryze.com", "ns3.stackryze.com"]);
     const MAX_NS = 6;
     const MIN_NS = 2;
     const [isEditingDNS, setIsEditingDNS] = useState(false);
@@ -40,7 +40,7 @@ export default function DomainDetail() {
                 while (padded.length < MIN_NS) padded.push('');
                 setNameservers(padded);
             } else {
-                setNameservers(["ns1.stackryze.com", "ns2.stackryze.com"]);
+                setNameservers(["ns1.stackryze.com", "ns2.stackryze.com", "ns3.stackryze.com"]);
             }
         }
         // Only set loading to false after we've checked the subdomains
@@ -334,7 +334,7 @@ export default function DomainDetail() {
                                             while (padded.length < MIN_NS) padded.push('');
                                             setNameservers(padded);
                                         } else {
-                                            setNameservers(["ns1.stackryze.com", "ns2.stackryze.com"]);
+                                            setNameservers(["ns1.stackryze.com", "ns2.stackryze.com", "ns3.stackryze.com"]);
                                         }
                                         setIsEditingDNS(false);
                                     } else {
@@ -364,7 +364,7 @@ export default function DomainDetail() {
                         <h3 className="font-bold text-slate-900 dark:text-white mb-2">Nameservers (NS Records)</h3>
                         <p className="text-sm text-slate-900 dark:text-white mb-4">
                             Custom nameservers allow you to manage your DNS records via external providers like Cloudflare or Route53.
-                            NS1 and NS2 are required. You can add up to {MAX_NS} nameservers total.
+                            NS1 and NS2 are required; we recommend adding NS3 too. You can add up to {MAX_NS} nameservers total.
                         </p>
 
                         <div className="space-y-3">

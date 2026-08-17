@@ -40,15 +40,11 @@ export function AuthProvider({ children }) {
         window.location.href = `${API_URL}/auth/${provider}`;
     };
 
-    const logout = async () => {
-        try {
-            const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-            await fetch(`${API_URL}/auth/logout`, { method: "POST", credentials: "include" });
-            setUser(null);
-            window.location.href = "/"; // Force full reload/redirect to home
-        } catch (error) {
-            console.error("Logout failed", error);
-        }
+    const logout = () => {
+        // Full ZITADEL SSO logout: backend destroys the session and ends the ZITADEL session.
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        setUser(null);
+        window.location.href = `${API_URL}/auth/zitadel/logout`;
     };
 
     return (

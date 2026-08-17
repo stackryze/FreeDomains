@@ -59,18 +59,7 @@ const ProtectedRoute = ({ children }) => {
     return children ? children : <Outlet />;
   }
 
-  // 1. Force Password Set Flow
-  if (user && !user.hasPassword) {
-    if (location !== '/set-password') {
-      return <Navigate to="/set-password" replace />;
-    }
-  }
-
-  // 2. Prevent access to Set Password if already set
-  if (user && user.hasPassword && location === '/set-password') {
-    return <Navigate to="/dashboard" replace />;
-  }
-
+  // Identity (email/password) is managed by ZITADEL — no in-app password/profile gate.
   return children ? children : <Outlet />;
 };
 
