@@ -213,8 +213,10 @@ export default function Signup() {
                         </div>
                         <Link to="/" className="flex items-center gap-2 shrink-0">
                             <img src="/stackryze_logo_black.png" alt="Stackryze Logo" className="h-8 w-auto dark:hidden" />
-                        <img src="/stackryze_logo_white.png" alt="Stackryze Logo" className="h-8 w-auto hidden dark:block" />
+                            <img src="/stackryze_logo_white.png" alt="Stackryze Logo" className="h-8 w-auto hidden dark:block" />
                         </Link>
+                    </div>
+
                     <button
                         type="button"
                         onClick={() => login("zitadel")}
