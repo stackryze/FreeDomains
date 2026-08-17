@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useToast } from "../hooks/use-toast";
 import { subdomainAPI } from "../lib/api";
-import { Loader2, CheckCircle, Info, Check, X, Eye, EyeOff } from "lucide-react";
+import { Loader2, CheckCircle, Info, Check, X, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { Turnstile } from '@marsidev/react-turnstile';
 import { Header } from "../components/header";
+import { useAuth } from "../context/auth-context";
 
 // Allowed email domains
 const ALLOWED_EMAIL_DOMAINS = [
@@ -25,6 +26,7 @@ const isAllowedEmailProvider = (email) => {
 };
 
 export default function Signup() {
+    const { login } = useAuth();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const message = searchParams.get('message');
