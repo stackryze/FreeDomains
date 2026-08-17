@@ -215,6 +215,18 @@ export default function Signup() {
                             <img src="/stackryze_logo_black.png" alt="Stackryze Logo" className="h-8 w-auto dark:hidden" />
                         <img src="/stackryze_logo_white.png" alt="Stackryze Logo" className="h-8 w-auto hidden dark:block" />
                         </Link>
+                    <button
+                        type="button"
+                        onClick={() => login("zitadel")}
+                        className="w-full flex items-center justify-center gap-3 bg-black text-white dark:bg-white dark:text-black py-3.5 rounded-xl font-medium text-sm hover:bg-neutral-800 dark:hover:bg-slate-200 transition-all duration-300 shadow-sm mb-6"
+                    >
+                        <ShieldCheck className="w-5 h-5" />
+                        Continue with Stackryze
+                    </button>
+
+                    <div className="relative my-6 text-center">
+                        <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200 dark:border-white/10"></div></div>
+                        <span className="relative bg-white dark:bg-[#111] px-3 text-xs text-slate-400 uppercase tracking-wider">Or register manually</span>
                     </div>
 
                     <form onSubmit={handleSignup} className="space-y-5">
