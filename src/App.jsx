@@ -44,7 +44,7 @@ const ProtectedRoute = ({ children }) => {
   // BUT: Allow them to complete migration steps first (/set-password, /complete-profile)
   // This ensures backend migration flow isn't disrupted
   const isNoreplyEmail = user?.email?.includes('noreply.github.com');
-  const allowedPagesForNoreply = ['/change-email', '/set-password', '/complete-profile'];
+  const allowedPagesForNoreply = ['/change-email', '/complete-profile'];
   if (isNoreplyEmail && !allowedPagesForNoreply.includes(location)) {
     return <Navigate to={`/change-email?email=${encodeURIComponent(user.email)}&required=true`} replace />;
   }
