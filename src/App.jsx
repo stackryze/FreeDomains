@@ -76,15 +76,15 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/verify-2fa" element={<Verify2FA />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-2fa" element={<Navigate to="/login" replace />} />
+          <Route path="/forgot-password" element={<Navigate to="/login" replace />} />
+          <Route path="/reset-password" element={<Navigate to="/login" replace />} />
           <Route path="/complete-profile" element={<CompleteProfile />} />
           <Route path="/whois" element={<Whois />} />
 
-          {/* Protected Routes including Set Password Force Flow */}
+          {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/set-password" element={<SetPassword />} />
+            <Route path="/set-password" element={<Navigate to="/dashboard" replace />} />
             <Route path="/change-email" element={<ChangeEmail />} />
           </Route>
 
