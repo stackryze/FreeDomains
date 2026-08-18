@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Cloudflare Wrangler local state / config redirect
+.wrangler/

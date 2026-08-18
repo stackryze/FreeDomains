@@ -12,7 +12,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "rm -rf .wrangler/deploy && npx wrangler deploy"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^1.17.1",
