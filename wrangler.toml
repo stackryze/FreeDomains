@@ -1,4 +1,9 @@
-# Cloudflare Pages project config (also enables `wrangler pages dev` / `deploy`).
-name = "freedomains"
-pages_build_output_dir = "dist"
+# Cloudflare Worker serving the static SPA build (Workers static assets).
+# `wrangler deploy` uploads ./dist and serves it; no Worker script needed.
+name = "stackryze-domains-frontend"
 compatibility_date = "2026-08-18"
+
+[assets]
+directory = "./dist"
+# Serve index.html for unknown client-side (React Router) routes.
+not_found_handling = "single-page-application"
