@@ -1,0 +1,3 @@
+# Cloudflare Pages SPA fallback: serve the app shell for any client-side
+# (React Router) route so deep links and refreshes don't 404.
+/*    /index.html   200

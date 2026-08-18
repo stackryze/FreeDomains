@@ -1,0 +1,4 @@
+# Cloudflare Pages project config (also enables `wrangler pages dev` / `deploy`).
+name = "freedomains"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-08-18"
