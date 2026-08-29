@@ -54,7 +54,7 @@ export default function Register() {
                 description: 'GitHub verification confirmed! You can now register your sryze.cc, ryzedns.org, nx.kg, or ryzn.pro domain.',
                 className: 'bg-green-50 border-green-200 text-green-900'
             });
-        } else if (kyc === 'not_verified') {
+        } else if (kyc === 'not_starred') {
             toast({
                 title: '🛡️ Verification Required',
                 description: `@${githubUser || 'You'} haven\'t verified your GitHub account yet. Connect your GitHub to verify and try again!`,
