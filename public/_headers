@@ -4,6 +4,8 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://challenges.cloudflare.com https://*.hcaptcha.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.hcaptcha.com; font-src 'self' data:; connect-src 'self' https://*.stackryze.com https://challenges.cloudflare.com https://*.hcaptcha.com; frame-src https://challenges.cloudflare.com https://*.hcaptcha.com
 
 # Vite emits content-hashed filenames under /assets — safe to cache forever.
 /assets/*

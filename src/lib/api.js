@@ -5,17 +5,52 @@
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// CSRF double-submit-cookie name set by the backend (middleware/csrf.js).
+// Must match CSRF_COOKIE_NAME there (default: 'freedomains.csrf').
+const CSRF_COOKIE_NAME = 'freedomains.csrf';
+const CSRF_HEADER_NAME = 'x-csrf-token';
+
+/**
+ * Read a cookie value by name. The CSRF cookie is intentionally non-httpOnly
+ * so the frontend can read it here and echo it back as a header the backend
+ * verifies against the cookie (double-submit pattern). An attacker's
+ * cross-site page cannot read this cookie itself (same-origin policy), so it
+ * cannot forge a matching header even though the cookie is sent automatically
+ * by the browser on cross-site requests.
+ */
+function getCookie(name) {
+    const match = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith(`${name}=`));
+    return match ? decodeURIComponent(match.split('=').slice(1).join('=')) : undefined;
+}
+
 /**
  * Make authenticated API request
  */
 async function apiRequest(endpoint, options = {}) {
+    const method = (options.method || 'GET').toUpperCase();
+    const headers = {
+        'Content-Type': 'application/json',
+        // Custom header forces a CORS preflight on every request, which the
+        // backend's origin allow-list then enforces; also required so simple
+        // cross-site requests can't reach this API (2026-10-30 audit fix).
+        'X-Requested-With': 'XMLHttpRequest',
+        ...options.headers,
+    };
+
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+        const csrfToken = getCookie(CSRF_COOKIE_NAME);
+        if (csrfToken) {
+            headers[CSRF_HEADER_NAME] = csrfToken;
+        }
+    }
+
     const config = {
         ...options,
+        method,
         credentials: 'include', // Send cookies for session authentication
-        headers: {
-            'Content-Type': 'application/json',
-            ...options.headers,
-        },
+        headers,
     };
 
     try {
@@ -169,6 +204,13 @@ export const subdomainAPI = {
     post: async (endpoint, data) => {
         return apiRequest(endpoint, {
             method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
+
+    patch: async (endpoint, data) => {
+        return apiRequest(endpoint, {
+            method: 'PATCH',
             body: JSON.stringify(data),
         });
     },

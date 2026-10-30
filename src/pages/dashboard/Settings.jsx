@@ -8,8 +8,6 @@ import {
 import { subdomainAPI } from "@/lib/api";
 import { toast } from "sonner";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
 function Toggle({ enabled, onChange, loading }) {
     return (
         <button
@@ -51,16 +49,13 @@ export default function Settings() {
     const handlePrivacyToggle = async (enabled) => {
         try {
             setPrivacyLoading(true);
-            const res = await fetch(`${API_BASE}/subdomains/whois-privacy`, {
-                method: "PATCH", credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ enabled }),
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error);
+            // Routed through subdomainAPI (not a raw fetch) so the CSRF
+            // header and shared error handling are applied consistently
+            // (2026-10-30 security audit fix).
+            const data = await subdomainAPI.patch("/subdomains/whois-privacy", { enabled });
             setWhoisPrivacy(data.whoisPrivacy);
             toast.success(data.message);
-        } catch (err) { toast.error(err.message); }
+        } catch (err) { toast.error(err.data?.error || err.message); }
         finally { setPrivacyLoading(false); }
     };
 

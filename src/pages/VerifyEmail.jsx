@@ -59,8 +59,14 @@ export default function VerifyEmail() {
                 description: "Logging you in...",
             });
 
-            // Use redirect from response or default to dashboard
-            const redirectTo = response.redirect || '/dashboard';
+            // Use redirect from response or default to dashboard.
+            // Defense-in-depth (2026-10-30 audit): only ever follow a
+            // same-origin relative path here, even though the backend
+            // currently only ever returns a fixed '/dashboard' value.
+            let redirectTo = response.redirect || '/dashboard';
+            if (typeof redirectTo !== 'string' || !redirectTo.startsWith('/') || redirectTo.startsWith('//')) {
+                redirectTo = '/dashboard';
+            }
 
             // Refresh auth context then navigate
             setTimeout(() => {
