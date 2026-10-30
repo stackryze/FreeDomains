@@ -1,5 +1,36 @@
 import { useEffect, useState } from "react";
 import { Activity, Globe2, ShieldCheck, Users } from "lucide-react";
+import { useCountUp } from "@/hooks/useCountUp";
+import { chipColor } from "@/lib/chips";
+
+function StatCard({ stat, index }) {
+  const { ref, display } = useCountUp(stat.value);
+  return (
+    <div
+      ref={ref}
+      className="group relative bg-card/70 backdrop-blur-md rounded-2xl p-5 md:p-6 flex flex-col justify-between hover:bg-card transition-all duration-150 shadow-border"
+    >
+      <div className="flex items-center justify-between mb-6">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center bg-secondary border border-border transition-transform duration-150 group-hover:scale-105"
+          style={{ color: chipColor(index + 4) }}
+        >
+          <stat.icon className="w-5 h-5" strokeWidth={1.75} />
+        </div>
+        <span className="text-[10px] md:text-xs font-mono text-muted-foreground uppercase tracking-widest"></span>
+      </div>
+
+      <div>
+        <div className="text-3xl md:text-4xl font-bold font-mono text-foreground tracking-tight mb-1 tabular-nums">
+          {display}
+        </div>
+        <div className="text-xs md:text-sm font-medium text-muted-foreground">
+          {stat.label}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function LiveStatsSection() {
   const [stats, setStats] = useState({
@@ -31,10 +62,10 @@ export function LiveStatsSection() {
   }, []);
 
   const statItems = [
-    { label: "Active Users", value: stats.totalUsers, icon: Users, accent: "text-signal", bg: "bg-signal/10", border: "border-signal/20" },
-    { label: "Domains Active", value: stats.activeDomains, icon: Globe2, accent: "text-sky-400", bg: "bg-sky-400/10", border: "border-sky-400/20" },
-    { label: "Countries Served", value: stats.countries, icon: Activity, accent: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-400/20" },
-    { label: "Global DNS Servers", value: stats.nameservers, icon: ShieldCheck, accent: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-400/20" }
+    { label: "Active Users", value: stats.totalUsers, icon: Users },
+    { label: "Domains Active", value: stats.activeDomains, icon: Globe2 },
+    { label: "Countries Served", value: stats.countries, icon: Activity },
+    { label: "Global DNS Servers", value: stats.nameservers, icon: ShieldCheck }
   ];
 
   return (
@@ -48,7 +79,7 @@ export function LiveStatsSection() {
           <span>Live Network Metrics</span>
         </div>
         <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-          Trusted by developers <span className="italic text-gradient-signal">worldwide</span>
+          Trusted by developers <span className="text-gradient-signal">worldwide</span>
         </h2>
         <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
           Real-time telemetry across our global authoritative DNS infrastructure.
@@ -57,29 +88,9 @@ export function LiveStatsSection() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full">
         {statItems.map((stat, idx) => (
-          <div
-            key={idx}
-            className="group relative bg-card/70 backdrop-blur-md border border-border rounded-2xl p-5 md:p-6 flex flex-col justify-between hover:border-foreground/25 hover:bg-card transition-all duration-300 shadow-sm"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${stat.bg} ${stat.accent} ${stat.border} border transition-transform duration-300 group-hover:scale-105`}>
-                <stat.icon className="w-5 h-5" strokeWidth={2.2} />
-              </div>
-              <span className="text-[10px] md:text-xs font-mono text-muted-foreground uppercase tracking-widest"></span>
-            </div>
-            
-            <div>
-              <div className="text-3xl md:text-4xl font-bold font-mono text-foreground tracking-tight mb-1">
-                {stat.value}
-              </div>
-              <div className="text-xs md:text-sm font-medium text-muted-foreground">
-                {stat.label}
-              </div>
-            </div>
-          </div>
+          <StatCard key={idx} stat={stat} index={idx} />
         ))}
       </div>
     </div>
   );
 }
-

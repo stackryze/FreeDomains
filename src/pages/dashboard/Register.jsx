@@ -274,7 +274,7 @@ export default function Register() {
         <div className="max-w-3xl">
             {/* Header */}
             <div className="mb-7">
-                <p className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-1">Account</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-signal mb-1">Account</p>
                 <h1 className="font-display text-2xl md:text-3xl font-medium text-foreground leading-tight">Register a Domain</h1>
                 <p className="text-sm text-foreground mt-1">Claim your free subdomain in seconds — valid for 1 year.</p>
             </div>
@@ -297,18 +297,18 @@ export default function Register() {
                 {/* Progress Bar */}
                 <div className="w-full bg-accent dark:bg-secondary rounded-full h-2.5 mb-2">
                     <div
-                        className={`h-2.5 rounded-full transition-all ${usagePercentage >= 100 ? 'bg-red-600 dark:bg-red-500' : usagePercentage >= 80 ? 'bg-amber-500' : 'bg-green-600 dark:bg-green-500'
+                        className={`h-2.5 rounded-full transition-all ${usagePercentage >= 100 ? 'bg-destructive' : usagePercentage >= 80 ? 'bg-warning' : 'bg-success'
                             }`}
                         style={{ width: `${Math.min(usagePercentage, 100)}%` }}
                     ></div>
                 </div>
 
                 {!canRegisterMore ? (
-                    <p className="text-xs text-red-700 dark:text-red-400 font-medium mt-2">
+                    <p className="text-xs text-destructive font-medium mt-2">
                         0 {rootDomain} domains remaining
                     </p>
                 ) : (
-                    <p className="text-xs text-blue-700 dark:text-blue-400 font-medium mt-2">
+                    <p className="text-xs text-signal font-medium mt-2">
                         {domainLimit - domainsRegistered} {rootDomain} {domainLimit - domainsRegistered === 1 ? 'domain' : 'domains'} remaining
                     </p>
                 )}
@@ -393,9 +393,9 @@ export default function Register() {
 
                         {/* Status Messages */}
                         {domain.length > 0 && domain.length < 3 && (
-                            <div className="mt-4 flex items-start gap-3 p-4 bg-amber-50/90 dark:bg-amber-500/10 border border-amber-200/50 dark:border-amber-500/20 rounded-lg">
-                                <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                                <p className="text-sm font-medium text-amber-700 dark:text-amber-400">
+                            <div className="mt-4 flex items-start gap-3 p-4 bg-warning/90  border border-warning/50  rounded-lg">
+                                <AlertCircle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
+                                <p className="text-sm font-medium text-warning ">
                                     Domain name must be at least 3 characters. Keep typing!
                                 </p>
                             </div>
@@ -434,10 +434,10 @@ export default function Register() {
 
                         const isSryzeOrRyzeDns = rootDomain === 'sryze.cc' || rootDomain === 'ryzedns.org' || rootDomain === 'nx.kg' || rootDomain === 'ryzn.pro';
                         return (
-                            <div className="bg-amber-50/50 dark:bg-amber-500/10 border border-amber-200/50 dark:border-amber-500/20 rounded-xl p-4 sm:p-5">
+                            <div className="bg-warning/50  border border-warning/50  rounded-xl p-4 sm:p-5">
                                 <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                                    <div className="w-8 h-8 rounded-full bg-warning  border border-warning  flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <Shield className="w-4 h-4 text-warning " />
                                     </div>
                                     <div className="flex-1">
                                         <h3 className="font-display text-foreground text-base font-medium mb-1">
@@ -454,7 +454,7 @@ export default function Register() {
                                                 rel="noopener noreferrer"
                                                 className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white dark:bg-secondary text-foreground font-bold text-xs border border-border dark:border-foreground/25 hover:bg-muted dark:hover:bg-accent shadow-sm transition duration-200 cursor-pointer rounded-lg"
                                             >
-                                                <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                                                <Star className="w-3.5 h-3.5 text-warning fill-warning" />
                                                 Star Repo
                                             </a>
                                             {/* Step 2: Verify */}
@@ -507,11 +507,11 @@ export default function Register() {
                                         />
                                         <label htmlFor="tos" className="text-xs text-foreground leading-tight cursor-pointer flex-1 font-medium opacity-90">
                                             I agree to the{" "}
-                                            <a href="/terms" target="_blank" className="font-bold underline hover:text-orange-500 transition-colors">
+                                            <a href="/terms" target="_blank" className="font-bold underline hover:text-signal/80 transition-colors">
                                                 Terms of Service
                                             </a>
                                             {" "}and{" "}
-                                            <a href="/privacy" target="_blank" className="font-bold underline hover:text-orange-500 transition-colors">
+                                            <a href="/privacy" target="_blank" className="font-bold underline hover:text-signal/80 transition-colors">
                                                 Privacy Policy
                                             </a>
                                         </label>
@@ -560,12 +560,12 @@ export default function Register() {
                     </button>
 
                     {/* Info Notice */}
-                    <div className="bg-blue-50/50 dark:bg-blue-500/10 border border-blue-200/50 dark:border-blue-500/20 p-4 rounded-lg">
+                    <div className="bg-signal/10 border border-signal/20 p-4 rounded-lg">
                         <div className="flex gap-2">
-                            <Info className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-                            <div className="text-xs text-blue-700 dark:text-blue-400">
+                            <Info className="w-4 h-4 text-signal flex-shrink-0 mt-0.5" />
+                            <div className="text-xs text-foreground">
                                 <p className="font-bold mb-1">What happens next?</p>
-                                <ul className="space-y-0.5 font-medium opacity-90">
+                                <ul className="space-y-0.5 font-medium text-muted-foreground">
                                     <li>• Your domain will be registered instantly</li>
                                     <li>• Configure DNS nameservers from the management page</li>
                                 </ul>

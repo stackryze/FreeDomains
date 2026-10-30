@@ -1,5 +1,6 @@
 import { Globe2, Sparkles, Server, Zap, Shield, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { chipColor } from "@/lib/chips";
 
 export function DomainExtensionsSection() {
   const extensions = [
@@ -38,7 +39,7 @@ export function DomainExtensionsSection() {
           <span>Domain Registry</span>
         </div>
         <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-          Available <span className="italic text-gradient-signal">Namespaces</span>
+          Available <span className="text-gradient-signal">Namespaces</span>
         </h2>
         <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
           Curated extensions powered by Stackryze global authoritative DNS.
@@ -50,11 +51,14 @@ export function DomainExtensionsSection() {
           <Link
             key={idx}
             to="/register"
-            className="group flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/70 backdrop-blur-md px-4 py-3.5 transition-all duration-200 hover:border-foreground/25 hover:bg-card shadow-sm"
+            className="group flex items-center justify-between gap-4 rounded-2xl bg-card/70 backdrop-blur-md px-4 py-3.5 transition-all duration-150 hover:bg-card shadow-border"
           >
             <div className="flex items-center gap-3.5 min-w-0">
-              <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-secondary border border-border text-foreground shrink-0 transition-colors group-hover:border-foreground/20">
-                <item.icon className="w-4 h-4 text-signal" strokeWidth={2} />
+              <div
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-secondary border border-border shrink-0 transition-colors group-hover:border-foreground/20"
+                style={{ color: chipColor(idx) }}
+              >
+                <item.icon className="w-4 h-4" strokeWidth={2} />
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">

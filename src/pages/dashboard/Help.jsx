@@ -112,7 +112,7 @@ export default function Help() {
 
             {/* Header */}
             <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-orange-500 mb-2 flex items-center gap-2">
+                <p className="text-sm font-bold uppercase tracking-widest text-signal mb-2 flex items-center gap-2">
                     <LifeBuoy className="w-4 h-4" />
                     Support
                 </p>
@@ -124,7 +124,7 @@ export default function Help() {
 
             {/* Discord CTA */}
             <div className="bg-card/70 backdrop-blur-xl border border-border rounded-3xl p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-sm relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-signal/5 to-transparent pointer-events-none"></div>
                 <div className="flex items-start gap-4 relative z-10">
                     <div className="w-12 h-12 rounded-2xl bg-[#5865F2]/10 border border-[#5865F2]/20 flex items-center justify-center flex-shrink-0 shadow-inner">
                         <MessageCircle className="w-6 h-6 text-[#5865F2] fill-[#5865F2]/20" />
@@ -150,7 +150,7 @@ export default function Help() {
             <div className="bg-card/70 backdrop-blur-md border border-border rounded-3xl p-6 md:p-8 shadow-sm">
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="font-display text-xl font-medium text-foreground flex items-center gap-2">
-                        <Book className="w-5 h-5 text-orange-500" />
+                        <Book className="w-5 h-5 text-signal" />
                         Documentation
                     </h2>
                     <a
@@ -189,7 +189,7 @@ export default function Help() {
             {/* FAQ */}
             <div className="pt-4">
                 <h2 className="font-display text-xl font-medium text-foreground mb-6 flex items-center gap-2">
-                    <HelpCircle className="w-5 h-5 text-orange-500" />
+                    <HelpCircle className="w-5 h-5 text-signal" />
                     Frequently Asked Questions
                 </h2>
                 <div className="space-y-3">
@@ -200,7 +200,7 @@ export default function Help() {
             {/* Contact */}
             <div className="pt-4">
                 <h2 className="font-display text-xl font-medium text-foreground mb-6 flex items-center gap-2">
-                    <Mail className="w-5 h-5 text-orange-500" />
+                    <Mail className="w-5 h-5 text-signal" />
                     Email Support
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

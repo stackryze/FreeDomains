@@ -1,43 +1,58 @@
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
 @import "@fontsource-variable/bricolage-grotesque";
-@import "@fontsource/instrument-serif";
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
-  Stackryze FreeDomains — Official Brand Design System
-  Display: Instrument Serif / Bricolage Grotesque · UI: Geist · Data/Mono: Geist Mono
-  Signature Accent: Signal Green (oklch(72% 0.18 155) / oklch(78% 0.18 155))
+  Stackryze FreeDomains — "Relay" Design System
+  ------------------------------------------------
+  This is network infrastructure, not a consumer SaaS: subdomains, DNS
+  records, propagation, resolvers. The system reads like a NOC panel —
+  quiet ink/paper surfaces, one signal color, data set in mono.
+
+  Display: Bricolage Grotesque · UI: Geist · Data/Mono: Geist Mono
+  Signature accent: Relay Blue (oklch(62% 0.19 254))
+  Depth: borders only. No soft drop shadows on cards — elevation comes
+  from a single flat ring, matching a technical tool rather than a
+  glossy product page.
 */
 
 @theme {
-  --font-display: "Instrument Serif", "Bricolage Grotesque Variable", "Geist Variable", ui-sans-serif, system-ui, serif;
+  --font-display: "Bricolage Grotesque Variable", "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", monospace;
 
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
   --color-signal: var(--signal);
   --color-signal-foreground: var(--signal-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-surface-elevated: var(--surface-elevated);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -68,77 +83,144 @@ a[disabled],
 
 /* Global text selection styling */
 ::selection {
-  background: var(--foreground);
-  color: var(--background);
+  background: var(--signal);
+  color: var(--signal-foreground);
 }
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 236 21% 15%;
+    /* "Copper" — warm, crafted-tool palette for domain/DNS infrastructure.
+       One accent: a copper/amber signal — reads like an indicator lamp on
+       network equipment, warmer and more distinctive than the blue every
+       other dev tool reaches for. Neutrals carry a slight warm undertone
+       (hue ~55-70, chroma kept low) rather than cold/clinical gray. All
+       values in OKLCH for perceptual consistency and verified contrast. */
+    --background: oklch(98% 0.006 70);
+    --foreground: oklch(19% 0.012 55);
 
-    --card: 0 0% 100%;
-    --card-foreground: 236 21% 15%;
+    --card: oklch(99.4% 0.004 70);
+    --card-foreground: oklch(19% 0.012 55);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 236 21% 15%;
+    --popover: oklch(99.4% 0.004 70);
+    --popover-foreground: oklch(19% 0.012 55);
 
-    --primary: 236 21% 18%;
-    --primary-foreground: 0 0% 98%;
+    --primary: oklch(19% 0.012 55);
+    --primary-foreground: oklch(98% 0.006 70);
 
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 236 21% 18%;
+    --secondary: oklch(93% 0.009 60);
+    --secondary-foreground: oklch(22% 0.012 55);
 
-    --muted: 240 5% 95%;
-    --muted-foreground: 228 8% 46%;
+    --muted: oklch(93% 0.009 60);
+    --muted-foreground: oklch(46% 0.012 55);
 
-    --accent: 240 6% 92%;
-    --accent-foreground: 236 21% 18%;
+    --accent: oklch(89% 0.012 58);
+    --accent-foreground: oklch(22% 0.012 55);
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: oklch(55% 0.19 25);
+    --destructive-foreground: oklch(98% 0.01 25);
 
-    --border: 230 11% 90%;
-    --input: 230 11% 90%;
-    --ring: 147 48% 52%;
+    --border: oklch(88% 0.01 60);
+    --input: oklch(88% 0.01 60);
+    --ring: oklch(58% 0.16 50);
 
-    --radius: 0.625rem;
+    --radius: 0.5rem;
 
-    --signal: #4FBE7A;
-    --signal-foreground: #0F2A1B;
+    /* Copper Signal — warm amber, like an indicator lamp on network gear.
+       Distinct hue family from destructive (25) and warning (95), each
+       >15° apart in OKLCH hue per better-colors' status-separation rule. */
+    --signal: oklch(55% 0.15 50);
+    --signal-foreground: oklch(98% 0.01 60);
+    --warning: oklch(68% 0.15 95);
+    --warning-foreground: oklch(16% 0.02 95);
+    --success: oklch(62% 0.15 155);
+    --success-foreground: oklch(98% 0.01 155);
+    --info: oklch(62% 0.15 250);
+    --info-foreground: oklch(98% 0.01 250);
+
+    /* Fixed ink surface — used for chrome that stays dark regardless of
+       site theme (footer), so it never inverts into a glaring white block. */
+    --ink: oklch(14% 0.014 50);
+    --ink-foreground: oklch(92% 0.008 65);
+    --ink-border: oklch(26% 0.016 50);
+
+    /* Sidebar / elevated-surface tier — one notch apart from the page
+       background and from cards, so navigation and dropdowns read as
+       distinct layers instead of blending into everything else. */
+    --sidebar: oklch(97% 0.007 65);
+    --surface-elevated: oklch(100% 0 0);
+
+    /* Chip palette — a matching multi-color set for icon accents only (not
+       for buttons/links/focus, which stay the single brand signal color).
+       Every chip shares the signal's lightness and chroma recipe; only hue
+       steps, so the set reads as one family rather than a random clash —
+       the same approach GitHub's language colors and Linear's labels use. */
+    --chip-1: oklch(55% 0.15 50);  /* copper   — same as --signal */
+    --chip-2: oklch(55% 0.13 155); /* jade     */
+    --chip-3: oklch(55% 0.14 230); /* azure    */
+    --chip-4: oklch(55% 0.14 300); /* violet   */
+    --chip-5: oklch(58% 0.17 15);  /* coral    */
+    --chip-6: oklch(60% 0.13 100); /* olive    */
   }
 
   .dark {
-    --background: 240 10% 6%;
-    --foreground: 240 5% 94%;
+    /* "Midnight + Electric Orange" — refined per direct design review.
+       Real tonal separation between background → sidebar → card →
+       elevated surface, instead of everything blending into one
+       brown-black. Exact hex per the agreed spec (kept literal, not
+       re-derived in OKLCH, so the values match exactly as reviewed). */
+    --background: #0A0A0C;
+    --foreground: #F5F5F7;
 
-    --card: 240 7% 9%;
-    --card-foreground: 240 5% 94%;
+    --sidebar: #0E0E12;
+    --card: #131318;
+    --card-foreground: #F5F5F7;
 
-    --popover: 240 7% 9%;
-    --popover-foreground: 240 5% 94%;
+    --surface-elevated: #19191F;
+    --popover: #19191F;
+    --popover-foreground: #F5F5F7;
 
-    --primary: 240 5% 94%;
-    --primary-foreground: 240 10% 6%;
+    --primary: #F5F5F7;
+    --primary-foreground: #0A0A0C;
 
-    --secondary: 240 6% 14%;
-    --secondary-foreground: 240 5% 94%;
+    --secondary: #16161B;
+    --secondary-foreground: #F5F5F7;
 
-    --muted: 240 6% 14%;
-    --muted-foreground: 228 9% 65%;
+    --muted: #131318;
+    --muted-foreground: #A1A1AA;
 
-    --accent: 240 6% 18%;
-    --accent-foreground: 240 5% 94%;
+    --accent: #1D1D24;
+    --accent-foreground: #F5F5F7;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: #F87171;
+    --destructive-foreground: #230A0A;
 
-    --border: 240 6% 18%;
-    --input: 240 6% 18%;
-    --ring: 147 52% 58%;
+    --border: #292930;
+    --input: #292930;
+    --ring: #FF7626;
 
-    --signal: #5CD68D;
-    --signal-foreground: #0A2214;
+    /* Primary orange — reserved for brand highlights and primary actions;
+       everything else stays neutral so it keeps its power. */
+    --signal: #FF8A3D;
+    --signal-foreground: #1A0D02;
+    --warning: #FBBF24;
+    --warning-foreground: #241900;
+    --success: #34D399;
+    --success-foreground: #04241A;
+    --info: #60A5FA;
+    --info-foreground: #071A33;
+
+    --ink: #0A0A0C;
+    --ink-foreground: #F5F5F7;
+    --ink-border: #292930;
+
+    /* Chip palette, dark — lighter to match --signal's dark-mode lightness,
+       same hue steps as light mode so the mapping stays recognizable. */
+    --chip-1: oklch(72% 0.14 50);
+    --chip-2: oklch(72% 0.12 155);
+    --chip-3: oklch(72% 0.12 230);
+    --chip-4: oklch(72% 0.12 300);
+    --chip-5: oklch(74% 0.15 15);
+    --chip-6: oklch(76% 0.11 100);
   }
 
   * {
@@ -148,87 +230,151 @@ a[disabled],
   html {
     @apply h-full w-full antialiased bg-background text-foreground overflow-x-hidden;
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
   }
 
   body {
     @apply min-h-full flex flex-col bg-background text-foreground relative;
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   }
+
+  #root {
+    @apply min-h-screen flex flex-col font-sans w-full relative;
+  }
 }
 
 /* ============================================================
-   STACKRYZE CONTINUOUS BACKGROUND LAYERS
+   RELAY — signature surface treatments
+   A circuit/grid texture and a traveling "signal trace" replace
+   the old soft gradient blobs. Structure, not glow.
    ============================================================ */
 
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 6%, transparent) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.dark .bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--foreground) 14%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 14%, transparent) 1px, transparent 1px);
+}
+
+/* Elevation for the single bold CTA — layered, not a harsh drop shadow */
+.shadow-signal {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ring) 35%, transparent),
+    0 1px 2px -1px color-mix(in oklab, var(--ring) 30%, transparent),
+    0 8px 20px -6px color-mix(in oklab, var(--ring) 35%, transparent);
+}
+.dark .shadow-signal {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ring) 40%, transparent),
+    0 6px 20px -8px color-mix(in oklab, var(--ring) 50%, transparent);
+}
+
+/* Default surface elevation — a 1px ring + two soft depth layers in light
+   mode; depth shadows vanish on dark, so dark mode keeps one white ring. */
+:root {
+  --shadow-border:
+    0px 0px 0px 1px oklch(0 0 0 / 0.06),
+    0px 1px 2px -1px oklch(0 0 0 / 0.06),
+    0px 2px 4px 0px oklch(0 0 0 / 0.04);
+  --shadow-border-hover:
+    0px 0px 0px 1px oklch(0 0 0 / 0.09),
+    0px 1px 2px -1px oklch(0 0 0 / 0.09),
+    0px 2px 4px 0px oklch(0 0 0 / 0.06);
+}
+.dark {
+  --shadow-border: 0 0 0 1px oklch(1 0 0 / 0.08);
+  --shadow-border-hover: 0 0 0 1px oklch(1 0 0 / 0.14);
+}
+.shadow-border {
+  border-color: transparent;
+  box-shadow: var(--shadow-border);
+  transition-property: box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+.shadow-border:hover {
+  box-shadow: var(--shadow-border-hover);
+}
+
+.text-signal {
+  color: var(--signal);
+}
+
+/* Compatibility surface classes — redefined under the Relay system so
+   existing markup keeps working without a gradient/blob treatment. */
 .bg-aurora {
-  background:
-    radial-gradient(ellipse 70% 50% at 12% 0%, rgba(79, 190, 122, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 40% at 88% 22%, rgba(100, 100, 120, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 45% at 50% 55%, rgba(79, 190, 122, 0.06) 0%, transparent 65%),
-    radial-gradient(ellipse 70% 50% at 20% 85%, rgba(100, 100, 120, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 55% at 90% 100%, rgba(79, 190, 122, 0.10) 0%, transparent 60%);
-  contain: layout style;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--border) 35%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 35%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 30%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 30%, transparent 100%);
 }
-
 .dark .bg-aurora {
-  background:
-    radial-gradient(ellipse 70% 50% at 12% 0%, rgba(92, 214, 141, 0.09) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 40% at 88% 22%, rgba(200, 200, 220, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 45% at 50% 55%, rgba(92, 214, 141, 0.04) 0%, transparent 65%),
-    radial-gradient(ellipse 70% 50% at 20% 85%, rgba(200, 200, 220, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 55% at 90% 100%, rgba(92, 214, 141, 0.06) 0%, transparent 60%);
-  contain: layout style;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--border) 50%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 50%, transparent) 1px, transparent 1px);
 }
-
 .page-tint {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(79, 190, 122, 0.03) 0%,
-      transparent 12%,
-      transparent 45%,
-      rgba(79, 190, 122, 0.04) 70%,
-      transparent 100%
-    );
+  background: none;
 }
-
-.dark .page-tint {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(92, 214, 141, 0.04) 0%,
-      transparent 12%,
-      transparent 45%,
-      rgba(92, 214, 141, 0.05) 70%,
-      transparent 100%
-    );
-}
-
 .bg-glow-signal {
-  background: radial-gradient(
-    ellipse 60% 50% at 50% 0%,
-    rgba(92, 214, 141, 0.18) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(ellipse 50% 60% at 50% 0%, color-mix(in oklab, var(--ring) 12%, transparent) 0%, transparent 70%);
 }
 
+/* Subtle atmospheric glow for application surfaces (dashboard) — a barely
+   visible orange glow near the top, not a decorative hero gradient. Meant
+   to be felt as atmosphere, not noticed as a graphic. */
+.bg-atmo {
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, color-mix(in oklab, var(--ring) 7%, transparent) 0%, transparent 70%);
+}
+
+/* No gradient, no italic — a flat signal-colored span. Name kept for
+   compatibility with existing markup. */
 .text-gradient-signal {
-  background: linear-gradient(
-    180deg,
-    #5CD68D 0%,
-    #3BA764 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--signal);
 }
 
 @keyframes ping-slow {
-  0% { transform: scale(1); opacity: 0.6; }
-  80%, 100% { transform: scale(2.2); opacity: 0; }
+  0% { transform: scale(1); opacity: 0.55; }
+  80%, 100% { transform: scale(2.1); opacity: 0; }
 }
 .animate-ping-slow {
   animation: ping-slow 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-ping-slow { animation: none; opacity: 0; }
+}
+
+/* A thin horizontal wire with a pulse travelling along it — the one
+   signature motif, used sparingly as a section divider or loading cue. */
+.signal-trace {
+  position: relative;
+  height: 1px;
+  background: var(--border);
+  overflow: hidden;
+}
+.signal-trace::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 72px;
+  background: linear-gradient(90deg, transparent, var(--signal), transparent);
+  animation: trace 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes trace {
+  0% { transform: translateX(-100px); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(calc(100vw)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-trace::after { animation: none; display: none; }
 }
 
 @keyframes pulse-dot {
@@ -237,9 +383,10 @@ a[disabled],
 }
 .animate-pulse-dot {
   animation: pulse-dot 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  #root {
-    @apply min-h-screen flex flex-col font-sans w-full relative;
-  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-dot { animation: none; }
 }
 
 /* Utilities */
@@ -247,7 +394,7 @@ a[disabled],
   @apply max-w-7xl mx-auto px-6 w-full;
 }
 
-/* Animations */
+/* Marquee / logo-strip scroll (used by sponsors section) */
 @keyframes scroll {
   0% {
     transform: translate3d(0, 0, 0);

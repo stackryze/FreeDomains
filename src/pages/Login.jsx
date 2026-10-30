@@ -50,9 +50,9 @@ export default function Login() {
                             <h1 className="text-3xl font-display font-medium text-foreground tracking-tight mb-1.5">Welcome back</h1>
                             <p className="text-muted-foreground text-sm">Sign in to manage your subdomains</p>
                         </div>
-                        <Link to="/" className="flex items-center gap-2 shrink-0">
-                            <img src="/stackryze_logo_black.png" alt="Stackryze Logo" className="h-7 w-auto dark:hidden" />
-                            <img src="/stackryze_logo_white.png" alt="Stackryze Logo" className="h-7 w-auto hidden dark:block" />
+                        <Link to="/" className="flex items-center gap-2 shrink-0 self-center">
+                            <img src="/stackryze_logo_black.png" alt="Stackryze Logo" className="h-6 w-auto dark:hidden" />
+                            <img src="/stackryze_logo_white.png" alt="Stackryze Logo" className="h-6 w-auto hidden dark:block" />
                         </Link>
                     </div>
 

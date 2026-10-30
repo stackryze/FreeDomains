@@ -1,4 +1,5 @@
 import { Globe, Zap, Users, Code, ShieldCheck, Activity } from "lucide-react";
+import { chipColor } from "@/lib/chips";
 
 export function FeatureCards() {
   const features = [
@@ -41,11 +42,11 @@ export function FeatureCards() {
   ];
 
   return (
-    <section id="features" className="w-full py-20 sm:py-28 bg-transparent text-foreground">
+    <section id="features" className="w-full py-16 sm:py-24 bg-transparent text-foreground">
       <div className="max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16">
         <div className="mb-16 max-w-2xl">
           <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
-            The price of admission <span className="italic text-gradient-signal">is zero.</span>
+            The price of admission <span className="text-gradient-signal">is zero.</span>
           </h2>
           <p className="mt-4 text-base md:text-lg text-muted-foreground leading-relaxed">
             Everything you need to claim your name on the web and manage DNS records with zero hidden limits or subscriptions.
@@ -56,12 +57,15 @@ export function FeatureCards() {
           {features.map((f, idx) => (
             <article
               key={idx}
-              className="flex flex-col justify-between rounded-2xl border border-border bg-card p-8 transition-colors duration-300 hover:border-foreground/20 group"
+              className="flex flex-col justify-between rounded-2xl bg-card p-8 shadow-border group"
             >
               <div>
                 <div className="flex items-center justify-between mb-8">
-                  <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-secondary border border-border text-foreground transition-transform duration-300 group-hover:scale-105">
-                    <f.icon className="w-6 h-6 text-[#4FBE7A]" strokeWidth={1.75} />
+                  <div
+                    className="w-12 h-12 flex items-center justify-center rounded-xl bg-secondary border border-border transition-transform duration-150 group-hover:scale-105"
+                    style={{ color: chipColor(idx) }}
+                  >
+                    <f.icon className="w-6 h-6" strokeWidth={1.75} />
                   </div>
                   <span className="font-mono text-[11px] font-medium text-muted-foreground bg-secondary border border-border px-2.5 py-1 rounded-full">
                     {f.badge}

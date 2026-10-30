@@ -20,14 +20,14 @@ export function About() {
                 <div className="max-w-4xl mx-auto text-center">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-secondary text-foreground text-xs font-medium uppercase tracking-wider mb-6 border border-border">
                         <span className="relative flex h-2 w-2">
-                            <span className="absolute inline-flex h-full w-full animate-ping-slow rounded-full bg-[#4FBE7A] opacity-75" />
-                            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#4FBE7A]" />
+                            <span className="absolute inline-flex h-full w-full animate-ping-slow rounded-full bg-signal opacity-75" />
+                            <span className="relative inline-flex h-2 w-2 rounded-full bg-signal" />
                         </span>
                         <span>A Stackryze Initiative</span>
                     </div>
-                    <h1 className="font-display text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight tracking-tight">
+                    <h1 className="font-display text-4xl md:text-6xl font-semibold text-foreground mb-6 leading-tight tracking-tight">
                         Giving back to the <br className="hidden md:block" />
-                        <span className="italic text-gradient-signal">developer community.</span>
+                        <span className="text-gradient-signal">developer community.</span>
                     </h1>
                     <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                         Stackryze Domains is our way of empowering builders. Free, open-source, and forever reliable.
@@ -59,22 +59,22 @@ export function About() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div className="bg-card p-6 rounded-2xl border border-border hover:border-foreground/20 transition-all">
-                            <Code className="w-7 h-7 text-[#4FBE7A] mb-4" />
+                            <Code className="w-7 h-7 text-signal mb-4" />
                             <h3 className="text-base font-semibold text-foreground mb-2">Open Source</h3>
                             <p className="text-sm text-muted-foreground leading-relaxed">Transparent infrastructure. Audit, contribute, or fork it.</p>
                         </div>
                         <div className="bg-card p-6 rounded-2xl border border-border hover:border-foreground/20 transition-all">
-                            <Users className="w-7 h-7 text-[#4FBE7A] mb-4" />
+                            <Users className="w-7 h-7 text-signal mb-4" />
                             <h3 className="text-base font-semibold text-foreground mb-2">Community</h3>
                             <p className="text-sm text-muted-foreground leading-relaxed">Built by developers, for developers. Maintained by volunteers.</p>
                         </div>
                         <div className="bg-card p-6 rounded-2xl border border-border hover:border-foreground/20 transition-all">
-                            <Shield className="w-7 h-7 text-[#4FBE7A] mb-4" />
+                            <Shield className="w-7 h-7 text-signal mb-4" />
                             <h3 className="text-base font-semibold text-foreground mb-2">Secure</h3>
                             <p className="text-sm text-muted-foreground leading-relaxed">Zero tolerance for abuse. We keep the namespace clean.</p>
                         </div>
                         <div className="bg-card p-6 rounded-2xl border border-border hover:border-foreground/20 transition-all">
-                            <Globe className="w-7 h-7 text-[#4FBE7A] mb-4" />
+                            <Globe className="w-7 h-7 text-signal mb-4" />
                             <h3 className="text-base font-semibold text-foreground mb-2">Accessible</h3>
                             <p className="text-sm text-muted-foreground leading-relaxed">Democratizing web identities for students and creators.</p>
                         </div>

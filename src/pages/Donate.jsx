@@ -109,7 +109,7 @@ export function Donate() {
                     </div>
 
                     <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-foreground leading-tight">
-                        Fueling free infrastructure for <span className="italic text-gradient-signal">builders.</span>
+                        Fueling free infrastructure for <span className="text-gradient-signal">builders.</span>
                     </h1>
 
                     <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">

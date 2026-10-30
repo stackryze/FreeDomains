@@ -21,7 +21,7 @@ export function LegalLayout({ children, title, date }) {
                         [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-8 [&_ul]:space-y-2.5 [&_ul]:text-base [&_ul]:md:text-lg [&_ul]:text-muted-foreground
                         [&_li]:pl-1.5
                         [&_.lead]:text-lg [&_.lead]:md:text-xl [&_.lead]:font-normal [&_.lead]:text-foreground [&_.lead]:mb-8 [&_.lead]:leading-relaxed
-                        [&_a]:text-[#4FBE7A] [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-foreground transition-colors
+                        [&_a]:text-signal [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-foreground transition-colors
                         [&_strong]:font-semibold [&_strong]:text-foreground
                     ">
                         {children}

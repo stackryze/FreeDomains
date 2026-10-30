@@ -2,6 +2,7 @@ import { Globe, Plus, Settings, Clock, CheckCircle, ArrowRight, Search, History,
 import { useDashboard } from "@/context/dashboard-context";
 import { useAuth } from "@/context/auth-context";
 import { Link } from "react-router-dom";
+import { useCountUp } from "@/hooks/useCountUp";
 
 export default function Overview() {
     const { subdomains, loading } = useDashboard();
@@ -58,75 +59,49 @@ export default function Overview() {
                 </div>
                 <Link
                     to="/register"
-                    className="inline-flex items-center gap-2 self-start sm:self-auto px-5 py-2.5 bg-foreground text-background text-sm font-semibold rounded-xl hover:bg-signal hover:text-signal-foreground transition-all duration-200 shadow-sm"
+                    className="inline-flex items-center gap-2 self-start sm:self-auto px-5 py-2.5 bg-signal text-signal-foreground text-sm font-semibold rounded-xl hover:bg-signal/90 transition-all duration-150 active:scale-[0.97] shadow-signal"
                 >
                     <Plus className="w-4 h-4" />
                     Register Domain
                 </Link>
             </div>
 
-            {/* ── Stat cards ── */}
+            {/* ── Stat cards — one accent (signal) for the overview total,
+                 semantic status colors for the rest: success/warning/destructive,
+                 never signal, so "Active" doesn't visually compete with
+                 the brand action color. ── */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-                <StatCard
-                    value={totalCount}
-                    label="Total"
-                    sub="domains"
-                    accentClass="text-foreground"
-                    dot="#4FBE7A"
-                    to="/my-domains"
-                />
-                <StatCard
-                    value={activeCount}
-                    label="Active"
-                    sub="running"
-                    accentClass="text-signal"
-                    dot="#4FBE7A"
-                    to="/my-domains"
-                />
-                <StatCard
-                    value={expiringCount}
-                    label="Expiring"
-                    sub="within 30 days"
-                    accentClass={expiringCount > 0 ? "text-amber-500" : "text-foreground"}
-                    dot={expiringCount > 0 ? "#fbbf24" : "var(--muted-foreground)"}
-                    to="/my-domains"
-                    warn={expiringCount > 0}
-                />
-                <StatCard
-                    value={expiredCount}
-                    label="Expired"
-                    sub="domains"
-                    accentClass={expiredCount > 0 ? "text-destructive" : "text-foreground"}
-                    dot={expiredCount > 0 ? "#ef4444" : "var(--muted-foreground)"}
-                    to="/my-domains"
-                />
+                <StatCard value={totalCount} label="Total" sub="domains" tone="neutral" to="/my-domains" />
+                <StatCard value={activeCount} label="Active" sub="running" tone="success" to="/my-domains" />
+                <StatCard value={expiringCount} label="Expiring" sub="within 30 days" tone={expiringCount > 0 ? "warning" : "neutral"} to="/my-domains" />
+                <StatCard value={expiredCount} label="Expired" sub="domains" tone={expiredCount > 0 ? "destructive" : "neutral"} to="/my-domains" />
             </div>
 
             {/* ── KYC / GitHub verification status ── */}
             {user?.githubVerified ? (
-                <div className="flex items-center gap-3 px-4 py-3 bg-signal/10 border border-signal/20 rounded-2xl">
-                    <div className="w-8 h-8 rounded-full bg-signal/20 flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="w-4 h-4 text-signal" />
+                <div className="flex items-center gap-3 px-4 py-3 bg-success/10 border border-success/20 rounded-2xl">
+                    <div className="w-8 h-8 rounded-full bg-success/15 flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-4 h-4 text-success" />
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-foreground">KYC Verified</p>
                         <p className="text-xs text-muted-foreground">GitHub identity verified — premium extensions (.sryze.cc, .ryzedns.org, .nx.kg, .ryzn.pro) unlocked</p>
                     </div>
-                    <span className="shrink-0 text-xs font-semibold px-2.5 py-1 bg-signal text-signal-foreground rounded-full">Verified</span>
+                    <span className="shrink-0 text-xs font-semibold px-2.5 py-1 bg-success text-success-foreground rounded-full">Verified</span>
                 </div>
             ) : (
                 <a
                     href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/github/kyc/start`}
-                    className="group flex items-center gap-3 px-4 py-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl hover:border-amber-500/40 transition-colors cursor-pointer"
+                    className="group flex items-center gap-3 px-4 py-3 bg-warning/10 border border-warning/20 rounded-2xl hover:border-warning/40 transition-colors cursor-pointer"
                 >
-                    <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                        <Shield className="w-4 h-4 text-amber-500" />
+                    <div className="w-8 h-8 rounded-full bg-warning/15 flex items-center justify-center flex-shrink-0">
+                        <Shield className="w-4 h-4 text-warning" />
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-foreground">KYC Not Verified</p>
                         <p className="text-xs text-muted-foreground">Complete GitHub verification to unlock sryze.cc, ryzedns.org, nx.kg &amp; ryzn.pro domains and extra quota</p>
                     </div>
-                    <span className="shrink-0 text-xs font-semibold px-2.5 py-1 border border-amber-500/40 text-amber-500 rounded-full group-hover:bg-amber-500 group-hover:text-background transition-colors">
+                    <span className="shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full bg-warning text-warning-foreground group-hover:bg-warning/90 transition-colors">
                         Verify →
                     </span>
                 </a>
@@ -139,7 +114,6 @@ export default function Overview() {
                 <ActionCard
                     to="/my-domains"
                     icon={Globe}
-                    iconBg="bg-signal/10"
                     iconColor="text-signal"
                     title="Manage Domains"
                     desc="View, renew, or configure your registered domains"
@@ -149,7 +123,6 @@ export default function Overview() {
                 <ActionCard
                     to="/dns"
                     icon={Settings}
-                    iconBg="bg-secondary"
                     iconColor="text-foreground"
                     title="DNS Configuration"
                     desc="Set up NS delegation and manage DNS records"
@@ -159,7 +132,6 @@ export default function Overview() {
                 <ActionCard
                     to="/whois"
                     icon={Search}
-                    iconBg="bg-secondary"
                     iconColor="text-foreground"
                     title="WHOIS Lookup"
                     desc="Look up registration info for any domain"
@@ -170,7 +142,6 @@ export default function Overview() {
                 <ActionCard
                     to="/history"
                     icon={History}
-                    iconBg="bg-secondary"
                     iconColor="text-foreground"
                     title="Activity History"
                     desc="Track changes, renewals, and domain events"
@@ -191,10 +162,10 @@ export default function Overview() {
                             <Link
                                 key={d._id}
                                 to={`/domains/${d._id}`}
-                                className="flex items-center justify-between px-4 py-3 bg-card/70 backdrop-blur-md border border-border rounded-xl hover:border-foreground/20 transition-all group shadow-sm"
+                                className="flex items-center justify-between px-4 py-3 bg-card rounded-xl shadow-border transition-all group"
                             >
                                 <div className="flex items-center gap-3 min-w-0">
-                                    <div className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center flex-shrink-0">
+                                    <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
                                         <Globe className="w-4 h-4 text-foreground" />
                                     </div>
                                     <span className="font-mono font-medium text-sm text-foreground truncate">
@@ -213,17 +184,18 @@ export default function Overview() {
 
             {/* ── Empty state ── */}
             {totalCount === 0 && !loading && (
-                <div className="bg-card/80 backdrop-blur-xl rounded-2xl border border-border p-8 md:p-10 text-center shadow-sm">
-                    <div className="w-12 h-12 bg-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 border border-border">
-                        <Globe className="w-6 h-6 text-foreground" />
+                <div className="relative bg-card rounded-2xl shadow-border p-8 md:p-10 text-center overflow-hidden">
+                    <div aria-hidden className="bg-glow-signal pointer-events-none absolute inset-0" />
+                    <div className="relative w-14 h-14 bg-signal/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-signal/20">
+                        <Globe className="w-7 h-7 text-signal" />
                     </div>
-                    <h3 className="text-2xl font-display font-medium text-foreground mb-2">Register your first domain</h3>
-                    <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
+                    <h3 className="relative text-2xl font-display font-medium text-foreground mb-2">Register your first domain</h3>
+                    <p className="relative text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
                         Free, instant, and takes under a minute. Claim your personal <strong>.indevs.in</strong>, <strong>.sryze.cc</strong>, <strong>.ryzedns.org</strong>, <strong>.nx.kg</strong>, or <strong>.ryzn.pro</strong> subdomain.
                     </p>
                     <Link
                         to="/register"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background font-semibold text-sm rounded-xl hover:bg-signal hover:text-signal-foreground transition-all duration-200 shadow-sm"
+                        className="relative inline-flex items-center gap-2 px-6 py-3 bg-signal text-signal-foreground font-semibold text-sm rounded-xl hover:bg-signal/90 transition-all duration-150 active:scale-[0.97] shadow-signal"
                     >
                         <Plus className="w-4 h-4" />
                         Register Now — It's Free
@@ -234,32 +206,42 @@ export default function Overview() {
     );
 }
 
-function StatCard({ value, label, sub, accentClass, dot, to, warn }) {
+const STAT_TONES = {
+    neutral: { dot: "bg-signal", text: "text-foreground" },
+    success: { dot: "bg-success", text: "text-success" },
+    warning: { dot: "bg-warning", text: "text-warning" },
+    destructive: { dot: "bg-destructive", text: "text-destructive" },
+};
+
+function StatCard({ value, label, sub, tone, to }) {
+    const { ref, display } = useCountUp(value, { duration: 700 });
+    const t = STAT_TONES[tone] || STAT_TONES.neutral;
     return (
         <Link
+            ref={ref}
             to={to}
-            className={`bg-card/70 backdrop-blur-xl border border-border rounded-2xl p-4 md:p-5 hover:border-foreground/25 transition-all duration-200 group shadow-sm ${warn ? "border-amber-500/30" : ""}`}
+            className="bg-card rounded-2xl p-4 md:p-5 shadow-border transition-all duration-150 group"
         >
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
+                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${t.dot}`} />
                     <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
                 </div>
-                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
             </div>
-            <p className={`text-3xl md:text-4xl font-display font-medium leading-none mt-3 ${accentClass}`}>{value}</p>
+            <p className={`text-3xl md:text-4xl font-display font-medium leading-none mt-3 tabular-nums ${t.text}`}>{display}</p>
             <p className="text-xs text-muted-foreground mt-1.5">{sub}</p>
         </Link>
     );
 }
 
-function ActionCard({ to, icon: Icon, iconBg, iconColor, title, desc }) {
+function ActionCard({ to, icon: Icon, iconColor, title, desc }) {
     return (
         <Link
             to={to}
-            className="bg-card/70 backdrop-blur-xl border border-border rounded-2xl p-5 flex items-center gap-4 hover:border-foreground/25 transition-all duration-200 group shadow-sm"
+            className="bg-card rounded-2xl p-5 flex items-center gap-4 shadow-border transition-all duration-150 group"
         >
-            <div className={`w-11 h-11 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0 border border-border`}>
+            <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 transition-transform duration-150 group-hover:scale-105">
                 <Icon className={`w-5 h-5 ${iconColor}`} />
             </div>
             <div className="flex-1 min-w-0">
@@ -273,11 +255,11 @@ function ActionCard({ to, icon: Icon, iconBg, iconColor, title, desc }) {
 
 function StatusPill({ status }) {
     const map = {
-        Active:          { bg: "bg-signal/10",  text: "text-signal",  dot: "bg-signal" },
-        Expired:         { bg: "bg-destructive/10",    text: "text-destructive",    dot: "bg-destructive" },
-        Suspended:       { bg: "bg-destructive/10",    text: "text-destructive",    dot: "bg-destructive" },
-        "Pending Deletion": { bg: "bg-amber-500/10", text: "text-amber-500", dot: "bg-amber-500" },
-        "Pending DNS":   { bg: "bg-sky-500/10",   text: "text-sky-500",   dot: "bg-sky-500" },
+        Active:             { bg: "bg-success/10",     text: "text-success",     dot: "bg-success" },
+        Expired:            { bg: "bg-destructive/10",  text: "text-destructive", dot: "bg-destructive" },
+        Suspended:          { bg: "bg-destructive/10",  text: "text-destructive", dot: "bg-destructive" },
+        "Pending Deletion": { bg: "bg-warning/10",       text: "text-warning",     dot: "bg-warning" },
+        "Pending DNS":      { bg: "bg-info/10",          text: "text-info",        dot: "bg-info" },
     };
     const s = map[status] || { bg: "bg-muted", text: "text-muted-foreground", dot: "bg-muted-foreground" };
     return (

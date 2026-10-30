@@ -24,12 +24,15 @@ const SidebarItem = ({ to, icon: Icon, label, active, onClick }) => (
     <Link
         to={to}
         onClick={onClick}
-        className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium transition-all duration-200 text-sm ${active
-            ? "bg-foreground text-background shadow-sm"
-            : "text-muted-foreground hover:text-foreground hover:bg-secondary/70"
+        className={`group w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium transition-all duration-150 text-sm relative ${active
+            ? "bg-signal/10 text-signal"
+            : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
             }`}
     >
-        <Icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-background" : "text-muted-foreground"}`} />
+        {active && (
+            <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-0.5 rounded-full bg-signal" aria-hidden />
+        )}
+        <Icon className={`w-4 h-4 flex-shrink-0 transition-transform duration-150 group-hover:scale-110 ${active ? "text-signal" : "text-muted-foreground"}`} />
         <span>{label}</span>
     </Link>
 );
@@ -173,14 +176,16 @@ export default function DashboardLayout() {
                 )}
 
                 <div className="flex flex-1 pt-[calc(4rem+var(--incident-height,0px))]">
-                    {/* Desktop Sidebar */}
-                    <aside className="w-64 bg-card/70 backdrop-blur-2xl border-r border-border hidden md:flex md:flex-col fixed top-[calc(4rem+var(--incident-height,0px))] h-[calc(100vh-4rem-var(--incident-height,0px))] z-10">
+                    {/* Desktop Sidebar — its own tonal layer (--sidebar), one
+                        notch apart from the page background, so navigation
+                        reads as a distinct surface instead of blending in */}
+                    <aside className="w-64 bg-sidebar border-r border-border hidden md:flex md:flex-col fixed top-[calc(4rem+var(--incident-height,0px))] h-[calc(100vh-4rem-var(--incident-height,0px))] z-10">
                         <SidebarContent />
                     </aside>
 
                     {/* Mobile Sidebar */}
                     <aside
-                        className={`fixed top-[var(--incident-height,0px)] left-0 h-[calc(100vh-var(--incident-height,0px))] w-64 bg-card/95 backdrop-blur-2xl border-r border-border z-40 transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                        className={`fixed top-[var(--incident-height,0px)] left-0 h-[calc(100vh-var(--incident-height,0px))] w-64 bg-sidebar border-r border-border z-40 transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                             }`}
                     >
                         {/* Mobile sidebar header with close button */}
@@ -196,8 +201,10 @@ export default function DashboardLayout() {
                         <SidebarContent />
                     </aside>
 
-                    {/* Main Content */}
-                    <main className="flex-1 md:ml-64 p-4 sm:p-6 md:p-10 pt-16 md:pt-6 mb-20 overflow-y-auto min-h-[calc(100vh-64px)]">
+                    {/* Main Content — a barely-visible atmospheric glow, felt
+                        rather than noticed, instead of a flat single tone */}
+                    <main className="relative flex-1 md:ml-64 p-4 sm:p-6 md:p-10 pt-16 md:pt-6 mb-20 overflow-y-auto min-h-[calc(100vh-64px)]">
+                        <div aria-hidden className="bg-atmo pointer-events-none absolute inset-0 -z-10" />
                         <div className="max-w-[1600px] mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-500">
                             <Outlet />
                         </div>

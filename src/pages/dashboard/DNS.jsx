@@ -4,11 +4,11 @@ export default function DNSRecords() {
     return (
         <div className="max-w-4xl space-y-8 relative">
             {/* Subtle background glow */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-signal/10 rounded-full blur-[100px] pointer-events-none -z-10"></div>
             
             {/* Header */}
             <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-orange-500 mb-2 flex items-center gap-2">
+                <p className="text-sm font-bold uppercase tracking-widest text-signal mb-2 flex items-center gap-2">
                     <Server className="w-4 h-4" />
                     Infrastructure
                 </p>
@@ -20,21 +20,21 @@ export default function DNSRecords() {
 
             {/* Managed DNS CTA - Premium Card */}
             <div className="bg-card/80 backdrop-blur-2xl border border-border rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent pointer-events-none"></div>
-                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-orange-500/30 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-signal/5 to-transparent pointer-events-none"></div>
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-signal/30 to-transparent"></div>
                 
                 <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between relative z-10">
                     <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 flex items-center justify-center flex-shrink-0 shadow-inner">
-                            <Zap className="w-6 h-6 text-orange-500 fill-orange-500/20" />
+                        <div className="w-12 h-12 rounded-xl bg-signal/10 border border-signal/20 flex items-center justify-center flex-shrink-0 shadow-inner">
+                            <Zap className="w-6 h-6 text-signal fill-signal/20" />
                         </div>
                         <div>
                             <div className="flex items-center gap-3 mb-2">
                                 <h2 className="font-display text-foreground text-xl font-medium">Managed DNS is Live!</h2>
-                                <span className="bg-orange-500 text-white px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide animate-pulse shadow-sm shadow-orange-500/20">New</span>
+                                <span className="bg-signal text-signal-foreground px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide animate-pulse shadow-sm shadow-signal/20">New</span>
                             </div>
                             <p className="text-sm font-medium text-foreground leading-relaxed max-w-xl">
-                                Host your DNS records directly with <strong className="text-orange-500">Stackryze DNS</strong> at <span className="font-mono bg-secondary dark:bg-secondary px-1.5 py-0.5 rounded text-foreground text-xs border border-border dark:border-border/60 shadow-sm">dns.stackryze.com</span>. Powered by PowerDNS, globally distributed and lightning fast.
+                                Host your DNS records directly with <strong className="text-signal">Stackryze DNS</strong> at <span className="font-mono bg-secondary dark:bg-secondary px-1.5 py-0.5 rounded text-foreground text-xs border border-border dark:border-border/60 shadow-sm">dns.stackryze.com</span>. Powered by PowerDNS, globally distributed and lightning fast.
                             </p>
                         </div>
                     </div>
