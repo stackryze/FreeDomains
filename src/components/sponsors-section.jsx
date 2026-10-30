@@ -32,7 +32,7 @@ export function SponsorsSection() {
     ];
 
     return (
-        <section className="w-full pt-6 md:pt-10 pb-4 bg-transparent">
+        <section className="w-full py-10 md:py-14 bg-transparent">
             <div className="max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16">
                 <div className="mb-8 text-center">
                     <h2 className="text-xs font-mono font-medium text-muted-foreground tracking-widest uppercase">

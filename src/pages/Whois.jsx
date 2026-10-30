@@ -126,10 +126,10 @@ export function Whois() {
 
                     {/* Supported domains hint */}
                     <p className="text-xs text-muted-foreground mt-3 text-center">
-                        Supported: <span className="font-mono font-medium text-foreground">.indevs.in</span> &amp;{" "}
+                        Supported:{" "}
+                        <span className="font-mono font-medium text-foreground">.indevs.in</span> &amp;{" "}
                         <span className="font-mono font-medium text-foreground">.sryze.cc</span> &amp;{" "}
-                        <span className="font-mono font-medium text-foreground">.ryzedns.org</span>
-                        <span className="text-border mx-1.5">·</span>
+                        <span className="font-mono font-medium text-foreground">.ryzedns.org</span> &amp;{" "}
                         <span className="font-mono font-medium text-foreground">.nx.kg</span> &amp;{" "}
                         <span className="font-mono font-medium text-foreground">.ryzn.pro</span>
                     </p>

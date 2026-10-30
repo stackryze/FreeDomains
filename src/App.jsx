@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Toaster } from "./components/ui/toaster";
 import { AuthProvider, useAuth } from './context/auth-context';
 import { Landing } from './pages/Landing';
@@ -70,65 +70,81 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="relative min-h-screen flex flex-col bg-background text-foreground selection:bg-foreground selection:text-background">
-          {/* Stackryze Continuous Atmospheric Background across all pages */}
-          <div aria-hidden className="bg-aurora pointer-events-none fixed inset-x-0 top-0 -z-10 min-h-full h-full" />
-          <div aria-hidden className="page-tint pointer-events-none fixed inset-x-0 top-0 -z-10 min-h-full h-full" />
-
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/docs" element={<Docs />} />
-            <Route path="/about" element={<About />} />
-
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/verify-2fa" element={<Navigate to="/login" replace />} />
-            <Route path="/forgot-password" element={<Navigate to="/login" replace />} />
-            <Route path="/reset-password" element={<Navigate to="/login" replace />} />
-            <Route path="/complete-profile" element={<CompleteProfile />} />
-            <Route path="/whois" element={<Whois />} />
-
-            {/* Protected Routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route path="/set-password" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/change-email" element={<ChangeEmail />} />
-            </Route>
-
-            <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-              <Route path="/dashboard" element={<Overview />} />
-              <Route path="/overview" element={<Overview />} />
-              <Route path="/my-domains" element={<MyDomains />} />
-              <Route path="/domains/:id" element={<DomainDetail />} />
-              <Route path="/dns" element={<DNSRecords />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/history" element={<History />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/profile" element={<Settings />} />
-              <Route path="/help" element={<Help />} />
-              <Route path="/dashboard/verify-github" element={<VerifyGitHub />} />
-            </Route>
-
-            {/* Public Donate Page */}
-            <Route path="/donate" element={<Donate />} />
-
-            {/* WHOIS Lookup Page */}
-            <Route path="/whois" element={<Whois />} />
-
-            {/* Legal Pages */}
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/aup" element={<AUP />} />
-            <Route path="/abuse" element={<Abuse />} />
-
-            {/* Catch-all for 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <DiscordPill />
-          <Toaster />
-        </div>
+        <AppShell />
       </Router>
     </AuthProvider>
+  );
+}
+
+const DASHBOARD_PREFIXES = ['/dashboard', '/overview', '/my-domains', '/domains', '/dns', '/register', '/history', '/settings', '/profile', '/help'];
+
+function AppShell() {
+  const location = useLocation();
+  const inDashboard = DASHBOARD_PREFIXES.some((p) => location.pathname === p || location.pathname.startsWith(`${p}/`));
+
+  return (
+    <div className="relative min-h-screen flex flex-col bg-background text-foreground selection:bg-foreground selection:text-background">
+      {/* Stackryze Continuous Atmospheric Background across all pages */}
+      <div aria-hidden className="bg-aurora pointer-events-none fixed inset-x-0 top-0 z-0 min-h-full h-full" />
+      <div aria-hidden className="page-tint pointer-events-none fixed inset-x-0 top-0 z-0 min-h-full h-full" />
+
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/docs" element={<Docs />} />
+        <Route path="/about" element={<About />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/verify-2fa" element={<Navigate to="/login" replace />} />
+        <Route path="/forgot-password" element={<Navigate to="/login" replace />} />
+        <Route path="/reset-password" element={<Navigate to="/login" replace />} />
+        <Route path="/complete-profile" element={<CompleteProfile />} />
+        <Route path="/whois" element={<Whois />} />
+
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/set-password" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/change-email" element={<ChangeEmail />} />
+        </Route>
+
+        <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+          <Route path="/dashboard" element={<Overview />} />
+          <Route path="/overview" element={<Overview />} />
+          <Route path="/my-domains" element={<MyDomains />} />
+          <Route path="/domains/:id" element={<DomainDetail />} />
+          <Route path="/dns" element={<DNSRecords />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Settings />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/dashboard/verify-github" element={<VerifyGitHub />} />
+        </Route>
+
+        {/* Public Donate Page */}
+        <Route path="/donate" element={<Donate />} />
+
+        {/* WHOIS Lookup Page */}
+        <Route path="/whois" element={<Whois />} />
+
+        {/* Legal Pages */}
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/aup" element={<AUP />} />
+        <Route path="/abuse" element={<Abuse />} />
+
+        {/* Catch-all for 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      {/* The dashboard sidebar already has its own Help & Support / Discord
+          link, so the floating pill is redundant there — and dashboard
+          content (tables, action buttons) frequently extends into its
+          bottom-right corner, so it was overlapping real interactive
+          elements. Only show it on the public marketing pages. */}
+      {!inDashboard && <DiscordPill />}
+      <Toaster />
+    </div>
   );
 }
 
@@ -137,9 +153,9 @@ const DiscordPill = () => (
     href="https://discord.gg/wr7s97cfM7"
     target="_blank"
     rel="noreferrer"
-    className="fixed bottom-24 right-6 z-50 hidden md:flex items-center gap-2.5 bg-foreground text-background px-4 py-2.5 rounded-full font-semibold text-sm shadow-md hover:bg-signal hover:text-signal-foreground transition-all duration-200 group"
+    className="fixed bottom-24 right-6 z-50 hidden md:flex items-center gap-2.5 bg-card text-foreground border border-border shadow-border px-4 py-2.5 rounded-full font-semibold text-sm hover:bg-signal hover:text-signal-foreground hover:border-transparent transition-all duration-200 group"
   >
-    <div className="bg-background/20 p-1.5 rounded-full text-foreground group-hover:text-signal-foreground flex items-center justify-center transition-colors">
+    <div className="bg-secondary p-1.5 rounded-full text-foreground group-hover:bg-signal-foreground/15 group-hover:text-signal-foreground flex items-center justify-center transition-colors">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 127.14 96.36" fill="currentColor">
         <path d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.08 0A72.37 72.37 0 0 0 45.67 0a105.14 105.14 0 0 0-26.23 8.07C2.04 33.72-2.38 58.62.9 83.33a105.73 105.73 0 0 0 32.17 16.14A77.7 77.7 0 0 0 40 85.34a69.8 69.8 0 0 1-10.87-5.18c.9-.67 1.8-1.34 2.66-2a75.57 75.57 0 0 0 63.56 0c.88.66 1.77 1.34 2.67 2a69.8 69.8 0 0 1-10.88 5.18 77.34 77.34 0 0 0 6.9 14.13 105.74 105.74 0 0 0 32.2-16.14c3.85-28.53-2.12-52.6-18.54-75.26zM42.3 65.23c-5.86 0-10.66-5.32-10.66-11.83 0-6.5 4.7-11.82 10.66-11.82 5.96 0 10.74 5.3 10.66 11.82 0 6.5-4.7 11.83-10.66 11.83zm42.54 0c-5.86 0-10.66-5.32-10.66-11.83 0-6.5 4.7-11.82 10.66-11.82 5.96 0 10.73 5.3 10.66 11.82 0 6.5-4.72 11.83-10.66 11.83z"/>
       </svg>

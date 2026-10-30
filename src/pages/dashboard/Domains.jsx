@@ -84,7 +84,7 @@ export default function MyDomains() {
         toast({
             title: "Nameservers Updated",
             description: "Changes may take up to 24 hours to propagate globally.",
-            className: "bg-signal/10 border-green-200 text-green-900"
+            className: "bg-success/10 border-success/20 text-success"
         });
     };
 
@@ -96,7 +96,7 @@ export default function MyDomains() {
             toast({
                 title: "Domain Renewed Successfully! 🎉",
                 description: `${domain.name}.${domain.domain || 'indevs.in'} has been extended for another year. New expiry date will be shown on your dashboard.`,
-                className: "bg-signal/10 border-green-200 text-green-900"
+                className: "bg-success/10 border-success/20 text-success"
             });
 
             // Refresh the list to get updated data
@@ -124,14 +124,18 @@ export default function MyDomains() {
 
     const StatusBadge = ({ status }) => {
         const styles = {
-            "Active": "bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20",
-            "Deletion Review": "bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-500/20",
-            "Pending": "bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/20"
+            "Active": "bg-success/10 text-success border-success/20",
+            "Expired": "bg-destructive/10 text-destructive border-destructive/20",
+            "Suspended": "bg-destructive/10 text-destructive border-destructive/20",
+            "Deletion Review": "bg-destructive/10 text-destructive border-destructive/20",
+            "Pending": "bg-warning/10 text-warning border-warning/20"
         };
         const dotStyles = {
-            "Active": "bg-green-600 dark:bg-green-400",
-            "Deletion Review": "bg-red-600 dark:bg-red-400",
-            "Pending": "bg-amber-600 dark:bg-amber-400"
+            "Active": "bg-success",
+            "Expired": "bg-destructive",
+            "Suspended": "bg-destructive",
+            "Deletion Review": "bg-destructive",
+            "Pending": "bg-warning"
         };
 
         return (
@@ -146,7 +150,7 @@ export default function MyDomains() {
         <div className="max-w-5xl">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
                 <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 mb-1">Account</p>
+                    <p className="text-xs font-bold uppercase tracking-widest text-signal mb-1">Account</p>
                     <h1 className="font-display text-2xl md:text-3xl font-medium text-foreground leading-tight">My Domains</h1>
                     <p className="text-sm text-foreground mt-1">Manage your active domains and configurations.</p>
                 </div>
@@ -162,29 +166,29 @@ export default function MyDomains() {
 
             {/* Pending GitHub Verification Banner */}
             {pendingVerification && (
-                <div className="mb-5 border-[1px] rounded-xl p-4 bg-amber-50 border-amber-200">
+                <div className="mb-5 border rounded-xl p-4 bg-warning/10 border-warning/20">
                     <div className="flex items-start gap-3">
-                        <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                        <Shield className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
                         <div className="flex-1">
-                            <h3 className="text-sm font-medium text-amber-600 dark:text-amber-400 mb-1">
+                            <h3 className="text-sm font-medium text-foreground mb-1">
                                 GitHub Verification Pending
                             </h3>
-                            <p className="text-sm text-yellow-800 mb-3">
+                            <p className="text-sm text-muted-foreground mb-3">
                                 Your GitHub verification for <strong>{pendingVerification.requestedDomain}.sryze.cc</strong> is being reviewed by our team.
                             </p>
-                            <div className="bg-white/50 rounded-lg p-3 text-xs space-y-1">
+                            <div className="bg-background/50 rounded-lg p-3 text-xs space-y-1">
                                 <div className="flex items-center gap-2">
-                                    <Clock className="w-4 h-4 text-yellow-600" />
-                                    <span className="font-semibold text-yellow-900">Status:</span>
-                                    <span className="text-yellow-800">Awaiting Admin Approval</span>
+                                    <Clock className="w-4 h-4 text-warning" />
+                                    <span className="font-semibold text-foreground">Status:</span>
+                                    <span className="text-muted-foreground">Awaiting Admin Approval</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Globe className="w-4 h-4 text-yellow-600" />
-                                    <span className="font-semibold text-yellow-900">Domain:</span>
-                                    <span className="font-mono text-yellow-800">{pendingVerification.requestedDomain}.sryze.cc (Reserved)</span>
+                                    <Globe className="w-4 h-4 text-warning" />
+                                    <span className="font-semibold text-foreground">Domain:</span>
+                                    <span className="font-mono text-muted-foreground">{pendingVerification.requestedDomain}.sryze.cc (Reserved)</span>
                                 </div>
                             </div>
-                            <p className="text-xs text-yellow-700 mt-3">
+                            <p className="text-xs text-muted-foreground mt-3">
                                 Once approved, your domain will be automatically created and appear here!
                             </p>
                         </div>
@@ -222,7 +226,7 @@ export default function MyDomains() {
                             {!user?.githubVerified && (
                                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/20 dark:bg-[#111]/40 rounded-lg">
                                     <div className="bg-white/80 dark:bg-black/60 backdrop-blur-md border border-border p-5 rounded-xl text-center shadow-sm max-w-sm w-full mx-4">
-                                        <Shield className="w-8 h-8 text-amber-500 mx-auto mb-2" />
+                                        <Shield className="w-8 h-8 text-warning mx-auto mb-2" />
                                         <p className="text-sm font-bold text-foreground mb-2">GitHub Verification Required</p>
                                         <p className="text-xs text-foreground mb-5">
                                             We require all users to verify their GitHub to prevent abuse. Verify your account to view limits and register domains.
@@ -232,7 +236,7 @@ export default function MyDomains() {
                                                 href="https://github.com/stackryze/FreeDomains"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1.5 bg-amber-400 text-foreground px-3 py-2 rounded-md font-bold text-xs hover:bg-amber-500 transition-all shadow-sm"
+                                                className="inline-flex items-center gap-1.5 bg-warning text-foreground px-3 py-2 rounded-md font-bold text-xs hover:bg-warning transition-all shadow-sm"
                                             >⭐ Star Repo</a>
                                             <a
                                                 href={`${API_BASE}/github/kyc/start?domain=&root=indevs.in`}
@@ -255,8 +259,8 @@ export default function MyDomains() {
                             <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
                                 <div
                                     className={`h-2 rounded-full transition-all ${
-                                        indevsPercent >= 100 ? 'bg-red-600'
-                                        : indevsPercent >= 80 ? 'bg-amber-500'
+                                        indevsPercent >= 100 ? 'bg-destructive'
+                                        : indevsPercent >= 80 ? 'bg-warning'
                                         : 'bg-blue-600'
                                     }`}
                                     style={{ width: `${indevsPercent}%` }}
@@ -275,9 +279,9 @@ export default function MyDomains() {
                             <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
                                 <div
                                     className={`h-2 rounded-full transition-all ${((subdomains?.filter(s => s.domain === 'sryze.cc').length || 0) / (user?.sryzeDomainsLimit || 1) * 100) >= 100
-                                            ? 'bg-red-600'
+                                            ? 'bg-destructive'
                                             : ((subdomains?.filter(s => s.domain === 'sryze.cc').length || 0) / (user?.sryzeDomainsLimit || 1) * 100) >= 80
-                                                ? 'bg-amber-500'
+                                                ? 'bg-warning'
                                                 : 'bg-purple-600'
                                         }`}
                                     style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'sryze.cc').length || 0) / (user?.sryzeDomainsLimit || 1) * 100), 100)}%` }}
@@ -296,9 +300,9 @@ export default function MyDomains() {
                             <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
                                 <div
                                     className={`h-2 rounded-full transition-all ${((subdomains?.filter(s => s.domain === 'ryzedns.org').length || 0) / (user?.ryzeDnsDomainsLimit || 1) * 100) >= 100
-                                            ? 'bg-red-600'
+                                            ? 'bg-destructive'
                                             : ((subdomains?.filter(s => s.domain === 'ryzedns.org').length || 0) / (user?.ryzeDnsDomainsLimit || 1) * 100) >= 80
-                                                ? 'bg-amber-500'
+                                                ? 'bg-warning'
                                                 : 'bg-teal-600'
                                         }`}
                                     style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'ryzedns.org').length || 0) / (user?.ryzeDnsDomainsLimit || 1) * 100), 100)}%` }}
@@ -317,9 +321,9 @@ export default function MyDomains() {
                             <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
                                 <div
                                     className={`h-2 rounded-full transition-all ${((subdomains?.filter(s => s.domain === 'nx.kg').length || 0) / (user?.nxKgDomainsLimit || 1) * 100) >= 100
-                                            ? 'bg-red-600'
+                                            ? 'bg-destructive'
                                             : ((subdomains?.filter(s => s.domain === 'nx.kg').length || 0) / (user?.nxKgDomainsLimit || 1) * 100) >= 80
-                                                ? 'bg-amber-500'
+                                                ? 'bg-warning'
                                                 : 'bg-violet-600'
                                         }`}
                                     style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'nx.kg').length || 0) / (user?.nxKgDomainsLimit || 1) * 100), 100)}%` }}
@@ -338,9 +342,9 @@ export default function MyDomains() {
                             <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
                                 <div
                                     className={`h-2 rounded-full transition-all ${((subdomains?.filter(s => s.domain === 'ryzn.pro').length || 0) / (user?.ryznProDomainsLimit || 1) * 100) >= 100
-                                            ? 'bg-red-600'
+                                            ? 'bg-destructive'
                                             : ((subdomains?.filter(s => s.domain === 'ryzn.pro').length || 0) / (user?.ryznProDomainsLimit || 1) * 100) >= 80
-                                                ? 'bg-amber-500'
+                                                ? 'bg-warning'
                                                 : 'bg-emerald-600'
                                         }`}
                                     style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'ryzn.pro').length || 0) / (user?.ryznProDomainsLimit || 1) * 100), 100)}%` }}
@@ -394,7 +398,7 @@ export default function MyDomains() {
                                             const daysUntilExpiry = Math.ceil((new Date(domain.expiresAt) - new Date()) / (1000 * 60 * 60 * 24));
                                             if (daysUntilExpiry > 0 && daysUntilExpiry <= 30) {
                                                 return (
-                                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-500 mt-2">
+                                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-warning  mt-2">
                                                         <AlertCircle className="w-3 h-3" />
                                                         Expires in {daysUntilExpiry} day{daysUntilExpiry !== 1 ? 's' : ''}
                                                     </span>
@@ -418,7 +422,7 @@ export default function MyDomains() {
                                                 </span>
                                             ))
                                         ) : (
-                                            <span className="text-foreground dark:text-background italic text-xs">Not configured</span>
+                                            <span className="text-muted-foreground italic text-xs">Not configured</span>
                                         )}
                                     </div>
                                 </td>
@@ -458,7 +462,7 @@ export default function MyDomains() {
                                 <td colSpan={4} className="p-16">
                                     <div className="text-center">
                                         <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
-                                            <Globe className="w-10 h-10 text-orange-500 dark:text-orange-400" />
+                                            <Globe className="w-10 h-10 text-signal " />
                                         </div>
                                         <h3 className="font-display text-2xl font-medium text-foreground mb-3">No Domains Yet</h3>
                                         <p className="text-foreground mb-6 max-w-md mx-auto">
@@ -496,14 +500,14 @@ export default function MyDomains() {
                         <div className="grid grid-cols-2 gap-4">
                             <div className="bg-card/70 border border-border rounded-lg p-4">
                                 <h5 className="font-bold text-foreground text-sm mb-1">HTTPS Security</h5>
-                                <div className="flex items-center gap-2 text-xs font-medium text-green-600 dark:text-green-400">
-                                    <div className="w-2 h-2 rounded-full bg-green-600 dark:bg-green-400 animate-pulse"></div>
+                                <div className="flex items-center gap-2 text-xs font-medium text-success ">
+                                    <div className="w-2 h-2 rounded-full bg-success  animate-pulse"></div>
                                     Active (Let's Encrypt)
                                 </div>
                             </div>
                             <div className="bg-card/70 border border-border rounded-lg p-4">
                                 <h5 className="font-bold text-foreground text-sm mb-1">Expiration</h5>
-                                <div className="flex items-center gap-2 text-xs font-medium text-amber-600 dark:text-amber-500">
+                                <div className="flex items-center gap-2 text-xs font-medium text-warning ">
                                     <Clock className="w-3 h-3" />
                                     {selectedDomain?.expiresAt ? new Date(selectedDomain.expiresAt).toLocaleDateString('en-GB') : 'N/A'}
                                 </div>
@@ -516,7 +520,7 @@ export default function MyDomains() {
                                 <h4 className="font-bold text-foreground flex items-center gap-2">
                                     <SettingsIcon className="w-4 h-4" /> Nameserver Configuration
                                 </h4>
-                                <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-gray-100 rounded text-gray-500">Advanced</span>
+                                <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-secondary rounded text-muted-foreground">Advanced</span>
                             </div>
 
                             <div className="border border-border rounded-xl p-5 space-y-4 bg-card/70 hover:shadow-sm transition-all focus-within:border-foreground dark:focus-within:border-foreground">
@@ -601,15 +605,15 @@ export default function MyDomains() {
 
                         {/* Danger Zone */}
                         <div className="pt-6 mt-6 border-t font-mono">
-                            <h4 className="text-red-600 font-bold mb-4 text-sm uppercase tracking-wider">Danger Zone</h4>
-                            <div className="flex items-center justify-between p-4 border border-red-200 bg-red-50 rounded-lg">
+                            <h4 className="text-destructive font-bold mb-4 text-sm uppercase tracking-wider">Danger Zone</h4>
+                            <div className="flex items-center justify-between p-4 border border-destructive/20 bg-destructive/10 rounded-lg">
                                 <div>
-                                    <p className="font-bold text-red-900">Delete Domain</p>
-                                    <p className="text-xs text-red-700">Permanently remove this domain.</p>
+                                    <p className="font-bold text-foreground">Delete Domain</p>
+                                    <p className="text-xs text-muted-foreground">Permanently remove this domain.</p>
                                 </div>
                                 <button
                                     onClick={() => setDeleteId(selectedDomain.id)}
-                                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm shadow-sm transition duration-200 cursor-pointer rounded-lg font-bold"
+                                    className="px-4 py-2 bg-destructive hover:bg-destructive/90 text-destructive-foreground text-sm shadow-sm transition duration-200 cursor-pointer rounded-lg font-bold"
                                 >
                                     Delete Domain
                                 </button>
@@ -634,7 +638,7 @@ export default function MyDomains() {
                         <AlertDialogAction
                             onClick={handleDelete}
                             disabled={isDeleting}
-                            className="bg-red-600 text-white font-bold hover:bg-red-700"
+                            className="bg-destructive text-destructive-foreground font-bold hover:bg-destructive/90"
                         >
                             {isDeleting ? 'Deleting...' : 'Delete'}
                         </AlertDialogAction>

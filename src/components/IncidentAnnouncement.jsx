@@ -61,7 +61,7 @@ export function IncidentAnnouncement() {
             {/* Compact Modal */}
             {showModal && (
                 <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white/90 dark:bg-[#1A1A1A]/95 backdrop-blur-2xl border border-slate-200/80 dark:border-white/10 rounded-[24px] shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+                    <div className="bg-popover/95 backdrop-blur-2xl border border-border rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col">
 
                         {/* Header */}
                         <div className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10 p-5 flex items-start justify-between">

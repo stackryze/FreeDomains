@@ -35,7 +35,7 @@ export default function History() {
             case 'deletion_request':return { icon: Trash2,     color: "text-red-600 bg-red-50" };
             case 'nameserver_update':return { icon: Settings,  color: "text-amber-600 bg-amber-50" };
             case 'status_change':   return { icon: AlertCircle,color: "text-purple-600 bg-purple-50" };
-            default:                return { icon: Activity,   color: "text-gray-500 bg-gray-50" };
+            default:                return { icon: Activity,   color: "text-muted-foreground bg-secondary" };
         }
     };
 
@@ -61,7 +61,7 @@ export default function History() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
                 <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-1">Account</p>
+                    <p className="text-xs font-bold uppercase tracking-widest text-signal mb-1">Account</p>
                     <h1 className="font-display text-2xl md:text-3xl font-medium text-foreground leading-tight">Activity History</h1>
                     <p className="text-sm text-foreground mt-1">
                         {activities.length} {activities.length === 1 ? 'activity' : 'activities'} recorded

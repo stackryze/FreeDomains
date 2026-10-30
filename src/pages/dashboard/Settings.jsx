@@ -105,7 +105,7 @@ export default function Settings() {
                         {user?.blog && (
                             <div className="flex items-center gap-2 text-sm text-foreground font-medium">
                                 <Link2 className="w-4 h-4 text-foreground shrink-0" />
-                                <a href={user.blog.startsWith("http") ? user.blog : `https://${user.blog}`} target="_blank" rel="noreferrer" className="hover:text-orange-500 hover:underline truncate">
+                                <a href={user.blog.startsWith("http") ? user.blog : `https://${user.blog}`} target="_blank" rel="noreferrer" className="hover:text-signal/80 hover:underline truncate">
                                     {user.blog.replace(/^https?:\/\//, "")}
                                 </a>
                             </div>
@@ -170,7 +170,7 @@ export default function Settings() {
                     {/* Email */}
                     <div className="bg-card/70 backdrop-blur-md border border-border rounded-xl p-5 shadow-sm">
                         <div className="flex items-center gap-2 mb-4">
-                            <Mail className="w-4 h-4 text-orange-500" />
+                            <Mail className="w-4 h-4 text-signal" />
                             <h3 className="font-display text-foreground text-sm font-medium">Email Address</h3>
                         </div>
                         {isEditingEmail ? (
@@ -183,7 +183,7 @@ export default function Settings() {
                                     autoFocus
                                     className="flex-1 px-3 py-2 text-sm border border-border focus:border-foreground dark:focus:border-white rounded-lg outline-none bg-input/50 text-foreground"
                                 />
-                                <button onClick={handleEmailUpdate} disabled={emailLoading} className="px-3 py-2 bg-foreground text-background rounded-lg hover:bg-orange-500 hover:text-white dark:hover:bg-orange-500 transition-colors disabled:opacity-50">
+                                <button onClick={handleEmailUpdate} disabled={emailLoading} className="px-3 py-2 bg-foreground text-background rounded-lg hover:bg-signal hover:text-signal-foreground transition-colors disabled:opacity-50">
                                     {emailLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
                                 </button>
                                 <button onClick={() => { setIsEditingEmail(false); setNewEmail(""); }} className="px-3 py-2 bg-secondary dark:bg-secondary text-foreground rounded-lg hover:bg-accent dark:hover:bg-accent transition-colors">
@@ -196,8 +196,8 @@ export default function Settings() {
                                     <span className="font-mono text-sm text-foreground font-medium truncate">{user?.email}</span>
                                     {!user?.isEmailVerified && <span className="shrink-0 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-bold">Unverified</span>}
                                     {user?.email?.includes("noreply.github.com") && (
-                                        <span className="shrink-0 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                        <span className="shrink-0 text-xs bg-warning text-warning px-2 py-0.5 rounded-full flex items-center gap-1 font-bold">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />
                                             Change required
                                         </span>
                                     )}
@@ -214,18 +214,18 @@ export default function Settings() {
                     {/* Centralized Security & Passwords */}
                     <div className="bg-card/70 backdrop-blur-md border border-border rounded-xl p-5 shadow-sm">
                         <div className="flex items-center gap-2 mb-3">
-                            <Shield className="w-4 h-4 text-orange-500" />
+                            <Shield className="w-4 h-4 text-signal" />
                             <h3 className="font-display text-foreground text-sm font-medium">Centralized Security &amp; Passwords</h3>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
-                            Authentication credentials, Passkeys, Multi-Factor Authentication (2FA), and password management are centralized through <strong>Stackryze SSO</strong> at <a href="https://auth.stackryze.com" target="_blank" rel="noreferrer" className="text-orange-500 underline font-medium hover:text-orange-600">auth.stackryze.com</a>.
+                            Authentication credentials, Passkeys, Multi-Factor Authentication (2FA), and password management are centralized through <strong>Stackryze SSO</strong> at <a href="https://auth.stackryze.com" target="_blank" rel="noreferrer" className="text-signal underline font-medium hover:text-signal/80">auth.stackryze.com</a>.
                         </p>
                     </div>
 
                     {/* Privacy / WHOIS */}
                     <div className="bg-card/70 backdrop-blur-md border border-border rounded-xl p-5 shadow-sm">
                         <div className="flex items-center gap-2 mb-4">
-                            <Globe className="w-4 h-4 text-orange-500" />
+                            <Globe className="w-4 h-4 text-signal" />
                             <h3 className="font-display text-foreground text-sm font-medium">Privacy</h3>
                         </div>
 
@@ -235,8 +235,8 @@ export default function Settings() {
                                 <p className="text-xs font-medium text-foreground mt-0.5 leading-relaxed">
                                     Hide your email from public domain WHOIS lookups.
                                 </p>
-                                <span className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 rounded-full text-xs font-bold ${whoisPrivacy ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
-                                    <span className={`w-1.5 h-1.5 rounded-full ${whoisPrivacy ? "bg-green-500" : "bg-amber-400"}`} />
+                                <span className={`inline-flex items-center gap-1.5 mt-2 px-2 py-0.5 rounded-full text-xs font-bold ${whoisPrivacy ? "bg-green-100 text-green-700" : "bg-warning text-warning"}`}>
+                                    <span className={`w-1.5 h-1.5 rounded-full ${whoisPrivacy ? "bg-green-500" : "bg-warning"}`} />
                                     {whoisPrivacy ? "Email hidden" : "Email visible"}
                                 </span>
                             </div>
