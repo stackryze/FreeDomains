@@ -87,7 +87,7 @@ export function GradientButton({ children, className, ...props }) {
   return (
     <button
       className={cn(
-        "px-8 py-2 rounded-full bg-gradient-to-b from-blue-500 to-blue-600 text-white focus:ring-2 focus:ring-blue-400 hover:shadow-xl transition duration-200 cursor-pointer font-medium",
+        "px-8 py-2 rounded-full bg-gradient-to-b from-signal to-[#6B3FFA] text-white focus:ring-2 focus:ring-signal/40 hover:shadow-xl transition duration-200 cursor-pointer font-medium",
         className
       )}
       {...props}
@@ -117,7 +117,7 @@ export function UnapologeticButton({ children, className, shadowBg = "bg-yellow-
 export function LitUpBordersButton({ children, className, ...props }) {
   return (
     <button className={cn("p-[3px] relative cursor-pointer", className)} {...props}>
-      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg animate-pulse" />
+      <div className="absolute inset-0 bg-gradient-to-r from-signal to-[#6B3FFA] rounded-lg animate-pulse" />
       <div className="px-8 py-2 bg-black rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent font-medium">
         {children}
       </div>
@@ -173,12 +173,12 @@ export function SpotifyButton({ children, className, ...props }) {
   );
 }
 
-// 11. NextJS Blue Button - Bright blue shadow-glow transition
+// 11. Signal Button - Signal indigo shadow-glow transition
 export function NextJSBlueButton({ children, className, ...props }) {
   return (
     <button
       className={cn(
-        "shadow-[0_4px_14px_0_rgb(0,118,255,39%)] hover:shadow-[0_6px_20px_rgba(0,118,255,23%)] hover:bg-[rgba(0,118,255,0.9)] px-8 py-2 bg-[#0070f3] rounded-md text-white font-light transition duration-200 ease-linear cursor-pointer text-sm",
+        "shadow-[0_4px_14px_0_rgb(124,92,255,35%)] hover:shadow-[0_6px_20px_rgba(124,92,255,25%)] hover:bg-signal px-8 py-2 bg-signal rounded-md text-white font-light transition duration-200 ease-linear cursor-pointer text-sm",
         className
       )}
       {...props}

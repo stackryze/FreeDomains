@@ -61,7 +61,7 @@ export default function MyDomains() {
             toast({
                 title: "Deletion Request Submitted",
                 description: "Your deletion request will be reviewed by an admin. The domain will remain active until approved.",
-                className: "bg-blue-50 border-blue-200 text-blue-900"
+                className: "bg-signal/10 border-signal/30 text-signal-foreground"
             });
 
             // Refresh the list from backend
@@ -91,11 +91,14 @@ export default function MyDomains() {
     const handleRenew = async (domain) => {
         setIsRenewing(true);
         try {
-            await subdomainAPI.renew(domain._id);
+            const updated = await subdomainAPI.renew(domain._id);
+            const newExpiryStr = updated?.expiresAt
+                ? new Date(updated.expiresAt).toLocaleDateString('en-GB')
+                : null;
 
             toast({
                 title: "Domain Renewed Successfully! 🎉",
-                description: `${domain.name}.${domain.domain || 'indevs.in'} has been extended for another year. New expiry date will be shown on your dashboard.`,
+                description: `${domain.name}.${domain.domain || 'indevs.in'} has been extended for another year.${newExpiryStr ? ` New expiry date: ${newExpiryStr}` : ''}`,
                 className: "bg-signal/10 border-green-200 text-green-900"
             });
 
@@ -257,7 +260,7 @@ export default function MyDomains() {
                                     className={`h-2 rounded-full transition-all ${
                                         indevsPercent >= 100 ? 'bg-red-600'
                                         : indevsPercent >= 80 ? 'bg-amber-500'
-                                        : 'bg-blue-600'
+                                        : 'bg-signal'
                                     }`}
                                     style={{ width: `${indevsPercent}%` }}
                                 />
@@ -278,7 +281,7 @@ export default function MyDomains() {
                                             ? 'bg-red-600'
                                             : ((subdomains?.filter(s => s.domain === 'sryze.cc').length || 0) / (user?.sryzeDomainsLimit || 1) * 100) >= 80
                                                 ? 'bg-amber-500'
-                                                : 'bg-purple-600'
+                                                : 'bg-signal'
                                         }`}
                                     style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'sryze.cc').length || 0) / (user?.sryzeDomainsLimit || 1) * 100), 100)}%` }}
                                 ></div>
@@ -320,7 +323,7 @@ export default function MyDomains() {
                                             ? 'bg-red-600'
                                             : ((subdomains?.filter(s => s.domain === 'nx.kg').length || 0) / (user?.nxKgDomainsLimit || 1) * 100) >= 80
                                                 ? 'bg-amber-500'
-                                                : 'bg-violet-600'
+                                                : 'bg-signal'
                                         }`}
                                     style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'nx.kg').length || 0) / (user?.nxKgDomainsLimit || 1) * 100), 100)}%` }}
                                 ></div>
@@ -392,7 +395,7 @@ export default function MyDomains() {
                                         {/* Expiry warning */}
                                         {domain.expiresAt && (() => {
                                             const daysUntilExpiry = Math.ceil((new Date(domain.expiresAt) - new Date()) / (1000 * 60 * 60 * 24));
-                                            if (daysUntilExpiry > 0 && daysUntilExpiry <= 30) {
+                                            if (daysUntilExpiry > 0 && daysUntilExpiry <= 60) {
                                                 return (
                                                     <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-500 mt-2">
                                                         <AlertCircle className="w-3 h-3" />
@@ -400,6 +403,15 @@ export default function MyDomains() {
                                                     </span>
                                                 );
                                             }
+                                            if (daysUntilExpiry <= 0 && daysUntilExpiry >= -15) {
+                                                return (
+                                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-red-600 dark:text-red-400 mt-2">
+                                                        <AlertCircle className="w-3 h-3" />
+                                                        Expired (grace period)
+                                                    </span>
+                                                );
+                                            }
+                                            return null;
                                         })()}
                                     </div>
                                 </td>
@@ -432,24 +444,42 @@ export default function MyDomains() {
                                     </div>
                                 </td>
                                 <td className="p-2 sm:p-3 md:p-4 text-right align-middle">
-                                    <div className="flex justify-end items-center gap-1.5 flex-wrap">
-                                        <button
-                                            onClick={() => handleRenew(domain)}
-                                            disabled={isRenewing || loading || domain.status === 'Pending Deletion'}
-                                            className="inline-flex items-center justify-center h-7 md:h-8 px-2.5 font-bold border border-border hover:border-border dark:hover:border-foreground/25 bg-card/70 text-foreground hover:text-foreground dark:hover:text-white shadow-sm transition-all duration-200 disabled:opacity-50 text-[10px] md:text-xs whitespace-nowrap cursor-pointer rounded"
-                                            title={domain.status === 'Pending Deletion' ? 'Cannot renew - deletion pending' : 'Renew Domain'}
-                                        >
-                                            <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                                            Renew
-                                        </button>
-                                        <Link
-                                            to={`/domains/${domain._id}`}
-                                            className="inline-flex items-center justify-center h-7 md:h-8 px-2.5 font-bold border border-border hover:border-border dark:hover:border-foreground/25 bg-card/70 text-foreground hover:text-foreground dark:hover:text-white shadow-sm transition-all duration-200 text-[10px] md:text-xs whitespace-nowrap cursor-pointer rounded"
-                                        >
-                                            <SettingsIcon className="w-3 h-3 md:w-3.5 md:h-3.5 mr-1.5" />
-                                            Manage
-                                        </Link>
-                                    </div>
+                                    {(() => {
+                                        const daysUntilExpiry = domain.expiresAt
+                                            ? Math.ceil((new Date(domain.expiresAt) - new Date()) / (1000 * 60 * 60 * 24))
+                                            : null;
+                                        const isLockedStatus = domain.status === 'Pending Deletion' || domain.status === 'Suspended';
+                                        const outsideWindow = daysUntilExpiry !== null && (daysUntilExpiry > 60 || daysUntilExpiry < -15);
+                                        const renewTitle = domain.status === 'Pending Deletion'
+                                            ? 'Cannot renew - deletion pending'
+                                            : domain.status === 'Suspended'
+                                                ? 'Cannot renew - domain suspended'
+                                                : (daysUntilExpiry !== null && daysUntilExpiry > 60)
+                                                    ? `Renewal opens in ${daysUntilExpiry - 60} day${daysUntilExpiry - 60 === 1 ? '' : 's'}`
+                                                    : (daysUntilExpiry !== null && daysUntilExpiry < -15)
+                                                        ? 'Expired beyond 15-day grace period'
+                                                        : 'Renew Domain';
+                                        return (
+                                            <div className="flex justify-end items-center gap-1.5 flex-wrap">
+                                                <button
+                                                    onClick={() => handleRenew(domain)}
+                                                    disabled={isRenewing || loading || isLockedStatus || outsideWindow}
+                                                    className="inline-flex items-center justify-center h-7 md:h-8 px-2.5 font-bold border border-border hover:border-border dark:hover:border-foreground/25 bg-card/70 text-foreground hover:text-foreground dark:hover:text-white shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-[10px] md:text-xs whitespace-nowrap cursor-pointer rounded"
+                                                    title={renewTitle}
+                                                >
+                                                    <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                                    Renew
+                                                </button>
+                                                <Link
+                                                    to={`/domains/${domain._id}`}
+                                                    className="inline-flex items-center justify-center h-7 md:h-8 px-2.5 font-bold border border-border hover:border-border dark:hover:border-foreground/25 bg-card/70 text-foreground hover:text-foreground dark:hover:text-white shadow-sm transition-all duration-200 text-[10px] md:text-xs whitespace-nowrap cursor-pointer rounded"
+                                                >
+                                                    <SettingsIcon className="w-3 h-3 md:w-3.5 md:h-3.5 mr-1.5" />
+                                                    Manage
+                                                </Link>
+                                            </div>
+                                        );
+                                    })()}
                                 </td>
                             </tr>
                         ))}

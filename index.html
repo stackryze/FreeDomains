@@ -1,10 +1,36 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark" style="color-scheme: dark; background-color: #0A0A0B;">
 
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="/stackryze_logo_white.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function() {
+      try {
+        const theme = localStorage.getItem('vite-ui-theme') || 'dark';
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.style.colorScheme = 'light';
+          document.documentElement.style.backgroundColor = '#FAFAFA';
+        } else {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+          document.documentElement.style.backgroundColor = '#0A0A0B';
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    html, body {
+      background-color: #0A0A0B;
+      color: #F4F4F5;
+    }
+    html:not(.dark), html:not(.dark) body {
+      background-color: #FAFAFA;
+      color: #18181B;
+    }
+  </style>
   <title>Stackryze Free Domains | Indevs</title>
   <meta name="description"
     content="Get your free domain from Stackryze. A transparent, open-source platform for developers, students, and creators. Free domains for everyone - no hidden costs, no credit card required." />
@@ -66,7 +92,7 @@
   </script>
 </head>
 
-<body>
+<body class="bg-[#0A0A0B] text-foreground antialiased">
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>

@@ -308,7 +308,7 @@ export default function Register() {
                         0 {rootDomain} domains remaining
                     </p>
                 ) : (
-                    <p className="text-xs text-blue-700 dark:text-blue-400 font-medium mt-2">
+                    <p className="text-xs text-signal dark:text-signal font-medium mt-2">
                         {domainLimit - domainsRegistered} {rootDomain} {domainLimit - domainsRegistered === 1 ? 'domain' : 'domains'} remaining
                     </p>
                 )}
@@ -560,10 +560,10 @@ export default function Register() {
                     </button>
 
                     {/* Info Notice */}
-                    <div className="bg-blue-50/50 dark:bg-blue-500/10 border border-blue-200/50 dark:border-blue-500/20 p-4 rounded-lg">
+                    <div className="bg-signal/5 dark:bg-signal/10 border border-signal/30 dark:border-signal/20 p-4 rounded-lg">
                         <div className="flex gap-2">
-                            <Info className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-                            <div className="text-xs text-blue-700 dark:text-blue-400">
+                            <Info className="w-4 h-4 text-signal flex-shrink-0 mt-0.5" />
+                            <div className="text-xs text-signal dark:text-signal">
                                 <p className="font-bold mb-1">What happens next?</p>
                                 <ul className="space-y-0.5 font-medium opacity-90">
                                     <li>• Your domain will be registered instantly</li>

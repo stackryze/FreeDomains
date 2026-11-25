@@ -61,7 +61,7 @@ export function FeatureCards() {
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-secondary border border-border text-foreground transition-transform duration-300 group-hover:scale-105">
-                    <f.icon className="w-6 h-6 text-[#4FBE7A]" strokeWidth={1.75} />
+                    <f.icon className="w-6 h-6 text-[#7C5CFF]" strokeWidth={1.75} />
                   </div>
                   <span className="font-mono text-[11px] font-medium text-muted-foreground bg-secondary border border-border px-2.5 py-1 rounded-full">
                     {f.badge}

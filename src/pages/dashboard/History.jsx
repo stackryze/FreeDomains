@@ -30,11 +30,11 @@ export default function History() {
             case 'login':           return { icon: Activity,   color: "text-cyan-600 bg-cyan-50" };
             case 'create':
             case 'registration':    return { icon: Plus,       color: "text-green-600 bg-green-50" };
-            case 'renewal':         return { icon: RefreshCw,  color: "text-blue-600 bg-blue-50" };
+            case 'renewal':         return { icon: RefreshCw,  color: "text-signal bg-signal/10" };
             case 'soft_delete':
             case 'deletion_request':return { icon: Trash2,     color: "text-red-600 bg-red-50" };
             case 'nameserver_update':return { icon: Settings,  color: "text-amber-600 bg-amber-50" };
-            case 'status_change':   return { icon: AlertCircle,color: "text-purple-600 bg-purple-50" };
+            case 'status_change':   return { icon: AlertCircle,color: "text-signal bg-signal/10" };
             default:                return { icon: Activity,   color: "text-gray-500 bg-gray-50" };
         }
     };

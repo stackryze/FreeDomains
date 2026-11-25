@@ -50,10 +50,14 @@ export default function DomainDetail() {
     const handleRenew = async () => {
         setIsRenewing(true);
         try {
-            await subdomainAPI.renew(domain._id);
+            const updated = await subdomainAPI.renew(domain._id);
+            const fallbackExpiry = domain.expiresAt
+                ? new Date(new Date(domain.expiresAt).setFullYear(new Date(domain.expiresAt).getFullYear() + 1))
+                : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+            const displayExpiry = (updated?.expiresAt ? new Date(updated.expiresAt) : fallbackExpiry).toLocaleDateString('en-GB');
             toast({
                 title: "Domain Renewed Successfully! 🎉",
-                description: `${domain.name}.${domain.domain || 'indevs.in'} has been extended for 1 year. New expiry date: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB')}`,
+                description: `${domain.name}.${domain.domain || 'indevs.in'} has been extended for 1 year. New expiry date: ${displayExpiry}`,
 
                 className: "bg-signal/10 border-green-200 text-green-900"
             });
@@ -76,7 +80,7 @@ export default function DomainDetail() {
             toast({
                 title: "Deletion Request Submitted",
                 description: "Your deletion request will be reviewed by an admin. The domain will remain active until approved.",
-                className: "bg-blue-50 border-blue-200 text-blue-900"
+                className: "bg-signal/10 border-signal/30 text-signal-foreground"
             });
             await refresh();
             // Navigate away since domain is gone
@@ -237,32 +241,47 @@ export default function DomainDetail() {
                         <div className="flex flex-col items-end gap-1.5">
                              <button
                                 onClick={handleRenew}
-                                disabled={isRenewing || (daysUntilExpiry && daysUntilExpiry > 60) || domain.status === 'Pending Deletion'}
+                                disabled={
+                                    isRenewing ||
+                                    domain.status === 'Pending Deletion' ||
+                                    domain.status === 'Suspended' ||
+                                    (daysUntilExpiry !== null && (daysUntilExpiry > 60 || daysUntilExpiry < -15))
+                                }
                                 className="inline-flex items-center justify-center font-bold border border-border hover:border-border dark:hover:border-foreground/25 bg-card/70 text-foreground hover:text-foreground dark:hover:text-white shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed h-7 w-full sm:w-auto text-[10px] px-2.5 cursor-pointer rounded"
                                 title={
                                     domain.status === 'Pending Deletion'
                                         ? 'Cannot renew - deletion pending'
-                                        : (daysUntilExpiry && daysUntilExpiry > 60) ? 'Check back closer to expiry' : 'Renew Domain'
+                                        : domain.status === 'Suspended'
+                                            ? 'Cannot renew - domain suspended'
+                                            : (daysUntilExpiry !== null && daysUntilExpiry > 60)
+                                                ? 'Check back closer to expiry'
+                                                : (daysUntilExpiry !== null && daysUntilExpiry < -15)
+                                                    ? 'Expired beyond 15-day grace period'
+                                                    : 'Renew Domain'
                                 }
                             >
                                 <RefreshCw className={`w-3 h-3 justify-center ${isRenewing ? 'animate-spin mr-1' : 'mr-1'}`} />
                                 {isRenewing ? 'Renewing...' : 'Renew'}
                             </button>
-                            {daysUntilExpiry && daysUntilExpiry > 60 && (
+                            {daysUntilExpiry !== null && daysUntilExpiry > 60 && (
                                 <p className="text-[10px] text-foreground flex items-center gap-1 font-medium">
                                     <Clock className="w-3 h-3" />
-                                    Renewal in {daysUntilExpiry - 60} days
+                                    Renewal in {daysUntilExpiry - 60} day{daysUntilExpiry - 60 === 1 ? '' : 's'}
                                 </p>
                             )}
                         </div>
                     </div>
 
-                    {daysUntilExpiry && daysUntilExpiry <= 60 && daysUntilExpiry > 0 && (
+                    {daysUntilExpiry !== null && daysUntilExpiry <= 60 && daysUntilExpiry >= -15 && domain.status !== 'Suspended' && domain.status !== 'Pending Deletion' && (
                         <div className={`mt-4 p-3 rounded-lg border ${daysUntilExpiry <= 30 ? 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/20' : 'bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20'}`}>
                             <div className="flex items-center gap-2">
                                 <AlertCircle className={`w-4 h-4 ${daysUntilExpiry <= 30 ? 'text-red-500 dark:text-red-400' : 'text-amber-500 dark:text-amber-400'}`} />
                                 <p className={`text-xs font-bold ${daysUntilExpiry <= 30 ? 'text-red-600 dark:text-red-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                                    Domain expires in {daysUntilExpiry} days
+                                    {daysUntilExpiry > 0
+                                        ? `Domain expires in ${daysUntilExpiry} day${daysUntilExpiry === 1 ? '' : 's'}`
+                                        : daysUntilExpiry === 0
+                                            ? 'Domain expires today'
+                                            : `Domain expired ${Math.abs(daysUntilExpiry)} day${Math.abs(daysUntilExpiry) === 1 ? '' : 's'} ago (grace period)`}
                                 </p>
                             </div>
                             <p className={`text-xs mt-1 ${daysUntilExpiry <= 30 ? 'text-red-600 dark:text-red-400' : 'text-amber-600 dark:text-amber-400'}`}>
@@ -274,11 +293,11 @@ export default function DomainDetail() {
             </div>
 
             {/* Single Important Notice */}
-            {daysUntilExpiry && daysUntilExpiry <= 60 && (
+            {daysUntilExpiry !== null && daysUntilExpiry <= 60 && daysUntilExpiry >= -15 && domain.status !== 'Suspended' && domain.status !== 'Pending Deletion' && (
                 <div className="bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 p-4 rounded-lg">
                     <p className="text-sm font-bold text-green-600 dark:text-green-400 mb-1">Renewal Available</p>
                     <p className="text-sm text-green-700 dark:text-green-300">
-                        You can renew your domain when it has less than 60 days until expiry. We'll email you reminders.
+                        You can renew your domain within 60 days of expiry (plus a 15-day grace period). We'll email you reminders at 60 and 10 days before expiry.
                     </p>
                 </div>
             )}
@@ -360,7 +379,7 @@ export default function DomainDetail() {
                 </div>
 
                 <div className="space-y-6">
-                    <div className={`border rounded-lg p-6 transition-colors ${isEditingDNS ? 'bg-blue-50/50 dark:bg-blue-500/5 border-blue-200/50 dark:border-blue-500/20' : 'bg-transparent border-border dark:border-border/60'}`}>
+                    <div className={`border rounded-lg p-6 transition-colors ${isEditingDNS ? 'bg-signal/5 dark:bg-signal/10 border-signal/30 dark:border-signal/20' : 'bg-transparent border-border dark:border-border/60'}`}>
                         <h3 className="font-display text-foreground font-medium mb-2">Nameservers (NS Records)</h3>
                         <p className="text-sm text-foreground mb-4">
                             Custom nameservers allow you to manage your DNS records via external providers like Cloudflare or Route53.
@@ -385,7 +404,7 @@ export default function DomainDetail() {
                                                 placeholder={`e.g. ns${idx + 1}.example.com`}
                                                 className={`font-mono transition-all ${
                                                     isEditingDNS
-                                                        ? 'bg-input border-blue-300 dark:border-blue-500/50 focus:border-blue-500'
+                                                        ? 'bg-input border-signal/50 dark:border-signal/50 focus:border-signal'
                                                         : 'bg-muted dark:bg-accent/60 text-foreground border-border dark:border-border cursor-not-allowed'
                                                 }`}
                                                 readOnly={!isEditingDNS}
@@ -415,9 +434,9 @@ export default function DomainDetail() {
                                 <button
                                     type="button"
                                     onClick={() => setNameservers([...nameservers, ''])}
-                                    className="mt-1 inline-flex items-center gap-1.5 text-sm font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+                                    className="mt-1 inline-flex items-center gap-1.5 text-sm font-bold text-signal dark:text-signal hover:text-signal dark:hover:text-signal transition-colors"
                                 >
-                                    <span className="w-5 h-5 rounded-full bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20 font-bold text-base leading-none flex items-center justify-center transition-colors">+</span>
+                                    <span className="w-5 h-5 rounded-full bg-signal/10 dark:bg-signal/10 hover:bg-signal/20 dark:hover:bg-signal/20 text-signal dark:text-signal border border-signal/30 dark:border-signal/20 font-bold text-base leading-none flex items-center justify-center transition-colors">+</span>
                                     Add nameserver{nameservers.length < MAX_NS ? ` (${MAX_NS - nameservers.length} remaining)` : ''}
                                 </button>
                             )}
@@ -472,12 +491,12 @@ export default function DomainDetail() {
                         )}
                     </div>
 
-                    <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 p-4 rounded-lg">
+                    <div className="bg-signal/5 dark:bg-signal/10 border border-signal/30 dark:border-signal/20 p-4 rounded-lg">
                         <div className="flex items-start gap-3">
-                            <AlertCircle className="w-5 h-5 text-blue-500 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                            <AlertCircle className="w-5 h-5 text-signal dark:text-signal flex-shrink-0 mt-0.5" />
                             <div>
-                                <p className="text-sm font-bold text-blue-600 dark:text-blue-400 mb-1">DNS Propagation Notice</p>
-                                <p className="text-sm text-blue-700 dark:text-blue-300">
+                                <p className="text-sm font-bold text-signal dark:text-signal mb-1">DNS Propagation Notice</p>
+                                <p className="text-sm text-signal dark:text-signal">
                                     Changes to nameservers may take up to 48 hours to propagate globally.
                                 </p>
                             </div>
@@ -495,7 +514,7 @@ export default function DomainDetail() {
                 
                 <div className="bg-amber-50/50 dark:bg-amber-500/10 border border-amber-200/50 dark:border-amber-500/20 rounded-lg p-4 space-y-3">
                     <p className="text-xs sm:text-sm text-foreground">
-                        If you want to manage this domain's DNS records on <a href="https://dns.stackryze.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline font-semibold">dns.stackryze.com</a>, 
+                        If you want to manage this domain's DNS records on <a href="https://dns.stackryze.com" target="_blank" rel="noopener noreferrer" className="text-signal dark:text-signal hover:underline font-semibold">dns.stackryze.com</a>,
                         you need to verify ownership. Add the zone on the DNS platform, copy the verification code it gives you, and paste it here.
                     </p>
 
@@ -552,7 +571,7 @@ export default function DomainDetail() {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <div className="py-4 space-y-4">
-                        <div className="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 rounded-lg p-3 text-xs text-blue-700 dark:text-blue-300 space-y-1">
+                        <div className="bg-signal/5 dark:bg-signal/10 border border-signal/30 dark:border-signal/20 rounded-lg p-3 text-xs text-signal dark:text-signal space-y-1">
                             <p><strong>1.</strong> Go to <a href="https://dns.stackryze.com" target="_blank" rel="noopener noreferrer" className="underline font-medium">dns.stackryze.com</a></p>
                             <p><strong>2.</strong> Add zone <strong>{domain.name}.{domain.domain || 'indevs.in'}</strong></p>
                             <p><strong>3.</strong> Copy the verification code it shows you</p>

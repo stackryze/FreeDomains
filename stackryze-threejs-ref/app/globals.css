@@ -1,0 +1,529 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-signal: var(--signal);
+  --color-signal-foreground: var(--signal-foreground);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
+}
+
+/* ============================================================
+   STACKRYZE — DESIGN TOKENS
+   Cool grey palette, P3 wide-gamut via OKLCH
+   ============================================================ */
+
+:root {
+  /* Surfaces */
+  --background: oklch(94.5% 0.005 285);
+  --foreground: oklch(18% 0.003 285);
+
+  --card: oklch(98% 0.003 285);
+  --card-foreground: oklch(18% 0.003 285);
+
+  --popover: oklch(98% 0.003 285);
+  --popover-foreground: oklch(18% 0.003 285);
+
+  /* Brand */
+  --primary: oklch(22% 0.003 285);
+  --primary-foreground: oklch(96% 0.004 285);
+
+  --secondary: oklch(88% 0.005 285);
+  --secondary-foreground: oklch(22% 0.003 285);
+
+  --muted: oklch(90% 0.005 285);
+  --muted-foreground: oklch(45% 0.005 285);
+
+  --accent: oklch(78% 0.006 285);
+  --accent-foreground: oklch(18% 0.003 285);
+
+  --destructive: oklch(57.7% 0.245 27.33);
+  --destructive-foreground: oklch(98% 0 0);
+
+  --border: oklch(82% 0.006 285);
+  --input: oklch(85% 0.005 285);
+  --ring: oklch(45% 0.005 285);
+
+  --radius: 0.625rem;
+
+  --sidebar: oklch(96% 0.004 285);
+  --sidebar-foreground: oklch(18% 0.003 285);
+  --sidebar-primary: oklch(22% 0.003 285);
+  --sidebar-accent: oklch(88% 0.005 285);
+  --sidebar-border: oklch(82% 0.006 285);
+  --sidebar-ring: oklch(45% 0.005 285);
+
+  /* Signature accent — only used for live/active states */
+  --signal: oklch(72% 0.18 155);
+  --signal-foreground: oklch(15% 0.02 155);
+}
+
+.dark {
+  --background: oklch(11% 0.002 285);
+  --foreground: oklch(94% 0.004 285);
+
+  --card: oklch(15% 0.003 285);
+  --card-foreground: oklch(94% 0.004 285);
+
+  --popover: oklch(15% 0.003 285);
+  --popover-foreground: oklch(94% 0.004 285);
+
+  --primary: oklch(94% 0.004 285);
+  --primary-foreground: oklch(15% 0.003 285);
+
+  --secondary: oklch(22% 0.003 285);
+  --secondary-foreground: oklch(94% 0.004 285);
+
+  --muted: oklch(22% 0.003 285);
+  --muted-foreground: oklch(70% 0.005 285);
+
+  --accent: oklch(32% 0.005 285);
+  --accent-foreground: oklch(94% 0.004 285);
+
+  --destructive: oklch(57.7% 0.245 27.33);
+  --destructive-foreground: oklch(98% 0 0);
+
+  --border: oklch(28% 0.004 285);
+  --input: oklch(28% 0.004 285);
+  --ring: oklch(70% 0.005 285);
+
+  --sidebar: oklch(15% 0.003 285);
+  --sidebar-foreground: oklch(94% 0.004 285);
+  --sidebar-primary: oklch(94% 0.004 285);
+  --sidebar-accent: oklch(22% 0.003 285);
+  --sidebar-border: oklch(28% 0.004 285);
+  --sidebar-ring: oklch(70% 0.005 285);
+
+  --signal: oklch(78% 0.18 155);
+  --signal-foreground: oklch(15% 0.02 155);
+}
+
+/* ============================================================
+   GLOBAL RESET
+   ============================================================ */
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.011em;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* ============================================================
+   GRAIN + GRID BACKGROUNDS
+   ============================================================ */
+
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+}
+.dark .grain::after {
+  opacity: 0.07;
+  mix-blend-mode: screen;
+}
+
+/* Global ambient grain — REMOVED (caused repaint on every scroll frame).
+   Use .grain on individual containers if needed. */
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 6%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 40%, transparent 80%);
+}
+
+.bg-grid-fine {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 4%, transparent) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.bg-dots {
+  background-image: radial-gradient(circle, color-mix(in oklch, var(--foreground) 12%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Topographic contour pattern — the infrastructure "signature" */
+.bg-topo {
+  background-image:
+    radial-gradient(ellipse 600px 300px at 20% 30%, transparent 0%, transparent 100%),
+    radial-gradient(ellipse 400px 400px at 80% 70%, transparent 0%, transparent 100%);
+  background-color:
+    repeating-radial-gradient(
+      ellipse 800px 600px at 30% 40%,
+      transparent 0,
+      transparent 38px,
+      color-mix(in oklch, var(--foreground) 4%, transparent) 38px,
+      color-mix(in oklch, var(--foreground) 4%, transparent) 39px
+    );
+}
+
+/* Atmospheric gradient mesh — used as fixed ambient layer */
+.bg-aurora {
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 0%, color-mix(in oklch, var(--signal) 14%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 20%, color-mix(in oklch, var(--foreground) 6%, transparent) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklch, var(--foreground) 8%, transparent) 0%, transparent 60%);
+}
+.dark .bg-aurora {
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 0%, color-mix(in oklch, var(--signal) 10%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 20%, color-mix(in oklch, var(--foreground) 4%, transparent) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklch, var(--foreground) 5%, transparent) 0%, transparent 60%);
+}
+
+/* Soft ambient signal glow — for the hero */
+.bg-glow-signal {
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    color-mix(in oklch, var(--signal) 22%, transparent) 0%,
+    transparent 70%
+  );
+}
+
+/* Section backgrounds — promoted from inline styles for cacheable paint.
+   Each class is isolated with `contain: paint` so the browser can
+   repaint the section without re-computing the rest of the page. */
+.section-bg-card-tint {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--card) 70%, transparent) 0%,
+    color-mix(in oklch, var(--background) 80%, transparent) 100%
+  );
+}
+
+.section-bg-card-tint-soft {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--card) 60%, transparent) 0%,
+    color-mix(in oklch, var(--background) 80%, transparent) 100%
+  );
+}
+
+.section-bg-footer-tint {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--background) 90%, transparent) 0%,
+    color-mix(in oklch, var(--card) 50%, transparent) 100%
+  );
+}
+
+.section-bg-topo {
+  background: repeating-radial-gradient(
+    ellipse 900px 700px at 30% 50%,
+    transparent 0,
+    transparent 42px,
+    color-mix(in oklch, var(--foreground) 5%, transparent) 42px,
+    color-mix(in oklch, var(--foreground) 5%, transparent) 43px
+  );
+}
+
+.section-bg-aurora-right {
+  background: radial-gradient(
+    ellipse 60% 40% at 80% 30%,
+    color-mix(in oklch, var(--signal) 8%, transparent) 0%,
+    transparent 60%
+  );
+}
+
+.section-bg-aurora-left {
+  background: radial-gradient(
+    ellipse 50% 50% at 10% 50%,
+    color-mix(in oklch, var(--signal) 7%, transparent) 0%,
+    transparent 60%
+  );
+}
+
+.section-bg-cta-glow {
+  background: radial-gradient(
+    ellipse 50% 50% at 50% 50%,
+    color-mix(in oklch, var(--signal) 10%, transparent) 0%,
+    transparent 70%
+  );
+}
+
+.section-bg-dots-32 {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--foreground) 10%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 32px 32px;
+}
+
+/* Edge fades — used on background layers so they don't paint edges */
+.fade-y-both {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
+}
+
+/* Section mask fades — for smooth transitions */
+.fade-bottom {
+  mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+}
+.fade-top {
+  mask-image: linear-gradient(to top, black 0%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, black 0%, black 80%, transparent 100%);
+}
+.fade-edges {
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 50%, black 60%, transparent 100%);
+}
+
+/* ============================================================
+   DIVIDERS
+   ============================================================ */
+
+.divider-soft {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border) 50%,
+    transparent 100%
+  );
+  height: 1px;
+}
+
+.section-fade-out {
+  position: relative;
+}
+.section-fade-out::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 80px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--background));
+}
+
+/* ============================================================
+   GRADIENTS
+   ============================================================ */
+
+.text-gradient {
+  background: linear-gradient(
+    180deg,
+    var(--foreground) 0%,
+    color-mix(in oklch, var(--foreground) 70%, transparent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-signal {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--signal) 90%, var(--foreground)) 0%,
+    var(--signal) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.6; }
+  80%, 100% { transform: scale(2.2); opacity: 0; }
+}
+.animate-ping-slow {
+  animation: ping-slow 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(var(--radius-orbit, 120px)) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(var(--radius-orbit, 120px)) rotate(-360deg); }
+}
+.animate-orbit {
+  animation: orbit calc(var(--duration, 16s) * 1s) linear infinite;
+  transform-origin: center;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklch, var(--foreground) 10%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ============================================================
+   DIVIDERS
+   ============================================================ */
+
+.divider-soft {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border) 50%,
+    transparent 100%
+  );
+  height: 1px;
+}
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* ============================================================
+   PERFORMANCE HINTS
+   ============================================================
+   - Promote the fixed atmosphere layers onto their own composited
+     layer so they don't invalidate the rest of the page on scroll.
+   - Use `content-visibility: auto` on long sections so off-screen
+     content is skipped during render (huge scroll-time savings).
+   ============================================================ */
+.bg-aurora,
+.bg-grid-fine,
+.fade-bottom,
+.fade-top,
+.fade-edges {
+  /* Hints only — actual values set in layout/page via classes below */
+  contain: strict;
+}
+
+.cv-auto {
+  content-visibility: auto;
+  /* Reserve an estimate so layout doesn't jump as sections enter view */
+  contain-intrinsic-size: 1px 600px;
+}
+
+.gpu {
+  /* Hint the compositor: this element will be animated/transformed.
+     Use sparingly — overuse burns GPU memory. */
+  transform: translateZ(0);
+  will-change: transform;
+}

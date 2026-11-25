@@ -72,7 +72,7 @@ export default function Overview() {
                     label="Total"
                     sub="domains"
                     accentClass="text-foreground"
-                    dot="#4FBE7A"
+                    dot="#7C5CFF"
                     to="/my-domains"
                 />
                 <StatCard
@@ -80,7 +80,7 @@ export default function Overview() {
                     label="Active"
                     sub="running"
                     accentClass="text-signal"
-                    dot="#4FBE7A"
+                    dot="#7C5CFF"
                     to="/my-domains"
                 />
                 <StatCard

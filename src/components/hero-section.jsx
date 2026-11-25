@@ -116,7 +116,7 @@ export function HeroSection() {
 
           {/* Left: Text */}
           <div className="space-y-6 lg:pr-8">
-            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white tracking-tight">
+            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white tracking-tight text-balance">
               A NAME FOR EVERYONE <span className="text-gradient-signal italic">ONLINE.</span>
             </h1>
 
@@ -132,7 +132,7 @@ export function HeroSection() {
               Check Availability
             </label>
 
-            <div className="flex border border-white/20 rounded-xl relative z-50 focus-within:ring-2 focus-within:ring-[#4FBE7A]/50 focus-within:border-[#4FBE7A] transition-all bg-[#121214]/70 backdrop-blur-xl">
+            <div className="flex border border-white/20 rounded-xl relative z-50 focus-within:ring-2 focus-within:ring-[#7C5CFF]/50 focus-within:border-[#7C5CFF] transition-all bg-[#121214]/70 backdrop-blur-xl">
               <input
                 type="text"
                 placeholder="yourname"
@@ -166,7 +166,7 @@ export function HeroSection() {
                         >
                           {d.label}
                           {selectedTld.tld === d.tld && (
-                            <CheckCircle className="w-4 h-4 flex-shrink-0 text-[#4FBE7A]" />
+                            <CheckCircle className="w-4 h-4 flex-shrink-0 text-[#7C5CFF]" />
                           )}
                         </button>
                       ))}
@@ -176,7 +176,7 @@ export function HeroSection() {
               </div>
               {isChecking && (
                 <div className="absolute right-44 top-1/2 -translate-y-1/2">
-                  <Loader2 className="w-5 h-5 text-[#4FBE7A] animate-spin" />
+                  <Loader2 className="w-5 h-5 text-[#7C5CFF] animate-spin" />
                 </div>
               )}
             </div>

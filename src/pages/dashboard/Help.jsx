@@ -61,7 +61,7 @@ const faqs = [
     },
     {
         q: "Do domains expire?",
-        a: "Domains are renewed automatically as long as your account is active. You'll receive a warning if a domain is approaching expiry."
+        a: "Domains are valid for 1 year and can be renewed for free within 60 days of expiry (plus a 15-day grace period after expiry). We'll send reminder emails 60 days and 10 days before expiration."
     },
     {
         q: "How do I set up DNS records?",
@@ -124,7 +124,7 @@ export default function Help() {
 
             {/* Discord CTA */}
             <div className="bg-card/70 backdrop-blur-xl border border-border rounded-3xl p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-sm relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent pointer-events-none"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-signal/10 to-transparent pointer-events-none"></div>
                 <div className="flex items-start gap-4 relative z-10">
                     <div className="w-12 h-12 rounded-2xl bg-[#5865F2]/10 border border-[#5865F2]/20 flex items-center justify-center flex-shrink-0 shadow-inner">
                         <MessageCircle className="w-6 h-6 text-[#5865F2] fill-[#5865F2]/20" />

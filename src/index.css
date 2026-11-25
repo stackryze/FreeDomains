@@ -9,7 +9,7 @@
 /*
   Stackryze FreeDomains — Official Brand Design System
   Display: Instrument Serif / Bricolage Grotesque · UI: Geist · Data/Mono: Geist Mono
-  Signature Accent: Signal Green (oklch(72% 0.18 155) / oklch(78% 0.18 155))
+  Signature Accent: Signal Indigo (#7C5CFF)
 */
 
 @theme {
@@ -100,12 +100,12 @@ a[disabled],
 
     --border: 230 11% 90%;
     --input: 230 11% 90%;
-    --ring: 147 48% 52%;
+    --ring: 252 100% 68%;
 
     --radius: 0.625rem;
 
-    --signal: #4FBE7A;
-    --signal-foreground: #0F2A1B;
+    --signal: #7C5CFF;
+    --signal-foreground: #0F0824;
   }
 
   .dark {
@@ -135,10 +135,10 @@ a[disabled],
 
     --border: 240 6% 18%;
     --input: 240 6% 18%;
-    --ring: 147 52% 58%;
+    --ring: 252 100% 76%;
 
-    --signal: #5CD68D;
-    --signal-foreground: #0A2214;
+    --signal: #A78BFF;
+    --signal-foreground: #0F0824;
   }
 
   * {
@@ -162,21 +162,21 @@ a[disabled],
 
 .bg-aurora {
   background:
-    radial-gradient(ellipse 70% 50% at 12% 0%, rgba(79, 190, 122, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 12% 0%, rgba(124, 92, 255, 0.18) 0%, transparent 55%),
     radial-gradient(ellipse 60% 40% at 88% 22%, rgba(100, 100, 120, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 45% at 50% 55%, rgba(79, 190, 122, 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 45% at 50% 55%, rgba(124, 92, 255, 0.08) 0%, transparent 65%),
     radial-gradient(ellipse 70% 50% at 20% 85%, rgba(100, 100, 120, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 55% at 90% 100%, rgba(79, 190, 122, 0.10) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 55% at 90% 100%, rgba(124, 92, 255, 0.14) 0%, transparent 60%);
   contain: layout style;
 }
 
 .dark .bg-aurora {
   background:
-    radial-gradient(ellipse 70% 50% at 12% 0%, rgba(92, 214, 141, 0.09) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 12% 0%, rgba(167, 139, 255, 0.14) 0%, transparent 55%),
     radial-gradient(ellipse 60% 40% at 88% 22%, rgba(200, 200, 220, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 45% at 50% 55%, rgba(92, 214, 141, 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 45% at 50% 55%, rgba(167, 139, 255, 0.07) 0%, transparent 65%),
     radial-gradient(ellipse 70% 50% at 20% 85%, rgba(200, 200, 220, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 55% at 90% 100%, rgba(92, 214, 141, 0.06) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 55% at 90% 100%, rgba(167, 139, 255, 0.10) 0%, transparent 60%);
   contain: layout style;
 }
 
@@ -184,10 +184,10 @@ a[disabled],
   background:
     linear-gradient(
       180deg,
-      rgba(79, 190, 122, 0.03) 0%,
+      rgba(124, 92, 255, 0.05) 0%,
       transparent 12%,
       transparent 45%,
-      rgba(79, 190, 122, 0.04) 70%,
+      rgba(124, 92, 255, 0.06) 70%,
       transparent 100%
     );
 }
@@ -196,10 +196,10 @@ a[disabled],
   background:
     linear-gradient(
       180deg,
-      rgba(92, 214, 141, 0.04) 0%,
+      rgba(167, 139, 255, 0.06) 0%,
       transparent 12%,
       transparent 45%,
-      rgba(92, 214, 141, 0.05) 70%,
+      rgba(167, 139, 255, 0.07) 70%,
       transparent 100%
     );
 }
@@ -207,7 +207,7 @@ a[disabled],
 .bg-glow-signal {
   background: radial-gradient(
     ellipse 60% 50% at 50% 0%,
-    rgba(92, 214, 141, 0.18) 0%,
+    rgba(167, 139, 255, 0.26) 0%,
     transparent 70%
   );
 }
@@ -215,8 +215,8 @@ a[disabled],
 .text-gradient-signal {
   background: linear-gradient(
     180deg,
-    #5CD68D 0%,
-    #3BA764 100%
+    #A78BFF 0%,
+    #7C5CFF 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -237,14 +237,72 @@ a[disabled],
 }
 .animate-pulse-dot {
   animation: pulse-dot 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  #root {
-    @apply min-h-screen flex flex-col font-sans w-full relative;
-  }
+}
+
+#root {
+  @apply min-h-screen flex flex-col font-sans w-full relative;
 }
 
 /* Utilities */
 .container-custom {
   @apply max-w-7xl mx-auto px-6 w-full;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, oklch(1 0 0 / 4%) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(1 0 0 / 4%) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.bg-dots {
+  background-image: radial-gradient(oklch(1 0 0 / 7%) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.mask-fade {
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+
+.text-fade {
+  background: linear-gradient(180deg, var(--foreground) 34%, color-mix(in oklch, var(--foreground) 52%, transparent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Double-bezel architecture */
+.shell {
+  border-radius: 1.5rem;
+  padding: 6px;
+  background: color-mix(in oklch, var(--card) 55%, var(--background));
+  border: 1px solid var(--border);
+}
+
+.core {
+  border-radius: 1.125rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid oklch(1 0 0 / 8%);
+  background: oklch(1 0 0 / 3%);
+  padding: 0.3rem 0.75rem 0.3rem 0.6rem;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.ease-fluid { 
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1); 
 }
 
 /* Animations */

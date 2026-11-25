@@ -63,10 +63,22 @@ async function apiRequest(endpoint, options = {}) {
             throw new Error('Unauthorized - please log in');
         }
 
-        const data = await response.json();
+        const contentType = response.headers.get('content-type') || '';
+        const data = contentType.includes('application/json')
+            ? await response.json()
+            : { message: await response.text() };
 
         if (!response.ok) {
-            const error = new Error(data.error || data.message || 'Request failed');
+            const rawError = data?.error ?? data?.message;
+            let errorMessage = 'Request failed';
+            if (typeof rawError === 'string' && rawError.trim()) {
+                errorMessage = rawError;
+            } else if (rawError && typeof rawError === 'object') {
+                errorMessage = rawError.message || rawError.error || JSON.stringify(rawError);
+            } else if (!response.ok && response.statusText) {
+                errorMessage = `Request failed (${response.status} ${response.statusText})`;
+            }
+            const error = new Error(errorMessage);
             error.status = response.status;
             error.data = data;
             throw error;

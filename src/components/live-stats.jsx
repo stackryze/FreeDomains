@@ -32,9 +32,9 @@ export function LiveStatsSection() {
 
   const statItems = [
     { label: "Active Users", value: stats.totalUsers, icon: Users, accent: "text-signal", bg: "bg-signal/10", border: "border-signal/20" },
-    { label: "Domains Active", value: stats.activeDomains, icon: Globe2, accent: "text-sky-400", bg: "bg-sky-400/10", border: "border-sky-400/20" },
-    { label: "Countries Served", value: stats.countries, icon: Activity, accent: "text-amber-400", bg: "bg-amber-400/10", border: "border-amber-400/20" },
-    { label: "Global DNS Servers", value: stats.nameservers, icon: ShieldCheck, accent: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-400/20" }
+    { label: "Domains Active", value: stats.activeDomains, icon: Globe2, accent: "text-signal", bg: "bg-signal/10", border: "border-signal/20" },
+    { label: "Countries Served", value: stats.countries, icon: Activity, accent: "text-signal", bg: "bg-signal/10", border: "border-signal/20" },
+    { label: "Global DNS Servers", value: stats.nameservers, icon: ShieldCheck, accent: "text-signal", bg: "bg-signal/10", border: "border-signal/20" }
   ];
 
   return (

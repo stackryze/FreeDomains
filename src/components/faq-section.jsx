@@ -54,10 +54,10 @@ export function FAQSection() {
                 onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
                 className="w-full py-6 flex items-center justify-between text-left group"
               >
-                <span className="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors duration-300 pr-8">
+                <span className="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-signal transition-colors duration-300 pr-8">
                   {faq.question}
                 </span>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${openIndex === idx ? 'bg-blue-50 text-blue-600' : 'bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${openIndex === idx ? 'bg-signal/10 text-signal' : 'bg-slate-50 dark:bg-white/5 text-slate-400 group-hover:bg-signal/10 group-hover:text-signal'}`}>
                    <ChevronDown className={`w-5 h-5 flex-shrink-0 transition-transform duration-500 ${openIndex === idx ? 'rotate-180' : ''}`} />
                 </div>
               </button>

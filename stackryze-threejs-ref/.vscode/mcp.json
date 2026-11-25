@@ -1,0 +1,18 @@
+{
+  "servers": {
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
+    },
+    "three-js": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-three-js"
+      ]
+    }
+  }
+}
