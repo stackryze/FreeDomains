@@ -26,3 +26,7 @@ dist-ssr
 
 # Cloudflare Wrangler local state / config redirect
 .wrangler/
+
+# Local reference directories
+stackryze-ref/
+stackryze-threejs-ref/
