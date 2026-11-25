@@ -57,7 +57,7 @@ const faqs = [
     },
     {
         q: "How many domains can I register?",
-        a: "Users get 1 free .indevs.in domain by default. Starring our GitHub repo and verifying unlocks 1 free .sryze.cc domain, 1 free .ryzedns.org domain, 1 free .nx.kg domain, and 1 free .ryzn.pro domain. Further limits can be increased by contacting support via Discord or email and stating your reason."
+        a: "GitHub verification is required to register domains. Once verified by starring our GitHub repo, you can register 1 .indevs.in, 1 .sryze.cc, 1 .ryzedns.org, 1 .nx.kg, and 1 .ryzn.pro domain by default. Limits can be increased by contacting support via Discord or email and stating your reason."
     },
     {
         q: "Do domains expire?",
@@ -65,11 +65,11 @@ const faqs = [
     },
     {
         q: "How do I set up DNS records?",
-        a: "Navigate to Dashboard → DNS Configuration. From there you can add A, CNAME, TXT, and other record types, or delegate NS to your own nameservers."
+        a: "Go to My Domains → Manage on your domain to set your nameservers (NS records). You can point them to Stackryze DNS (dns.stackryze.com) or any external DNS provider like Cloudflare or Route53 to manage A, AAAA, CNAME, MX, and TXT records."
     },
     {
         q: "Can I delete a domain?",
-        a: "Yes. Go to My Domains → select a domain → Delete. Deletion is permanent and the name becomes available to others immediately."
+        a: "Yes. Go to My Domains → Manage → Delete. Submitting a deletion marks the domain as Pending Deletion for admin review; once approved, it enters a 7-day cooling-off period before permanent removal."
     },
 ];
 

@@ -11,7 +11,7 @@ export function FAQSection() {
     },
     {
       question: "How long can I keep my subdomain?",
-      answer: "Domains are valid for 1 year and can be renewed indefinitely for free. We'll send you a reminder email before it expires so you don't lose it."
+      answer: "Domains are valid for 1 year and can be renewed for free within 60 days of expiry (plus a 15-day grace period). We'll send reminder emails 60 and 10 days before it expires."
     },
     {
       question: "Can I use this for commercial projects?",
@@ -23,11 +23,11 @@ export function FAQSection() {
     },
     {
       question: "Can I transfer my subdomain to someone else?",
-      answer: "Not yet. Right now, once you claim it, it's tied to your GitHub account. We might add transfers later if people want it."
+      answer: "Not yet. Right now, once you claim it, it's tied to your Stackryze account. We might add transfers later if people want it."
     },
     {
-      question: "Can I point my subdomain to a custom domain?",
-      answer: "You can use CNAME records to point your *.indevs.in subdomain to any host — Vercel, Netlify, Cloudflare Pages, or your own server. Full DNS control is yours from day one."
+      question: "Can I point my subdomain to a custom DNS provider?",
+      answer: "Yes. Every domain supports custom NS delegation to Stackryze DNS (dns.stackryze.com) or external providers like Cloudflare and Route53, giving you full control over A, AAAA, CNAME, MX, and TXT records."
     }
   ];
 

@@ -26,7 +26,7 @@ export default function ChangeEmail() {
         if (!isNoreplyEmail) {
             toast({
                 title: "Not Required",
-                description: "Email change from this page is only for GitHub noreply emails. Use Settings to change your email.",
+                description: "Email change from this page is only for GitHub noreply emails. Manage your account at auth.stackryze.com.",
             });
             navigate('/dashboard');
             return;

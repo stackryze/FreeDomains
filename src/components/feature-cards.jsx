@@ -5,20 +5,20 @@ export function FeatureCards() {
     {
       icon: Globe,
       title: "Free Subdomains",
-      description: "Claim up to 5 free subdomains on premium TLDs like .indevs.in, .sryze.cc, and .ryzedns.org with zero subscription fees.",
-      badge: "5 Max / User"
+      description: "Claim free subdomains across .indevs.in, .sryze.cc, .ryzedns.org, .nx.kg, and .ryzn.pro with zero subscription fees after GitHub verification.",
+      badge: "5 Extensions"
     },
     {
       icon: Code,
-      title: "Full DNS Control",
-      description: "Manage A, AAAA, CNAME, MX, TXT, and SRV records with instant propagation and built-in type validation.",
-      badge: "Instant Propagation"
+      title: "Full DNS Delegation",
+      description: "Delegate NS records to Stackryze DNS (dns.stackryze.com), Cloudflare, or any authoritative DNS provider with instant PowerDNS updates.",
+      badge: "BYO Nameservers"
     },
     {
       icon: Zap,
-      title: "Developer REST API",
-      description: "Automate domain registration, DNS record updates, and webhook callbacks with our developer-friendly API.",
-      badge: "REST API"
+      title: "Stackryze SSO & Security",
+      description: "Protected by centralized Stackryze SSO authentication, Passkeys/2FA support, and WHOIS privacy enabled by default.",
+      badge: "Centralized SSO"
     },
     {
       icon: ShieldCheck,

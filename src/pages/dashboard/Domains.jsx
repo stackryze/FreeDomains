@@ -635,7 +635,7 @@ export default function MyDomains() {
                             <div className="flex items-center justify-between p-4 border border-red-200 bg-red-50 rounded-lg">
                                 <div>
                                     <p className="font-bold text-red-900">Delete Domain</p>
-                                    <p className="text-xs text-red-700">Permanently remove this domain.</p>
+                                    <p className="text-xs text-red-700">Submit a deletion request for admin review (7-day cooling-off after approval).</p>
                                 </div>
                                 <button
                                     onClick={() => setDeleteId(selectedDomain.id)}

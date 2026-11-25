@@ -53,7 +53,7 @@ export default function Overview() {
                         {greeting()}, {user?.name?.split(" ")[0] || "there"}
                     </h1>
                     <p className="text-sm text-muted-foreground mt-1">
-                        {totalCount === 0 ? "Register your first free domain to get started." : `You have ${totalCount} active domain${totalCount > 1 ? "s" : ""} on Stackryze.`}
+                        {totalCount === 0 ? "Register your first free domain to get started." : `You have ${totalCount} registered domain${totalCount > 1 ? "s" : ""} on Stackryze.`}
                     </p>
                 </div>
                 <Link
@@ -124,7 +124,7 @@ export default function Overview() {
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold text-foreground">KYC Not Verified</p>
-                        <p className="text-xs text-muted-foreground">Complete GitHub verification to unlock sryze.cc, ryzedns.org, nx.kg &amp; ryzn.pro domains and extra quota</p>
+                        <p className="text-xs text-muted-foreground">Complete GitHub verification to unlock domain registration across all extensions (.indevs.in, .sryze.cc, .ryzedns.org, .nx.kg &amp; .ryzn.pro)</p>
                     </div>
                     <span className="shrink-0 text-xs font-semibold px-2.5 py-1 border border-amber-500/40 text-amber-500 rounded-full group-hover:bg-amber-500 group-hover:text-background transition-colors">
                         Verify →
