@@ -12,11 +12,12 @@ export default function Signup() {
         <>
             <Header />
             <div className="min-h-screen flex flex-col items-center justify-center bg-transparent px-4 py-12" style={{ paddingTop: 'calc(4rem + var(--incident-height, 0px) + 2.5rem)' }}>
-                <div className="w-full max-w-md bg-card/80 backdrop-blur-xl rounded-2xl border border-border p-8 md:p-10 relative shadow-sm">
+                <div className="w-full max-w-md bg-card/90 backdrop-blur-xl rounded-3xl border border-border p-8 md:p-10 relative shadow-sm overflow-hidden">
+                    <div aria-hidden="true" className="bg-glow-signal pointer-events-none absolute inset-0 opacity-60" />
                     {/* Header */}
-                    <div className="mb-8 flex items-start justify-between">
+                    <div className="relative z-10 mb-8 flex items-start justify-between">
                         <div>
-                            <h1 className="text-3xl font-display font-medium text-foreground tracking-tight mb-1.5">Create Account</h1>
+                            <h1 className="text-2xl font-semibold text-foreground tracking-[-0.03em] mb-1">Create Account</h1>
                             <p className="text-muted-foreground text-sm">Sign up to claim your free subdomains</p>
                         </div>
                         <Link to="/" className="flex items-center gap-2 shrink-0">

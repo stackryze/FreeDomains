@@ -1,78 +1,76 @@
-import { Globe2, Sparkles, Server, Zap, Shield, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export function DomainExtensionsSection() {
-  const extensions = [
-    {
-      ext: ".indevs.in",
-      description: "Accessible, secure digital identities for developers and open-source projects.",
-      icon: Globe2,
-    },
-    {
-      ext: ".sryze.cc",
-      description: "A modern namespace for creators, projects, and digital-first applications.",
-      icon: Sparkles,
-    },
-    {
-      ext: ".ryzedns.org",
-      description: "Supporting self-hosted infrastructure and open-source network services.",
-      icon: Server,
-    },
-    {
-      ext: ".nx.kg",
-      description: "A concise namespace built for the next generation of web applications.",
-      icon: Zap,
-    },
-    {
-      ext: ".ryzn.pro",
-      description: "Pro-grade domain namespace for developer tools and SaaS platforms.",
-      icon: Shield,
-    }
-  ];
+const extensions = [
+  {
+    tld: "indevs.in",
+    sample: "yourapp",
+    description: "Primary namespace for developers, portfolios, and open-source tools.",
+  },
+  {
+    tld: "sryze.cc",
+    sample: "api",
+    description: "Short, modern namespace for creators, services, and web applications.",
+  },
+  {
+    tld: "ryzedns.org",
+    sample: "homelab",
+    description: "Dedicated to self-hosted infrastructure and open-source network utilities.",
+  },
+  {
+    tld: "nx.kg",
+    sample: "go",
+    description: "Concise two-letter namespace for fast links and edge deployments.",
+  },
+  {
+    tld: "ryzn.pro",
+    sample: "studio",
+    description: "Structured namespace for production developer tools and SaaS demos.",
+  },
+];
 
+export function DomainExtensionsSection() {
   return (
-    <div className="w-full flex flex-col justify-start">
-      <div className="mb-6 md:mb-8 space-y-2">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/80 backdrop-blur-md px-3 py-1 text-xs font-mono tracking-wider uppercase mb-2">
-          <Globe2 className="w-3.5 h-3.5 text-signal" />
-          <span>Domain Registry</span>
-        </div>
-        <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-          Available <span className="italic text-gradient-signal">Namespaces</span>
+    <div className="flex flex-col justify-start">
+      <div className="p-6 sm:p-10 lg:p-12 pb-6 sm:pb-8 space-y-2">
+        <p className="font-mono text-xs text-muted-foreground">Public Registry</p>
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-[-0.03em] text-foreground">
+          Available namespaces
         </h2>
-        <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-          Curated extensions powered by Stackryze global authoritative DNS.
+        <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
+          Five curated root domains with instant NS delegation and free annual renewals.
         </p>
       </div>
 
-      <div className="flex flex-col gap-2.5 w-full">
-        {extensions.map((item, idx) => (
+      <div className="border-t border-border divide-y divide-border">
+        {extensions.map((item) => (
           <Link
-            key={idx}
-            to="/register"
-            className="group flex items-center justify-between gap-4 rounded-2xl border border-border bg-card/70 backdrop-blur-md px-4 py-3.5 transition-all duration-200 hover:border-foreground/25 hover:bg-card shadow-sm"
+            key={item.tld}
+            to={`/register?root=${encodeURIComponent(item.tld)}`}
+            className="group flex items-center justify-between gap-4 px-6 sm:px-10 lg:px-12 py-4 hover:bg-secondary/40 transition-colors duration-150"
           >
-            <div className="flex items-center gap-3.5 min-w-0">
-              <div className="w-9 h-9 flex items-center justify-center rounded-xl bg-secondary border border-border text-foreground shrink-0 transition-colors group-hover:border-foreground/20">
-                <item.icon className="w-4 h-4 text-signal" strokeWidth={2} />
+            <div className="min-w-0 flex-1 space-y-0.5">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <span className="font-mono text-sm font-medium tracking-tight">
+                  <span className="text-muted-foreground">{item.sample}</span>
+                  <span className="text-foreground font-semibold">.{item.tld}</span>
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground border border-border px-1.5 py-0.5 rounded">
+                  Free · Renewable
+                </span>
               </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-sm md:text-base font-bold text-foreground tracking-tight">
-                    {item.ext}
-                  </span>
-                  <span className="font-mono text-[9px] uppercase tracking-wider text-signal bg-signal/10 px-2 py-0.5 rounded-full border border-signal/20 font-medium">
-                    Free
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground truncate max-w-[220px] sm:max-w-md">
-                  {item.description}
-                </p>
-              </div>
+              <p className="text-xs text-muted-foreground truncate">
+                {item.description}
+              </p>
             </div>
-            <div className="w-7 h-7 rounded-lg bg-secondary/60 flex items-center justify-center text-muted-foreground group-hover:text-foreground group-hover:bg-secondary transition-all shrink-0">
-              <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </div>
+
+            <span className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground group-hover:text-foreground transition-colors shrink-0">
+              <span>Claim</span>
+              <ArrowUpRight
+                className="w-3.5 h-3.5 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                aria-hidden="true"
+              />
+            </span>
           </Link>
         ))}
       </div>

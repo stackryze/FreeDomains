@@ -1,571 +1,570 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Switch } from "@/components/ui/switch";
 import { useDashboard } from "@/context/dashboard-context";
 import { useToast } from "@/hooks/use-toast";
 import { subdomainAPI } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
-import { Globe, CheckCircle, XCircle, AlertCircle, Loader2, Sparkles, Info, Github, Shield, Star } from "lucide-react";
-import { Turnstile } from '@marsidev/react-turnstile';
+import { ConsoleHeader } from "@/components/dashboard/ConsoleHeader";
+import {
+  Globe,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  Loader2,
+  Github,
+  Shield,
+  Star,
+  Lock,
+} from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const AVAILABLE_DOMAINS = [
+  { tld: "indevs.in", limitField: "domainLimit" },
+  { tld: "sryze.cc", limitField: "sryzeDomainsLimit" },
+  { tld: "ryzedns.org", limitField: "ryzeDnsDomainsLimit" },
+  { tld: "nx.kg", limitField: "nxKgDomainsLimit" },
+  { tld: "ryzn.pro", limitField: "ryznProDomainsLimit" },
+];
 
 export default function Register() {
-    const [domain, setDomain] = useState("");
-    const [rootDomain, setRootDomain] = useState("indevs.in");
-    const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [isChecking, setIsChecking] = useState(false);
-    const [isAvailable, setIsAvailable] = useState(null);
-    const [errorMsg, setErrorMsg] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [acceptedToS, setAcceptedToS] = useState(false);
-    const [captchaToken, setCaptchaToken] = useState(import.meta.env.DEV ? "dev-bypass" : null);
-    const captchaRef = useRef(null);
+  const [domain, setDomain] = useState("");
+  const [rootDomain, setRootDomain] = useState("indevs.in");
+  const [isChecking, setIsChecking] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(null);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [acceptedToS, setAcceptedToS] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(
+    import.meta.env.DEV ? "dev-bypass" : null
+  );
 
-    const availableDomains = ["indevs.in", "sryze.cc", "ryzedns.org", "nx.kg", "ryzn.pro"];
+  const { subdomains, refresh } = useDashboard();
+  const { user, checkAuth } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    const { subdomains, refresh } = useDashboard();
-    const { user, checkAuth } = useAuth();
-    const { toast } = useToast();
-    const navigate = useNavigate();
-    const location = useLocation();
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const kyc = params.get("kyc");
+    const returnedDomain = params.get("domain");
+    const githubUser = params.get("github");
+    const returnedRoot = params.get("root");
 
-    // On mount: handle return from GitHub KYC OAuth + pre-fill domain from URL params
-    useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const kyc = params.get('kyc');
-        const returnedDomain = params.get('domain');
-        const githubUser = params.get('github');
-        const returnedRoot = params.get('root') || 'sryze.cc'; // default to sryze.cc for backwards compat
+    if (returnedRoot && AVAILABLE_DOMAINS.some((d) => d.tld === returnedRoot)) {
+      setRootDomain(returnedRoot);
+    } else if (kyc && !returnedRoot) {
+      setRootDomain("sryze.cc");
+    }
 
-        if (returnedDomain) {
-            setDomain(returnedDomain);
-            setRootDomain(returnedRoot);
-        }
+    if (returnedDomain) {
+      setDomain(returnedDomain);
+    }
 
-        if (kyc === 'done') {
-            // Refresh user so githubVerified is up-to-date
-            checkAuth();
-            toast({
-                title: `🎉 GitHub Verified! Welcome, @${githubUser || 'you'}`,
-                description: 'GitHub verification confirmed! You can now register domains across indevs.in, sryze.cc, ryzedns.org, nx.kg, and ryzn.pro.',
-                className: 'bg-green-50 border-green-200 text-green-900'
-            });
-        } else if (kyc === 'not_starred') {
-            toast({
-                title: '🛡️ Verification Required',
-                description: `@${githubUser || 'You'} haven\'t verified your GitHub account yet. Connect your GitHub to verify and try again!`,
-                variant: 'destructive'
-            });
-        } else if (kyc === 'cancelled') {
-            toast({
-                title: 'Verification Cancelled',
-                description: 'GitHub authorization was cancelled. Try again when ready.',
-                variant: 'destructive'
-            });
-        } else if (kyc === 'already_linked') {
-            toast({
-                title: '⛔ GitHub Account Already Used',
-                description: githubUser
-                    ? `The GitHub account @${githubUser} is already linked to another Stackryze account.`
-                    : 'This GitHub account is already linked to another Stackryze account.',
-                variant: 'destructive'
-            });
-        } else if (kyc === 'too_new') {
-            toast({
-                title: 'Account Too New',
-                description: githubUser
-                    ? `The GitHub account @${githubUser} is too new. Accounts must be at least 1 month old to prevent abuse.`
-                    : 'Your GitHub account is too new. Accounts must be at least 1 month old to prevent abuse.',
-                variant: 'destructive'
-            });
-        } else if (kyc === 'error') {
-            toast({
-                title: 'Verification Error',
-                description: 'Something went wrong during GitHub verification. Please try again.',
-                variant: 'destructive'
-            });
-        } else {
-            // No KYC param — normal mount, refresh user for latest limits
-            checkAuth();
-        }
+    if (kyc === "done") {
+      checkAuth();
+      toast({
+        title: `GitHub Verified — Welcome, @${githubUser || "you"}`,
+        description:
+          "You can now register free domains across all five Stackryze extensions.",
+      });
+    } else if (kyc === "not_starred") {
+      toast({
+        title: "Verification Required",
+        description: `@${githubUser || "You"
+          } must complete GitHub verification before registering.`,
+        variant: "destructive",
+      });
+    } else if (kyc === "cancelled") {
+      toast({
+        title: "Verification Cancelled",
+        description: "GitHub authorization was cancelled. Try again when ready.",
+        variant: "destructive",
+      });
+    } else if (kyc === "already_linked") {
+      toast({
+        title: "GitHub Account Already Linked",
+        description: githubUser
+          ? `The GitHub account @${githubUser} is already linked to another Stackryze account.`
+          : "This GitHub account is already linked to another Stackryze account.",
+        variant: "destructive",
+      });
+    } else if (kyc === "too_new") {
+      toast({
+        title: "Account Too New",
+        description: githubUser
+          ? `The GitHub account @${githubUser} must be at least 1 month old.`
+          : "Your GitHub account must be at least 1 month old to register.",
+        variant: "destructive",
+      });
+    } else if (kyc === "error") {
+      toast({
+        title: "Verification Error",
+        description: "Something went wrong during GitHub verification.",
+        variant: "destructive",
+      });
+    } else {
+      checkAuth();
+    }
 
-        // Clean up URL params so toasts don't replay on refresh
-        if (kyc) {
-            navigate(location.pathname, { replace: true });
-        }
-    }, []);
+    if (kyc) {
+      navigate(location.pathname, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    // Calculate domain usage based on selected root domain.
-    // Backend requires GitHub verification across all TLDs (including indevs.in).
-    // Count from the actual subdomains list for every TLD so UI stays accurate even if stored counters drift.
-    const domainLimit = rootDomain === 'sryze.cc'
-        ? (user?.sryzeDomainsLimit || 1)
-        : rootDomain === 'ryzedns.org'
-            ? (user?.ryzeDnsDomainsLimit || 1)
-            : rootDomain === 'nx.kg'
-                ? (user?.nxKgDomainsLimit || 1)
-                : rootDomain === 'ryzn.pro'
-                    ? (user?.ryznProDomainsLimit || 1)
-                    : (user?.domainLimit || 1);
-    const domainsRegistered = rootDomain === 'sryze.cc'
-        ? (subdomains?.filter(s => s.domain === 'sryze.cc' && !s.deletedAt).length || 0)
-        : rootDomain === 'ryzedns.org'
-            ? (subdomains?.filter(s => s.domain === 'ryzedns.org' && !s.deletedAt).length || 0)
-            : rootDomain === 'nx.kg'
-                ? (subdomains?.filter(s => s.domain === 'nx.kg' && !s.deletedAt).length || 0)
-                : rootDomain === 'ryzn.pro'
-                    ? (subdomains?.filter(s => s.domain === 'ryzn.pro' && !s.deletedAt).length || 0)
-                    : (subdomains?.filter(s => (s.domain || 'indevs.in') === 'indevs.in' && !s.deletedAt).length || 0);
-    const canRegisterMore = domainsRegistered < domainLimit;
-    const usagePercentage = (domainsRegistered / domainLimit) * 100;
+  const getUsage = useCallback(
+    (tld, limitField) => {
+      const used =
+        subdomains?.filter(
+          (s) => (s.domain || "indevs.in") === tld && !s.deletedAt
+        ).length || 0;
+      const limit = user?.[limitField] || 1;
+      return { used, limit };
+    },
+    [subdomains, user]
+  );
 
+  const selectedMeta =
+    AVAILABLE_DOMAINS.find((d) => d.tld === rootDomain) || AVAILABLE_DOMAINS[0];
+  const { used: domainsRegistered, limit: domainLimit } = getUsage(
+    selectedMeta.tld,
+    selectedMeta.limitField
+  );
+  const canRegisterMore = domainsRegistered < domainLimit;
 
-    // Auto-check availability as user types
-    const checkAvailability = useCallback(async () => {
-        const domainLower = domain.toLowerCase().trim();
+  const checkAvailability = useCallback(async () => {
+    const domainLower = domain.toLowerCase().trim();
 
-        // Validation
-        if (domainLower.length < 3) {
-            setErrorMsg("Domain must be at least 3 characters");
-            setIsAvailable(false);
-            return;
-        }
+    if (domainLower.length < 3) {
+      setErrorMsg("Domain must be at least 3 characters");
+      setIsAvailable(false);
+      return;
+    }
 
-        if (domainLower.length > 63) {
-            setErrorMsg("Domain must be less than 63 characters");
-            setIsAvailable(false);
-            return;
-        }
+    if (domainLower.length > 63) {
+      setErrorMsg("Domain must be less than 63 characters");
+      setIsAvailable(false);
+      return;
+    }
 
-        // Block Punycode domains (xn-- prefix)
-        if (domainLower.startsWith('xn--')) {
-            setErrorMsg("Punycode/internationalized domains (starting with 'xn--') are not supported. Please use a standard ASCII domain name.");
-            setIsAvailable(false);
-            return;
-        }
+    if (domainLower.startsWith("xn--")) {
+      setErrorMsg("Punycode domains (starting with 'xn--') are not supported.");
+      setIsAvailable(false);
+      return;
+    }
 
-        // Check for non-ASCII characters (Punycode/IDN not supported)
-        if (!/^[\x00-\x7F]*$/.test(domainLower)) {
-            setErrorMsg("Internationalized domains (non-ASCII characters) are not supported. Please use only English letters, numbers, and hyphens.");
-            setIsAvailable(false);
-            return;
-        }
+    if (/[^\u0020-\u007E]/.test(domainLower)) {
+      setErrorMsg(
+        "Non-ASCII characters are not supported. Use lowercase letters, numbers, and hyphens."
+      );
+      setIsAvailable(false);
+      return;
+    }
 
-        if (!/^[a-z0-9-]+$/.test(domainLower)) {
-            setErrorMsg("Only lowercase letters, numbers, and hyphens allowed");
-            setIsAvailable(false);
-            return;
-        }
+    if (!/^[a-z0-9-]+$/.test(domainLower)) {
+      setErrorMsg("Only lowercase letters, numbers, and hyphens allowed");
+      setIsAvailable(false);
+      return;
+    }
 
-        if (domainLower.startsWith('-') || domainLower.endsWith('-')) {
-            setErrorMsg("Domain cannot start or end with a hyphen");
-            setIsAvailable(false);
-            return;
-        }
+    if (domainLower.startsWith("-") || domainLower.endsWith("-")) {
+      setErrorMsg("Domain cannot start or end with a hyphen");
+      setIsAvailable(false);
+      return;
+    }
 
-        // Check if already owned (on the same root domain)
-        const alreadyOwned = subdomains.some(s => s.name === domainLower && (s.domain || 'indevs.in') === rootDomain);
-        if (alreadyOwned) {
-            setErrorMsg(`You already own this subdomain on ${rootDomain}`);
-            setIsAvailable(false);
-            return;
-        }
-
-        setIsChecking(true);
-        try {
-            // Updated API call to check specific root domain
-            const response = await subdomainAPI.checkAvailability(domainLower, rootDomain);
-            if (response.available) {
-                setIsAvailable(true);
-                setErrorMsg("");
-            } else {
-                setIsAvailable(false);
-                setErrorMsg(response.message || "Domain is already taken");
-            }
-        } catch (error) {
-            setErrorMsg(error.message || "Failed to check availability");
-            setIsAvailable(false);
-        } finally {
-            setIsChecking(false);
-        }
-    }, [domain, rootDomain, subdomains]);
-
-    useEffect(() => {
-        if (!domain || domain.length < 3) {
-            setIsAvailable(null);
-            setErrorMsg("");
-            return;
-        }
-
-        const timeoutId = setTimeout(() => {
-            checkAvailability();
-        }, 500);
-
-        return () => clearTimeout(timeoutId);
-    }, [domain, rootDomain, checkAvailability]);
-
-    const handleRegister = async () => {
-        if (!isAvailable) {
-            toast({
-                title: "Domain Not Available",
-                description: "This domain is already taken or reserved. Please choose a different name and check availability.",
-                variant: "destructive"
-            });
-            return;
-        }
-
-        if (!acceptedToS) {
-            toast({
-                title: "Accept Terms to Continue",
-                description: "You must read and accept the Terms of Service and Privacy Policy before registering your domain.",
-                variant: "destructive"
-            });
-            return;
-        }
-
-        if (!captchaToken) {
-            toast({
-                title: "Complete CAPTCHA",
-                description: "Please complete the CAPTCHA verification to prove you're human.",
-                variant: "destructive"
-            });
-            return;
-        }
-
-        setIsSubmitting(true);
-        try {
-            const domainLower = domain.toLowerCase().trim();
-
-
-            await subdomainAPI.create({
-                name: domainLower,
-                domain: rootDomain,
-                captchaToken
-            });
-
-            toast({
-                title: "Domain Registered Successfully! 🎉",
-                description: `${domainLower}.${rootDomain} is now yours for 1 year! You can configure DNS settings from your dashboard.`,
-                className: "bg-signal/10 border-green-200 text-green-900"
-            });
-
-            await refresh();
-            navigate('/my-domains');
-        } catch (error) {
-            toast({
-                title: "Registration Failed",
-                description: error.message || "Unable to register this domain. It may have been taken by someone else. Please refresh and try again.",
-                variant: "destructive"
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    return (
-        <div className="max-w-3xl">
-            {/* Header */}
-            <div className="mb-7">
-                <p className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-1">Account</p>
-                <h1 className="font-display text-2xl md:text-3xl font-medium text-foreground leading-tight">Register a Domain</h1>
-                <p className="text-sm text-foreground mt-1">Claim your free subdomain in seconds — valid for 1 year.</p>
-            </div>
-
-            {/* Domain Usage Indicator */}
-            <div className={`mb-5 border rounded-xl p-4 backdrop-blur-md transition-colors ${!canRegisterMore ? 'bg-red-50/90 dark:bg-red-500/10 border-red-200/50 dark:border-red-500/20' : 'bg-card/70 border-border'
-                }`}>
-                <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                        <Info className={`w-4 h-4 ${!canRegisterMore ? 'text-red-500 dark:text-red-400' : 'text-foreground'}`} />
-                        <span className={`font-semibold text-sm ${!canRegisterMore ? 'text-red-900 dark:text-red-400' : 'text-foreground'}`}>
-                            {rootDomain} Usage: {domainsRegistered} / {domainLimit}
-                        </span>
-                    </div>
-                    {!canRegisterMore && (
-                        <span className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase">Limit Reached</span>
-                    )}
-                </div>
-
-                {/* Progress Bar */}
-                <div className="w-full bg-accent dark:bg-secondary rounded-full h-2.5 mb-2">
-                    <div
-                        className={`h-2.5 rounded-full transition-all ${usagePercentage >= 100 ? 'bg-red-600 dark:bg-red-500' : usagePercentage >= 80 ? 'bg-amber-500' : 'bg-green-600 dark:bg-green-500'
-                            }`}
-                        style={{ width: `${Math.min(usagePercentage, 100)}%` }}
-                    ></div>
-                </div>
-
-                {!canRegisterMore ? (
-                    <p className="text-xs text-red-700 dark:text-red-400 font-medium mt-2">
-                        0 {rootDomain} domains remaining
-                    </p>
-                ) : (
-                    <p className="text-xs text-signal dark:text-signal font-medium mt-2">
-                        {domainLimit - domainsRegistered} {rootDomain} {domainLimit - domainsRegistered === 1 ? 'domain' : 'domains'} remaining
-                    </p>
-                )}
-            </div>
-
-            {/* Registration Card */}
-            <div className="bg-card/70 backdrop-blur-md p-5 md:p-6 rounded-xl border border-border">
-                {!canRegisterMore && (
-                    <div className="mb-5 flex items-start gap-3 p-4 bg-red-50/90 dark:bg-red-500/10 border border-red-200/50 dark:border-red-500/20 rounded-lg">
-                        <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                        <div>
-                            <p className="text-sm font-bold text-red-900 dark:text-red-400 mb-1">
-                                Registration disabled
-                            </p>
-                            <p className="text-sm text-red-700 dark:text-red-300 font-medium">
-                                You've reached your limit of {domainLimit} {rootDomain} domain{domainLimit === 1 ? '' : 's'}.
-                            </p>
-                            <p className="text-sm text-red-700 dark:text-red-300 font-medium mt-1">
-                                Need more domains?{' '}
-                                <a href="https://discord.gg/wr7s97cfM7" target="_blank" rel="noopener noreferrer" className="underline font-bold hover:text-red-900 dark:hover:text-red-400">Join our Discord</a>{' '}
-                                or <a href="mailto:support@stackryze.com" className="underline font-bold hover:text-red-900 dark:hover:text-red-400">email support</a>{' '}
-                                to request a limit increase.
-                            </p>
-                        </div>
-                    </div>
-                )}
-                {/* Domain Input */}
-                <div className="space-y-6">
-                    <div>
-                        <label className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-                            <Globe className="w-4 h-4" />
-                            Choose Your Domain Name
-                        </label>
-                        <div className="flex flex-col sm:flex-row items-stretch gap-0">
-                            <div className="relative w-full">
-                                <Input
-                                    type="text"
-                                    value={domain}
-                                    onChange={(e) => setDomain(e.target.value)}
-                                    placeholder="your-awesome-project"
-                                    className="font-mono text-sm h-11 pr-10 rounded-t-lg rounded-b-none sm:rounded-l-lg sm:rounded-r-none border-b-0 sm:border-b sm:border-r-0 focus:z-10 w-full bg-input/50 border-border text-foreground"
-                                />
-                                {isChecking && (
-                                    <Loader2 className="w-4 h-4 text-muted-foreground animate-spin absolute right-3 top-1/2 -translate-y-1/2" />
-                                )}
-                                {!isChecking && isAvailable === true && (
-                                    <CheckCircle className="w-4 h-4 text-green-500 absolute right-3 top-1/2 -translate-y-1/2" />
-                                )}
-                                {!isChecking && isAvailable === false && domain.length >= 3 && (
-                                    <XCircle className="w-4 h-4 text-red-500 absolute right-3 top-1/2 -translate-y-1/2" />
-                                )}
-                            </div>
-                            <div className="relative h-11 -mt-[1px] sm:mt-0 min-w-[130px]">
-                                <button
-                                    type="button"
-                                    onClick={() => setDropdownOpen(o => !o)}
-                                    onBlur={() => setTimeout(() => setDropdownOpen(false), 150)}
-                                    className="w-full h-full flex items-center justify-between gap-2 px-3 bg-foreground text-background text-sm font-bold focus:outline-none cursor-pointer rounded-b-lg rounded-t-none sm:rounded-r-lg sm:rounded-l-none border border-transparent shadow-sm"
-                                >
-                                    <span className="font-mono">.{rootDomain}</span>
-                                    <svg className={`w-3.5 h-3.5 text-background flex-shrink-0 transition-transform duration-150 ${dropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
-                                </button>
-                                {dropdownOpen && (
-                                    <div className="absolute top-[calc(100%+4px)] left-0 right-0 z-50 border border-border dark:border-border rounded-xl overflow-hidden shadow-lg bg-card/90 backdrop-blur-xl">
-                                        {availableDomains.map(d => (
-                                            <button
-                                                key={d}
-                                                type="button"
-                                                onMouseDown={() => { setRootDomain(d); setDropdownOpen(false); }}
-                                                className={`w-full text-left px-4 py-3 font-mono font-bold text-sm transition-colors ${d === rootDomain
-                                                        ? 'bg-foreground text-background'
-                                                        : 'bg-transparent text-foreground hover:bg-secondary dark:hover:bg-secondary'
-                                                    }`}
-                                            >
-                                                .{d}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Status Messages */}
-                        {domain.length > 0 && domain.length < 3 && (
-                            <div className="mt-4 flex items-start gap-3 p-4 bg-amber-50/90 dark:bg-amber-500/10 border border-amber-200/50 dark:border-amber-500/20 rounded-lg">
-                                <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                                <p className="text-sm font-medium text-amber-700 dark:text-amber-400">
-                                    Domain name must be at least 3 characters. Keep typing!
-                                </p>
-                            </div>
-                        )}
-                        {errorMsg && domain.length >= 3 && (
-                            <div className="mt-4 flex items-start gap-3 p-4 bg-red-50/90 dark:bg-red-500/10 border border-red-200/50 dark:border-red-500/20 rounded-lg">
-                                <XCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                                <p className="text-sm font-medium text-red-700 dark:text-red-400">{errorMsg}</p>
-                            </div>
-                        )}
-                        {isAvailable && !errorMsg && (
-                            <div className="mt-4 flex items-start gap-3 p-4 bg-green-50/90 dark:bg-green-500/10 border border-green-200/50 dark:border-green-500/20 rounded-lg">
-                                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                                <div>
-                                    <p className="text-sm font-bold text-green-800 dark:text-green-400 mb-1">
-                                        ✨ {domain}.{rootDomain} is available!
-                                    </p>
-                                    <p className="text-xs text-green-700 dark:text-green-500 font-medium">
-                                        {!user?.githubVerified
-                                            ? 'Verify your account with GitHub to unlock this domain.'
-                                            : 'This domain is yours for the taking. Accept the terms below to claim it.'
-                                        }
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* KYC Gate — required for all TLDs */}
-                    {(() => {
-                        const needsKyc = !user?.githubVerified;
-                        if (!needsKyc) return null;
-
-                        return (
-                            <div className="bg-amber-50/50 dark:bg-amber-500/10 border border-amber-200/50 dark:border-amber-500/20 rounded-xl p-4 sm:p-5">
-                                <div className="flex items-start gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="font-display text-foreground text-base font-medium mb-1">
-                                            GitHub Verification Required
-                                        </h3>
-                                        <p className="text-foreground opacity-80 text-xs mb-3">
-                                            Star our repo and verify to prevent abuse and keep domains free.
-                                        </p>
-                                        <div className="flex flex-col sm:flex-row gap-2">
-                                            {/* Step 1: Star Repo */}
-                                            <a
-                                                href="https://github.com/stackryze/FreeDomains"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white dark:bg-secondary text-foreground font-bold text-xs border border-border dark:border-foreground/25 hover:bg-muted dark:hover:bg-accent shadow-sm transition duration-200 cursor-pointer rounded-lg"
-                                            >
-                                                <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                                                Star Repo
-                                            </a>
-                                            {/* Step 2: Verify */}
-                                            <a
-                                                href={`${API_BASE}/github/kyc/start?domain=${encodeURIComponent(domain)}&root=${encodeURIComponent(rootDomain)}`}
-                                                className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-foreground text-background font-bold text-xs hover:bg-foreground/90 dark:hover:bg-accent shadow-sm transition duration-200 cursor-pointer rounded-lg"
-                                            >
-                                                <Github className="w-3.5 h-3.5" />
-                                                Verify
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })()}
-
-                    {/* Terms of Service — only shown if not gated by KYC */}
-                    {isAvailable &&
-                        user?.githubVerified && (
-                            <>
-                                {/* Registration Period Info */}
-                                <div className="bg-muted dark:bg-black/40 border border-border rounded-lg p-3">
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-xs font-semibold text-foreground opacity-80">Registration Period:</span>
-                                            <span className="text-xs font-bold text-foreground">1 Year (Renewable)</span>
-                                        </div>
-                                        <div className="flex items-center justify-between border-t border-border dark:border-border pt-2">
-                                            <span className="text-xs font-semibold text-foreground opacity-80">Expires On:</span>
-                                            <span className="text-xs font-mono font-bold text-foreground">
-                                                {new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', {
-                                                    year: 'numeric',
-                                                    month: 'short',
-                                                    day: 'numeric'
-                                                })}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Terms Acceptance */}
-                                <div className="bg-card/70 backdrop-blur-md border border-border rounded-lg p-4">
-                                    <div className="flex items-start gap-3">
-                                        <Checkbox
-                                            id="tos"
-                                            checked={acceptedToS}
-                                            onCheckedChange={(checked) => setAcceptedToS(checked)}
-                                            className="mt-0.5 h-4 w-4 bg-input border-border dark:border-foreground/25"
-                                        />
-                                        <label htmlFor="tos" className="text-xs text-foreground leading-tight cursor-pointer flex-1 font-medium opacity-90">
-                                            I agree to the{" "}
-                                            <a href="/terms" target="_blank" className="font-bold underline hover:text-orange-500 transition-colors">
-                                                Terms of Service
-                                            </a>
-                                            {" "}and{" "}
-                                            <a href="/privacy" target="_blank" className="font-bold underline hover:text-orange-500 transition-colors">
-                                                Privacy Policy
-                                            </a>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                {/* Cloudflare Turnstile */}
-                                {!import.meta.env.DEV && (
-                                    <div className="flex justify-center my-4 min-h-[65px]">
-                                        <Turnstile
-                                            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
-                                            onSuccess={(token) => setCaptchaToken(token)}
-                                            onExpire={() => setCaptchaToken(null)}
-                                            onError={() => setCaptchaToken(null)}
-                                            options={{
-                                                theme: 'light',
-                                                size: 'normal',
-                                            }}
-                                        />
-                                    </div>
-                                )}
-                            </>
-                        )}
-
-
-                    {/* Register Button — disabled when KYC gate is active */}
-                    <button
-                        onClick={handleRegister}
-                        disabled={
-                            !isAvailable || !acceptedToS || !captchaToken || isSubmitting || !canRegisterMore ||
-                            !user?.githubVerified
-                        }
-                        className="w-full bg-foreground text-background font-extrabold py-3 text-sm rounded-lg shadow-sm hover:bg-foreground/90 dark:hover:bg-accent transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center"
-                    >
-                        {isSubmitting ? (
-                            <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Registering Your Domain...
-                            </>
-                        ) : (
-                            <>
-                                <Globe className="w-4 h-4 mr-2" />
-                                Register Domain
-                            </>
-                        )}
-                    </button>
-
-                    {/* Info Notice */}
-                    <div className="bg-signal/5 dark:bg-signal/10 border border-signal/30 dark:border-signal/20 p-4 rounded-lg">
-                        <div className="flex gap-2">
-                            <Info className="w-4 h-4 text-signal flex-shrink-0 mt-0.5" />
-                            <div className="text-xs text-signal dark:text-signal">
-                                <p className="font-bold mb-1">What happens next?</p>
-                                <ul className="space-y-0.5 font-medium opacity-90">
-                                    <li>• Your domain will be registered instantly</li>
-                                    <li>• Configure DNS nameservers from the management page</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    const alreadyOwned = subdomains.some(
+      (s) => s.name === domainLower && (s.domain || "indevs.in") === rootDomain
     );
+    if (alreadyOwned) {
+      setErrorMsg(`You already own this subdomain on ${rootDomain}`);
+      setIsAvailable(false);
+      return;
+    }
+
+    setIsChecking(true);
+    try {
+      const response = await subdomainAPI.checkAvailability(
+        domainLower,
+        rootDomain
+      );
+      if (response.available) {
+        setIsAvailable(true);
+        setErrorMsg("");
+      } else {
+        setIsAvailable(false);
+        setErrorMsg(response.message || "Domain is already taken");
+      }
+    } catch (error) {
+      setErrorMsg(error.message || "Failed to check availability");
+      setIsAvailable(false);
+    } finally {
+      setIsChecking(false);
+    }
+  }, [domain, rootDomain, subdomains]);
+
+  useEffect(() => {
+    if (!domain || domain.length < 3) {
+      setIsAvailable(null);
+      setErrorMsg("");
+      return;
+    }
+
+    const timeoutId = setTimeout(() => {
+      checkAvailability();
+    }, 450);
+
+    return () => clearTimeout(timeoutId);
+  }, [domain, rootDomain, checkAvailability]);
+
+  const handleRegister = async () => {
+    if (!isAvailable) {
+      toast({
+        title: "Domain Not Available",
+        description: "Choose a different available subdomain before registering.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!acceptedToS) {
+      toast({
+        title: "Accept Terms to Continue",
+        description:
+          "Read and accept the Terms of Service and Privacy Policy before registering.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!captchaToken) {
+      toast({
+        title: "Complete Verification",
+        description: "Complete the CAPTCHA verification to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const domainLower = domain.toLowerCase().trim();
+      await subdomainAPI.create({
+        name: domainLower,
+        domain: rootDomain,
+        captchaToken,
+      });
+
+      toast({
+        title: "Domain Registered",
+        description: `${domainLower}.${rootDomain} is now active with free annual renewals.`,
+        variant: "success",
+      });
+
+      await refresh();
+      navigate("/my-domains");
+    } catch (error) {
+      toast({
+        title: "Registration Failed",
+        description:
+          error.message ||
+          "Unable to register this domain. Please refresh and try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col flex-1">
+      <ConsoleHeader
+        eyebrow="New Allocation"
+        title="Register Domain"
+        description="Select a root namespace and claim a free subdomain with instant PowerDNS delegation."
+      />
+
+      {/* Flush 5-Column Segmented Namespace Strip */}
+      <div
+        className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-border border-b border-border"
+        role="tablist"
+        aria-label="Choose root domain namespace"
+      >
+        {AVAILABLE_DOMAINS.map(({ tld, limitField }) => {
+          const selected = rootDomain === tld;
+          const { used, limit } = getUsage(tld, limitField);
+
+          return (
+            <button
+              key={tld}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              onClick={() => setRootDomain(tld)}
+              className={`relative px-5 py-4 text-left flex items-center justify-between gap-2 ${selected
+                ? "bg-secondary/70 text-foreground"
+                : "bg-background text-muted-foreground hover:text-foreground hover:bg-secondary/25"
+                }`}
+            >
+              <span className="font-mono text-xs sm:text-sm font-medium">
+                .{tld}
+              </span>
+              <span
+                className={`font-mono text-[11px] tabular-nums px-1.5 py-0.5 rounded border ${selected
+                  ? "bg-card text-foreground border-border"
+                  : "bg-secondary/50 text-muted-foreground border-border"
+                  }`}
+              >
+                {used}/{limit}
+              </span>
+              {selected && (
+                <span
+                  className="absolute inset-x-0 bottom-0 h-0.5 bg-foreground"
+                  aria-hidden="true"
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex-1 p-6 sm:p-10">
+        <div className="rounded-xl border border-border bg-card overflow-hidden">
+          <div className="p-6 sm:p-8 space-y-6">
+            {!canRegisterMore && (
+              <div className="flex items-start gap-3 p-4 bg-destructive/10 border border-destructive/25 rounded-lg">
+                <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" aria-hidden="true" />
+                <div className="space-y-1 text-xs sm:text-sm">
+                  <p className="font-semibold text-destructive">Registration Limit Reached</p>
+                  <p className="text-muted-foreground">
+                    Limit of {domainLimit} .{rootDomain} domain{domainLimit === 1 ? "" : "s"} reached.{" "}
+                    <a
+                      href="https://discord.gg/wr7s97cfM7"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-foreground underline"
+                    >
+                      Join Discord
+                    </a>{" "}
+                    or{" "}
+                    <a
+                      href="mailto:support@stackryze.com"
+                      className="text-foreground underline"
+                    >
+                      email support
+                    </a>{" "}
+                    to request an increase.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between gap-2">
+                <label
+                  htmlFor="register-domain-input"
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  Subdomain Name
+                </label>
+                <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                  {domainsRegistered} of {domainLimit} used on .{rootDomain}
+                </span>
+              </div>
+
+              <div className="flex items-stretch">
+                <div className="relative flex-1 min-w-0">
+                  <Globe
+                    className="w-4 h-4 text-muted-foreground absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
+                    aria-hidden="true"
+                  />
+                  <input
+                    id="register-domain-input"
+                    type="text"
+                    value={domain}
+                    onChange={(e) =>
+                      setDomain(
+                        e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "")
+                      )
+                    }
+                    placeholder="your-project"
+                    spellCheck={false}
+                    autoComplete="off"
+                    className="w-full h-11 pl-10 pr-10 rounded-l-lg border border-r-0 border-border bg-background font-mono text-sm sm:text-base text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-foreground/50"
+                  />
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {isChecking && (
+                      <Loader2 className="w-4 h-4 text-muted-foreground animate-spin" aria-hidden="true" />
+                    )}
+                    {!isChecking && isAvailable === true && (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" aria-hidden="true" />
+                    )}
+                    {!isChecking && isAvailable === false && domain.length >= 3 && (
+                      <XCircle className="w-4 h-4 text-destructive" aria-hidden="true" />
+                    )}
+                  </div>
+                </div>
+
+                <div className="h-11 px-4 flex items-center bg-secondary border border-border rounded-r-lg font-mono text-sm text-foreground shrink-0 select-none">
+                  .{rootDomain}
+                </div>
+              </div>
+
+              {domain.length > 0 && domain.length < 3 && (
+                <p className="text-xs text-amber-500 flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Domain name must be at least 3 characters.</span>
+                </p>
+              )}
+
+              {errorMsg && domain.length >= 3 && (
+                <p className="text-xs text-destructive flex items-center gap-1.5">
+                  <XCircle className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>{errorMsg}</span>
+                </p>
+              )}
+
+              {isAvailable && !errorMsg && (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-4 py-3 rounded-lg bg-emerald-500/10 border border-emerald-500/25">
+                  <div className="flex items-center gap-2 text-xs font-mono text-foreground">
+                    <Lock className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+                    <span>
+                      https://<strong>{domain}.{rootDomain}</strong>
+                    </span>
+                  </div>
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    Available — ready to delegate
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {!user?.githubVerified && (
+              <div className="bg-amber-500/10 border border-amber-500/25 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <Shield className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" aria-hidden="true" />
+                  <div className="space-y-0.5">
+                    <h3 className="text-sm font-semibold text-foreground">
+                      GitHub Verification Required
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      Star the Stackryze repository and verify your GitHub account to claim subdomains.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 shrink-0">
+                  <a
+                    href="https://github.com/stackryze/FreeDomains"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-card text-foreground font-medium text-xs border border-border hover:bg-secondary rounded-full"
+                  >
+                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" aria-hidden="true" />
+                    <span>Star Repo</span>
+                  </a>
+                  <a
+                    href={`${API_BASE}/github/kyc/start?domain=${encodeURIComponent(
+                      domain
+                    )}&root=${encodeURIComponent(rootDomain)}`}
+                    className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-foreground text-background font-medium text-xs hover:bg-foreground/90 rounded-full"
+                  >
+                    <Github className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Verify GitHub</span>
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {isAvailable && user?.githubVerified && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between gap-4 rounded-lg bg-secondary/35 border border-border px-4 py-3.5">
+                  <div className="space-y-0.5">
+                    <label htmlFor="tos" className="text-sm font-medium text-foreground block cursor-pointer">
+                      Accept Registry Policies
+                    </label>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      I agree to the{" "}
+                      <a
+                        href="/terms"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-foreground underline underline-offset-4"
+                      >
+                        Terms of Service
+                      </a>{" "}
+                      and{" "}
+                      <a
+                        href="/privacy"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-foreground underline underline-offset-4"
+                      >
+                        Privacy Policy
+                      </a>
+                      .
+                    </p>
+                  </div>
+                  <Switch
+                    id="tos"
+                    checked={acceptedToS}
+                    onCheckedChange={(checked) => setAcceptedToS(Boolean(checked))}
+                  />
+                </div>
+
+                {!import.meta.env.DEV && (
+                  <div className="flex justify-center pt-1 min-h-[65px]">
+                    <Turnstile
+                      siteKey={
+                        import.meta.env.VITE_TURNSTILE_SITE_KEY ||
+                        "1x00000000000000000000AA"
+                      }
+                      onSuccess={(token) => setCaptchaToken(token)}
+                      onExpire={() => setCaptchaToken(null)}
+                      onError={() => setCaptchaToken(null)}
+                      options={{
+                        theme: "auto",
+                        size: "normal",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="px-6 sm:px-8 py-4 border-t border-border bg-secondary/25 flex flex-wrap items-center justify-end gap-4">
+            <button
+              type="button"
+              onClick={handleRegister}
+              disabled={
+                !isAvailable ||
+                !acceptedToS ||
+                !captchaToken ||
+                isSubmitting ||
+                !canRegisterMore ||
+                !user?.githubVerified
+              }
+              className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-full bg-foreground text-background font-medium text-sm hover:bg-foreground/90 disabled:opacity-40"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                  <span>Registering…</span>
+                </>
+              ) : (
+                <span>
+                  {domain && isAvailable
+                    ? `Register ${domain}.${rootDomain}`
+                    : "Register Domain"}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

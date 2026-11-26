@@ -1,213 +1,217 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer-section";
 import { DashboardProvider } from "@/context/dashboard-context";
 import {
-    LayoutDashboard,
-    Globe,
-    BarChart3,
-    Settings,
-    HelpCircle,
-    LogOut,
-    Plus,
-    Heart,
-    Server,
-    Menu,
-    X,
-    Clock,
-    Search
+  LayoutDashboard,
+  Globe,
+  User2,
+  HelpCircle,
+  LogOut,
+  Plus,
+  Server,
+  Clock,
+  Search,
+  Menu,
+  X,
 } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
+import { IS_LOCAL_DEMO } from "@/lib/demo-data";
 
-const SidebarItem = ({ to, icon: Icon, label, active, onClick }) => (
-    <Link
-        to={to}
-        onClick={onClick}
-        className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium transition-all duration-200 text-sm ${active
-            ? "bg-foreground text-background shadow-sm"
-            : "text-muted-foreground hover:text-foreground hover:bg-secondary/70"
-            }`}
-    >
-        <Icon className={`w-4 h-4 flex-shrink-0 ${active ? "text-background" : "text-muted-foreground"}`} />
-        <span>{label}</span>
-    </Link>
-);
+const NAV_GROUPS = [
+  {
+    title: "Registry",
+    items: [
+      { to: "/dashboard", icon: LayoutDashboard, label: "Overview" },
+      { to: "/my-domains", icon: Globe, label: "Domains" },
+      { to: "/register", icon: Plus, label: "Register Domain" },
+      { to: "/dns", icon: Server, label: "DNS Management" },
+    ],
+  },
+  {
+    title: "Tools",
+    items: [
+      { to: "/history", icon: Clock, label: "Activity History" },
+      { to: "/whois", icon: Search, label: "WHOIS Lookup" },
+    ],
+  },
+  {
+    title: "Account",
+    items: [
+      { to: "/profile", icon: User2, label: "Profile" },
+      { to: "/help", icon: HelpCircle, label: "Help & Support" },
+    ],
+  },
+];
+
+function LeftRailNav({ isActive, user, logout, onNavigate }) {
+  return (
+    <div className="flex flex-col h-full justify-between">
+      <div className="space-y-5">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.title} className="space-y-0.5">
+            <p className="px-2.5 pb-1 text-[11px] font-medium text-muted-foreground">
+              {group.title}
+            </p>
+            {group.items.map((item) => {
+              const IconComp = item.icon;
+              const active = isActive(item.to);
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={onNavigate}
+                  className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] ${
+                    active
+                      ? "bg-secondary text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  }`}
+                >
+                  <IconComp
+                    className={`w-4 h-4 shrink-0 ${
+                      active ? "text-foreground" : "text-muted-foreground"
+                    }`}
+                    aria-hidden="true"
+                  />
+                  <span className="truncate">{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      <div className="pt-4 mt-6 border-t border-border space-y-3">
+        {IS_LOCAL_DEMO && (
+          <div className="px-2.5 py-1.5 rounded-md border border-border bg-card flex items-center justify-between gap-2 text-[11px] font-mono text-muted-foreground">
+            <span className="flex items-center gap-1.5 text-foreground">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+              Demo Mode
+            </span>
+            <span>Dev</span>
+          </div>
+        )}
+
+        {user && (
+          <div className="flex items-center gap-2.5 px-1.5">
+            <img
+              src={user.avatarUrl || "/stackryze_logo_white.png"}
+              alt={user.name || "Account avatar"}
+              className="w-7 h-7 rounded-full border border-border object-cover bg-secondary shrink-0"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-medium text-foreground truncate">
+                {user.name || user.username || "Account"}
+              </p>
+              <p className="text-[11px] font-mono text-muted-foreground truncate">
+                @{user.username || "user"}
+              </p>
+            </div>
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={() => {
+            onNavigate?.();
+            logout();
+          }}
+          className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+        >
+          <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function DashboardLayout() {
-    const location = useLocation();
-    const { logout } = useAuth();
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const { user, logout } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path === "/dashboard") {
+      return (
+        location.pathname === "/dashboard" || location.pathname === "/overview"
+      );
+    }
+    if (path === "/my-domains") {
+      return (
+        location.pathname === "/my-domains" ||
+        location.pathname.startsWith("/domains/")
+      );
+    }
+    if (path === "/profile") {
+      return (
+        location.pathname === "/profile" || location.pathname === "/settings"
+      );
+    }
+    return location.pathname === path;
+  };
 
-    // Close sidebar when route changes (mobile)
-    useEffect(() => {
-        setSidebarOpen(false);
-    }, [location.pathname]);
+  return (
+    <DashboardProvider>
+      <div className="min-h-screen bg-background font-sans flex flex-col">
+        <Header />
 
-    // Prevent body scroll when mobile menu is open
-    useEffect(() => {
-        if (sidebarOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [sidebarOpen]);
+        {/* Full edge-to-edge Vercel Dashboard Shell */}
+        <div className="flex-1 w-full flex flex-col lg:flex-row pt-[calc(4rem+var(--incident-height,0px))]">
+          {/* Mobile Top Bar */}
+          <div className="lg:hidden flex items-center justify-between px-4 py-3 border-b border-border bg-background">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((o) => !o)}
+              aria-expanded={mobileMenuOpen}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-card text-xs font-medium text-foreground"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-3.5 h-3.5" aria-hidden="true" />
+              ) : (
+                <Menu className="w-3.5 h-3.5" aria-hidden="true" />
+              )}
+              <span>Menu</span>
+            </button>
 
-    const SidebarContent = () => (
-        <>
-            <div className="p-4 space-y-1.5 overflow-y-auto flex-1">
-                <SidebarItem
-                    to="/dashboard"
-                    icon={LayoutDashboard}
-                    label="Overview"
-                    active={isActive("/dashboard")}
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <SidebarItem
-                    to="/my-domains"
-                    icon={Globe}
-                    label="My Domains"
-                    active={isActive("/my-domains")}
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <SidebarItem
-                    to="/dns"
-                    icon={Server}
-                    label="DNS Records"
-                    active={isActive("/dns")}
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <SidebarItem
-                    to="/register"
-                    icon={Plus}
-                    label="Register Domain"
-                    active={isActive("/register")}
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <SidebarItem
-                    to="/history"
-                    icon={Clock}
-                    label="History"
-                    active={isActive("/history")}
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <SidebarItem
-                    to="/whois"
-                    icon={Search}
-                    label="WHOIS Lookup"
-                    active={isActive("/whois")}
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <div className="pt-3 border-t border-border my-2"></div>
-                {/* Analytics placeholder */}
-                <div className="opacity-40 pointer-events-none">
-                    <SidebarItem to="#" icon={BarChart3} label="Analytics (Soon)" active={false} />
-                </div>
-                <SidebarItem
-                    to="/profile"
-                    icon={Settings}
-                    label="Settings"
-                    active={isActive("/profile")}
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <SidebarItem
-                    to="/donate"
-                    icon={Heart}
-                    label="Donate"
-                    active={isActive("/donate")}
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <SidebarItem
-                    to="/help"
-                    icon={HelpCircle}
-                    label="Help & Support"
-                    active={isActive("/help")}
-                    onClick={() => setSidebarOpen(false)}
-                />
+            <Link
+              to="/register"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-foreground text-background text-xs font-medium hover:bg-foreground/90"
+            >
+              <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Register Domain</span>
+            </Link>
+          </div>
+
+          {mobileMenuOpen && (
+            <div className="lg:hidden p-4 border-b border-border bg-card">
+              <LeftRailNav
+                isActive={isActive}
+                user={user}
+                logout={logout}
+                onNavigate={() => setMobileMenuOpen(false)}
+              />
             </div>
+          )}
 
-            <div className="p-4 border-t border-border bg-transparent">
-                <button
-                    onClick={() => {
-                        setSidebarOpen(false);
-                        logout();
-                    }}
-                    className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl font-medium text-destructive hover:bg-destructive/10 transition-colors text-sm"
-                >
-                    <LogOut className="w-4 h-4" />
-                    <span>Sign Out</span>
-                </button>
+          {/* Left Sidebar Docked Flush to Left Edge */}
+          <aside className="hidden lg:block w-60 shrink-0 border-r border-border bg-background">
+            <div className="sticky top-[calc(4rem+var(--incident-height,0px))] h-[calc(100vh-4rem-var(--incident-height,0px))] overflow-y-auto px-3 py-5">
+              <LeftRailNav isActive={isActive} user={user} logout={logout} />
             </div>
-        </>
-    );
+          </aside>
 
-    return (
-        <DashboardProvider>
-            <div className="min-h-screen bg-transparent font-sans flex flex-col">
-                <Header />
-
-                {/* Mobile Hamburger Button */}
-                <button
-                    onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="md:hidden fixed top-[calc(5rem+var(--incident-height,0px))] left-4 z-50 p-2.5 bg-card/80 backdrop-blur-xl border border-border rounded-xl shadow-sm text-foreground hover:bg-muted transition-all"
-                    aria-label="Toggle menu"
-                >
-                    {sidebarOpen ? (
-                        <X className="w-5 h-5 text-foreground" />
-                    ) : (
-                        <Menu className="w-5 h-5 text-foreground" />
-                    )}
-                </button>
-
-                {/* Mobile Backdrop */}
-                {sidebarOpen && (
-                    <div
-                        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 md:hidden"
-                        onClick={() => setSidebarOpen(false)}
-                    />
-                )}
-
-                <div className="flex flex-1 pt-[calc(4rem+var(--incident-height,0px))]">
-                    {/* Desktop Sidebar */}
-                    <aside className="w-64 bg-card/70 backdrop-blur-2xl border-r border-border hidden md:flex md:flex-col fixed top-[calc(4rem+var(--incident-height,0px))] h-[calc(100vh-4rem-var(--incident-height,0px))] z-10">
-                        <SidebarContent />
-                    </aside>
-
-                    {/* Mobile Sidebar */}
-                    <aside
-                        className={`fixed top-[var(--incident-height,0px)] left-0 h-[calc(100vh-var(--incident-height,0px))] w-64 bg-card/95 backdrop-blur-2xl border-r border-border z-40 transform transition-transform duration-300 ease-in-out md:hidden flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                            }`}
-                    >
-                        {/* Mobile sidebar header with close button */}
-                        <div className="flex items-center justify-between p-4 border-b border-border mt-16">
-                            <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">Menu</h2>
-                            <button
-                                onClick={() => setSidebarOpen(false)}
-                                className="p-2 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-foreground"
-                            >
-                                <X className="w-4 h-4" />
-                            </button>
-                        </div>
-                        <SidebarContent />
-                    </aside>
-
-                    {/* Main Content */}
-                    <main className="flex-1 md:ml-64 p-4 sm:p-6 md:p-10 pt-16 md:pt-6 mb-20 overflow-y-auto min-h-[calc(100vh-64px)]">
-                        <div className="max-w-[1600px] mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-500">
-                            <Outlet />
-                        </div>
-                    </main>
-                </div>
-
-                <div className="md:ml-64">
-                    <Footer />
-                </div>
+          {/* Centered Container Inside Right Workspace (matches Vercel Console) */}
+          <main className="flex-1 min-w-0 px-6 sm:px-8 lg:px-10 py-8">
+            <div className="max-w-7xl mx-auto w-full">
+              <Outlet />
             </div>
-        </DashboardProvider>
-    );
+          </main>
+        </div>
+
+        <Footer />
+      </div>
+    </DashboardProvider>
+  );
 }

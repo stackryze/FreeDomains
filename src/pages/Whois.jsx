@@ -88,7 +88,7 @@ export function Whois() {
                         </span>
                         <span>Registry Directory</span>
                     </div>
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-medium text-foreground mb-4 leading-tight tracking-tight">
+                    <h1 className="text-3xl sm:text-5xl font-semibold text-foreground mb-4 leading-tight tracking-[-0.035em]">
                         WHOIS Lookup
                     </h1>
                     <p className="text-base text-muted-foreground font-normal max-w-xl mx-auto">

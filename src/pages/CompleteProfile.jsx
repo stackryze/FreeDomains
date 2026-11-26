@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { subdomainAPI } from "../lib/api";
 import { useToast } from "../hooks/use-toast";
@@ -86,7 +86,7 @@ export default function CompleteProfile() {
             <Link to="/" className="mb-8 flex items-center gap-3 group">
                 <img src="/stackryze_logo_black.png" alt="Stackryze Logo" className="h-9 w-auto dark:hidden" />
                 <img src="/stackryze_logo_white.png" alt="Stackryze Logo" className="h-9 w-auto hidden dark:block" />
-                <span className="text-xl font-display font-medium text-foreground tracking-tight">Stackryze Domains</span>
+                <span className="text-lg font-semibold text-foreground tracking-[-0.02em]">Stackryze Domains</span>
             </Link>
 
             <div className="w-full max-w-2xl bg-card/80 backdrop-blur-xl border border-border p-8 md:p-10 rounded-2xl shadow-sm">
@@ -99,7 +99,7 @@ export default function CompleteProfile() {
                 </div>
 
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-display font-medium text-foreground mb-2">Complete Your Profile</h1>
+                    <h1 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight mb-2">Complete Your Profile</h1>
                     <p className="text-sm text-muted-foreground">Please provide the missing registry details below</p>
                 </div>
 

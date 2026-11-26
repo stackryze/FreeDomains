@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Toaster } from "./components/ui/toaster";
+import { Toaster as SonnerToaster } from "./components/ui/sonner";
 import { AuthProvider, useAuth } from './context/auth-context';
 import { Landing } from './pages/Landing';
 import { Terms } from './pages/legal/Terms';
@@ -31,7 +32,7 @@ import VerifyGitHub from './pages/dashboard/VerifyGitHub';
 // Placeholder pages
 const Docs = () => (
   <div className="p-10 min-h-screen bg-transparent pt-32 text-foreground">
-    <h1 className="text-4xl font-bold font-display">Docs (Coming Soon)</h1>
+    <h1 className="text-4xl font-semibold tracking-tight">Docs (Coming Soon)</h1>
   </div>
 );
 
@@ -70,7 +71,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="relative min-h-screen flex flex-col bg-background text-foreground selection:bg-foreground selection:text-background">
+        <div className="relative min-h-screen flex flex-col bg-background text-foreground">
           {/* Stackryze Continuous Atmospheric Background across all pages */}
           <div aria-hidden className="bg-aurora pointer-events-none fixed inset-x-0 top-0 -z-10 min-h-full h-full" />
           <div aria-hidden className="page-tint pointer-events-none fixed inset-x-0 top-0 -z-10 min-h-full h-full" />
@@ -126,6 +127,7 @@ function App() {
           </Routes>
           <DiscordPill />
           <Toaster />
+          <SonnerToaster />
         </div>
       </Router>
     </AuthProvider>

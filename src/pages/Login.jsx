@@ -1,6 +1,6 @@
-import { ShieldCheck, Loader2 } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "../context/auth-context";
 import { Header } from "../components/header";
 
@@ -8,34 +8,21 @@ export default function Login() {
     const { login } = useAuth();
     const [searchParams] = useSearchParams();
     const error = searchParams.get('error');
-    const [errorBanner, setErrorBanner] = useState(null);
+    const [dismissedError, setDismissedError] = useState(null);
 
-    useEffect(() => {
-        if (error) {
-            let title = "Login Failed";
-            let description = "An unknown error occurred. Please try again.";
-
-            switch (error) {
-                case 'banned':
-                    title = "Account Suspended";
-                    description = "Your account has been banned for violating our terms.";
-                    break;
-                case 'oidc_failed':
-                    title = "Sign-in Failed";
-                    description = "We couldn't complete sign-in with Stackryze. Please try again.";
-                    break;
-                case 'server_error':
-                    title = "Server Error";
-                    description = "Something went wrong on our end. Please try later.";
-                    break;
-                default:
-                    description = error;
-                    break;
-            }
-
-            setErrorBanner({ title, description });
+    const errorBanner = useMemo(() => {
+        if (!error || dismissedError === error) return null;
+        switch (error) {
+            case 'banned':
+                return { title: "Account Suspended", description: "Your account has been banned for violating our terms." };
+            case 'oidc_failed':
+                return { title: "Sign-in Failed", description: "We couldn't complete sign-in with Stackryze. Please try again." };
+            case 'server_error':
+                return { title: "Server Error", description: "Something went wrong on our end. Please try later." };
+            default:
+                return { title: "Login Failed", description: error };
         }
-    }, [error]);
+    }, [error, dismissedError]);
 
     const handleLogin = () => login("zitadel");
 
@@ -43,11 +30,12 @@ export default function Login() {
         <>
             <Header />
             <div className="min-h-screen flex flex-col items-center justify-center bg-transparent px-4 py-12" style={{ paddingTop: 'calc(4rem + var(--incident-height, 0px) + 2.5rem)' }}>
-                <div className="w-full max-w-md bg-card/80 backdrop-blur-xl rounded-2xl border border-border p-8 md:p-10 relative shadow-sm">
+                <div className="w-full max-w-md bg-card/90 backdrop-blur-xl rounded-3xl border border-border p-8 md:p-10 relative shadow-sm overflow-hidden">
+                    <div aria-hidden="true" className="bg-glow-signal pointer-events-none absolute inset-0 opacity-60" />
                     {/* Header */}
-                    <div className="mb-8 flex items-start justify-between">
+                    <div className="relative z-10 mb-8 flex items-start justify-between">
                         <div>
-                            <h1 className="text-3xl font-display font-medium text-foreground tracking-tight mb-1.5">Welcome back</h1>
+                            <h1 className="text-2xl font-semibold text-foreground tracking-[-0.03em] mb-1">Welcome back</h1>
                             <p className="text-muted-foreground text-sm">Sign in to manage your subdomains</p>
                         </div>
                         <Link to="/" className="flex items-center gap-2 shrink-0">
@@ -65,7 +53,7 @@ export default function Login() {
                                     <p className="text-xs text-foreground/80">{errorBanner.description}</p>
                                 </div>
                                 <button
-                                    onClick={() => setErrorBanner(null)}
+                                    onClick={() => setDismissedError(error)}
                                     aria-label="Dismiss error"
                                     className="text-destructive hover:opacity-70 font-bold text-xl leading-none"
                                 >×</button>

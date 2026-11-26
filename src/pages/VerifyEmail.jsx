@@ -128,7 +128,7 @@ export default function VerifyEmail() {
             <Link to="/" className="mb-8 flex items-center gap-3 group">
                 <img src="/stackryze_logo_black.png" alt="Stackryze Logo" className="h-9 w-auto dark:hidden" />
                 <img src="/stackryze_logo_white.png" alt="Stackryze Logo" className="h-9 w-auto hidden dark:block" />
-                <span className="text-xl font-display font-medium text-foreground tracking-tight">Stackryze Domains</span>
+                <span className="text-lg font-semibold text-foreground tracking-[-0.02em]">Stackryze Domains</span>
             </Link>
 
             <div className="w-full max-w-md bg-card/80 backdrop-blur-xl border border-border p-8 md:p-10 rounded-2xl shadow-sm text-center">
@@ -136,7 +136,7 @@ export default function VerifyEmail() {
                 {isNoreplyEmail ? (
                     <>
                         <MailCheck className="w-12 h-12 text-destructive mx-auto mb-4" />
-                        <h1 className="text-3xl font-display font-medium text-foreground mb-2">Cannot Verify This Email</h1>
+                        <h1 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight mb-2">Cannot Verify This Email</h1>
 
                         <div className="bg-destructive/10 border border-destructive/20 text-destructive p-4 rounded-xl text-left mb-6">
                             <div className="flex gap-3 mb-3">
@@ -165,7 +165,7 @@ export default function VerifyEmail() {
                 ) : (
                     <>
                         <MailCheck className="w-12 h-12 text-signal mx-auto mb-4" />
-                        <h1 className="text-3xl font-display font-medium text-foreground mb-2">Check your inbox</h1>
+                        <h1 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight mb-2">Check your inbox</h1>
                         <p className="text-sm text-muted-foreground mb-6">
                             We've sent a 6-digit verification code to <br />
                             <strong className="text-foreground font-semibold">{email}</strong>

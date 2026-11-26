@@ -110,12 +110,12 @@ export default function ChangeEmail() {
             <Link to="/" className="mb-8 flex items-center gap-3 group">
                 <img src="/stackryze_logo_black.png" alt="Stackryze Logo" className="h-9 w-auto dark:hidden" />
                 <img src="/stackryze_logo_white.png" alt="Stackryze Logo" className="h-9 w-auto hidden dark:block" />
-                <span className="text-xl font-display font-medium text-foreground tracking-tight">Stackryze Domains</span>
+                <span className="text-lg font-semibold text-foreground tracking-[-0.02em]">Stackryze Domains</span>
             </Link>
 
             <div className="w-full max-w-md bg-card/80 backdrop-blur-xl border border-border p-8 md:p-10 rounded-2xl shadow-sm">
                 <Mail className="w-12 h-12 text-signal mx-auto mb-4" />
-                <h1 className="text-3xl font-display font-medium text-foreground mb-2 text-center">Update Your Email</h1>
+                <h1 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight mb-2 text-center">Update Your Email</h1>
 
                 {isRequired && (
                     <div className="mb-6 bg-amber-500/10 border border-amber-500/20 text-foreground p-4 rounded-xl flex gap-3 text-sm">

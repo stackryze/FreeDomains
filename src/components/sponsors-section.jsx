@@ -1,64 +1,58 @@
-
 export function SponsorsSection() {
-    const sponsors = [
-        {
-            name: "Cloudflare",
-            logo: "/Cloudflare_Logo.svg",
-            url: "https://www.cloudflare.com",
-            description: "Cloudflare provides a global network to make everything you connect to the Internet secure, private, fast, and reliable.",
-            color: "#F38020"
-        },
-        {
-            name: "DigitalOcean",
-            logo: "/digitalocean_logo.png",
-            url: "https://www.digitalocean.com",
-            description: "DigitalOcean simplifies cloud computing so developers and businesses can spend more time building software.",
-            color: "#008bcf"
-        },
-        {
-            name: "HetrixTools",
-            logo: "/hetrixtools.png",
-            url: "https://hetrixtools.com",
-            description: "HetrixTools provides Uptime Monitoring, Blacklist Monitoring, and Server Resource Monitoring to help webmasters improve efficiency.",
-            color: "#FF3D3D"
-        },
-        {
-            name: "1Password",
-            logo: "/1password_Logo.png",
-            url: "https://1password.com",
-            description: "1Password is the easiest way to store and use strong passwords. Log in to sites and fill forms securely with a single click.",
-            color: "#0094F5"
-        }
-    ];
+  const sponsors = [
+    {
+      name: "Cloudflare",
+      logo: "/Cloudflare_Logo.svg",
+      url: "https://www.cloudflare.com",
+    },
+    {
+      name: "DigitalOcean",
+      logo: "/digitalocean_logo.png",
+      url: "https://www.digitalocean.com",
+    },
+    {
+      name: "HetrixTools",
+      logo: "/hetrixtools.png",
+      url: "https://hetrixtools.com",
+    },
+    {
+      name: "1Password",
+      logo: "/1password_Logo.png",
+      url: "https://1password.com",
+    },
+  ];
 
-    return (
-        <section className="w-full pt-6 md:pt-10 pb-4 bg-transparent">
-            <div className="max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16">
-                <div className="mb-8 text-center">
-                    <h2 className="text-xs font-mono font-medium text-muted-foreground tracking-widest uppercase">
-                        Supported by industry leaders
-                    </h2>
-                </div>
+  return (
+    <section className="w-full px-6 md:px-12 lg:px-16">
+      <div className="max-w-[1600px] mx-auto border-x border-b border-border bg-background">
+        <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border">
+          <div className="lg:col-span-3 px-6 py-6 flex items-center justify-center lg:justify-start">
+            <p className="text-xs font-mono text-muted-foreground tracking-wide">
+              Infrastructure &amp; security partners
+            </p>
+          </div>
 
-                <div className="flex flex-wrap items-center justify-center gap-12 md:gap-16">
-                    {sponsors.map((sponsor, idx) => (
-                        <a
-                            key={idx}
-                            href={sponsor.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="h-10 opacity-60 hover:opacity-100 transition-opacity duration-300 grayscale hover:grayscale-0"
-                            title={sponsor.name}
-                        >
-                            <img
-                                src={sponsor.logo}
-                                alt={sponsor.name}
-                                className="h-full w-auto object-contain dark:brightness-0 dark:invert"
-                            />
-                        </a>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+          <div className="lg:col-span-9 grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border">
+            {sponsors.map((sponsor) => (
+              <a
+                key={sponsor.name}
+                href={sponsor.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-6 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity duration-200 grayscale hover:grayscale-0"
+                title={sponsor.name}
+              >
+                <img
+                  src={sponsor.logo}
+                  alt={sponsor.name}
+                  loading="lazy"
+                  className="h-6 sm:h-7 w-auto max-w-[120px] object-contain dark:brightness-0 dark:invert"
+                />
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

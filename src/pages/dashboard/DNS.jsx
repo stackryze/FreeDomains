@@ -1,94 +1,145 @@
-import { Server, Settings, ExternalLink, Zap } from "lucide-react";
+import { useState } from "react";
+import { Server, ExternalLink, ArrowUpRight, Layers, Check, Copy } from "lucide-react";
+import { ConsoleHeader } from "@/components/dashboard/ConsoleHeader";
+
+const delegationSteps = [
+  {
+    step: "1",
+    title: "Register your subdomain",
+    desc: "Claim an available name on .indevs.in, .sryze.cc, .ryzedns.org, .nx.kg, or .ryzn.pro.",
+  },
+  {
+    step: "2",
+    title: "Choose authoritative nameservers",
+    desc: "Keep Stackryze DNS (dns.stackryze.com) or enter 2–6 nameservers from any external DNS provider.",
+  },
+  {
+    step: "3",
+    title: "Automatic NS delegation",
+    desc: "Your NS records publish immediately in PowerDNS so resolver queries route directly to your provider.",
+  },
+  {
+    step: "4",
+    title: "Manage records anywhere",
+    desc: "Create A, AAAA, CNAME, TXT, and MX records in your chosen DNS provider with zero lock-in.",
+  },
+];
+
+const NODES = [
+  { id: "NS1", host: "ns1.stackryze.com", region: "New York" },
+  { id: "NS2", host: "ns2.stackryze.com", region: "Frankfurt" },
+  { id: "NS3", host: "ns3.stackryze.com", region: "Hyderabad" },
+];
 
 export default function DNSRecords() {
-    return (
-        <div className="max-w-4xl space-y-8 relative">
-            {/* Subtle background glow */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[100px] pointer-events-none -z-10"></div>
-            
-            {/* Header */}
+  const [copiedHost, setCopiedHost] = useState(null);
+
+  const handleCopy = (host) => {
+    navigator.clipboard.writeText(host);
+    setCopiedHost(host);
+    setTimeout(() => setCopiedHost(null), 1400);
+  };
+
+  return (
+    <div className="space-y-6 w-full">
+      <ConsoleHeader
+        title="DNS Management"
+        description="Use Stackryze Managed DNS or delegate nameservers to any external DNS provider."
+        actions={
+          <a
+            href="https://dns.stackryze.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"
+          >
+            <span>Open StackNS</span>
+            <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+          </a>
+        }
+      />
+
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <div className="px-6 py-5 border-b border-border flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-md bg-secondary border border-border flex items-center justify-center shrink-0">
+              <Server className="w-4 h-4 text-foreground" aria-hidden="true" />
+            </div>
             <div>
-                <p className="text-sm font-bold uppercase tracking-widest text-orange-500 mb-2 flex items-center gap-2">
-                    <Server className="w-4 h-4" />
-                    Infrastructure
-                </p>
-                <h1 className="font-display text-3xl md:text-4xl font-medium text-foreground leading-tight mb-3">DNS Management</h1>
-                <p className="text-base text-foreground font-medium max-w-2xl leading-relaxed">
-                    Host your domains with absolute freedom. Bring your own nameservers, or manage them directly through Stackryze DNS.
-                </p>
+              <h2 className="text-sm font-semibold text-foreground">
+                Stackryze Managed DNS
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Manage A, AAAA, CNAME, MX, TXT, and CAA records on{" "}
+                <span className="font-mono text-foreground">dns.stackryze.com</span>
+              </p>
             </div>
-
-            {/* Managed DNS CTA - Premium Card */}
-            <div className="bg-card/80 backdrop-blur-2xl border border-border rounded-3xl p-6 md:p-8 shadow-xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent pointer-events-none"></div>
-                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-orange-500/30 to-transparent"></div>
-                
-                <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between relative z-10">
-                    <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/20 flex items-center justify-center flex-shrink-0 shadow-inner">
-                            <Zap className="w-6 h-6 text-orange-500 fill-orange-500/20" />
-                        </div>
-                        <div>
-                            <div className="flex items-center gap-3 mb-2">
-                                <h2 className="font-display text-foreground text-xl font-medium">Managed DNS is Live!</h2>
-                                <span className="bg-orange-500 text-white px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide animate-pulse shadow-sm shadow-orange-500/20">New</span>
-                            </div>
-                            <p className="text-sm font-medium text-foreground leading-relaxed max-w-xl">
-                                Host your DNS records directly with <strong className="text-orange-500">Stackryze DNS</strong> at <span className="font-mono bg-secondary dark:bg-secondary px-1.5 py-0.5 rounded text-foreground text-xs border border-border dark:border-border/60 shadow-sm">dns.stackryze.com</span>. Powered by PowerDNS, globally distributed and lightning fast.
-                            </p>
-                        </div>
-                    </div>
-                    <a
-                        href="https://dns.stackryze.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-foreground text-background font-bold text-sm rounded-xl shadow-[0_4px_14px_0_rgb(0,0,0,0.1)] hover:scale-[1.02] hover:shadow-[0_6px_20px_rgba(0,0,0,0.15)] transition-all duration-300 whitespace-nowrap flex-shrink-0 w-full md:w-auto"
-                    >
-                        Get Started
-                        <ExternalLink className="w-4 h-4" />
-                    </a>
-                </div>
-            </div>
-
-            {/* How it works (Delegation model) */}
-            <div className="bg-card/70 backdrop-blur-md border border-border rounded-3xl p-6 md:p-8 shadow-sm">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 rounded-xl bg-foreground flex items-center justify-center shadow-lg">
-                        <Settings className="w-6 h-6 text-background" />
-                    </div>
-                    <div>
-                        <h2 className="font-display text-2xl font-medium text-foreground tracking-tight">Bring Your Own DNS</h2>
-                        <p className="text-sm font-medium text-foreground opacity-80 mt-0.5">The delegation model explained</p>
-                    </div>
-                </div>
-
-                <p className="text-base font-medium text-foreground leading-relaxed mb-8 max-w-2xl">
-                    Stackryze operates on a strict delegation model. When you register a subdomain (like{" "}
-                    <code className="bg-secondary dark:bg-secondary border border-border px-2 py-1 rounded-md font-mono text-sm shadow-sm">you.indevs.in</code>
-                    ), you retain full control by providing your own nameservers.
-                </p>
-
-                <div className="bg-muted/50 dark:bg-black/20 border border-border/80 dark:border-border/60 rounded-2xl p-6 md:p-8">
-                    <div className="space-y-6">
-                        {[
-                            { title: "Register Domain", desc: "Claim your free subdomain using our seamless registration dashboard." },
-                            { title: "Configure Nameservers", desc: "Enter your preferred DNS provider's nameservers (e.g., Cloudflare, Route53, or Stackryze DNS)." },
-                            { title: "Automatic Delegation", desc: "We instantly create NS records pointing traffic directly to your chosen nameservers." },
-                            { title: "Full Control", desc: "Manage all A, AAAA, CNAME, TXT, and MX records securely from your own DNS provider's dashboard." }
-                        ].map((step, i) => (
-                            <div key={i} className="flex gap-4 group">
-                                <div className="w-8 h-8 rounded-full bg-accent dark:bg-secondary text-foreground group-hover:bg-foreground group-hover:text-background dark:group-hover:bg-background dark:group-hover:text-foreground flex items-center justify-center font-bold text-sm flex-shrink-0 transition-colors mt-0.5 shadow-sm">
-                                    {i + 1}
-                                </div>
-                                <div>
-                                    <h3 className="font-display text-foreground text-base font-medium mb-1">{step.title}</h3>
-                                    <p className="text-sm font-medium text-foreground opacity-80 leading-relaxed">{step.desc}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 font-mono text-xs text-emerald-500 shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+            PowerDNS
+          </span>
         </div>
-    );
+
+        <div className="divide-y divide-border font-mono text-xs">
+          {NODES.map((n) => (
+            <button
+              key={n.id}
+              type="button"
+              onClick={() => handleCopy(n.host)}
+              className="w-full px-6 py-3.5 flex items-center justify-between gap-4 hover:bg-secondary/35 transition-colors text-left"
+            >
+              <div className="flex items-center gap-4 min-w-0">
+                <span className="text-muted-foreground w-8 shrink-0">{n.id}</span>
+                <span className="text-foreground truncate">{n.host}</span>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-muted-foreground hidden sm:inline">{n.region}</span>
+                {copiedHost === n.host ? (
+                  <Check className="w-3.5 h-3.5 text-emerald-500" aria-hidden="true" />
+                ) : (
+                  <Copy className="w-3.5 h-3.5 text-muted-foreground" aria-hidden="true" />
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-border bg-card overflow-hidden">
+        <div className="px-6 py-4 border-b border-border flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <Layers className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
+            <h2 className="text-sm font-semibold text-foreground">
+              Bring Your Own Nameservers
+            </h2>
+          </div>
+          <a
+            href="https://docs.stackryze.com/docs/domains/nameserver-delegation"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span>Docs</span>
+            <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
+          </a>
+        </div>
+
+        <div className="divide-y divide-border">
+          {delegationSteps.map((item) => (
+            <div key={item.step} className="px-6 py-4 flex items-start gap-4">
+              <span className="w-6 h-6 rounded-md bg-secondary border border-border font-mono text-xs font-medium text-foreground flex items-center justify-center shrink-0 mt-0.5 tabular-nums">
+                {item.step}
+              </span>
+              <div className="space-y-0.5">
+                <h3 className="text-sm font-medium text-foreground">{item.title}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }

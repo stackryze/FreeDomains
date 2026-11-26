@@ -30,3 +30,4 @@ dist-ssr
 # Local reference directories
 stackryze-ref/
 stackryze-threejs-ref/
+/.agents/skills/
