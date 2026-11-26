@@ -1,125 +1,163 @@
+import { Link } from "react-router-dom";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer-section";
 import {
-    Heart,
-    Globe,
-    Code,
-    Github,
-    Users,
-    Shield,
-    Mail
+  Globe,
+  Code,
+  Github,
+  Users,
+  Shield,
+  ArrowUpRight,
 } from "lucide-react";
 
+const pillars = [
+  {
+    icon: Code,
+    title: "Open Source",
+    description:
+      "Transparent infrastructure across frontend, API, and DNS tooling.",
+  },
+  {
+    icon: Users,
+    title: "Developer Community",
+    description:
+      "Built for students, maintainers, and indie builders shipping worldwide.",
+  },
+  {
+    icon: Shield,
+    title: "Abuse Protected",
+    description:
+      "GitHub verification and active monitoring keep the registry safe.",
+  },
+  {
+    icon: Globe,
+    title: "Full Delegation",
+    description:
+      "Use Stackryze DNS or point NS records to any external provider.",
+  },
+];
+
+const channels = [
+  { label: "Support", address: "support@stackryze.com" },
+  { label: "Abuse", address: "reportabuse@stackryze.com" },
+  { label: "Security", address: "security@stackryze.com" },
+];
+
 export function About() {
-    return (
-        <div className="min-h-screen bg-transparent">
-            <Header />
+  return (
+    <div className="min-h-screen flex flex-col bg-background text-foreground font-sans">
+      <Header />
 
-            {/* Hero Section */}
-            <section className="pt-[calc(6rem+var(--incident-height,0px))] pb-20 px-6 md:px-12 lg:px-16">
-                <div className="max-w-4xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-secondary text-foreground text-xs font-medium uppercase tracking-wider mb-6 border border-border">
-                        <span className="relative flex h-2 w-2">
-                            <span className="absolute inline-flex h-full w-full animate-ping-slow rounded-full bg-[#7C5CFF] opacity-75" />
-                            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#7C5CFF]" />
-                        </span>
-                        <span>A Stackryze Initiative</span>
-                    </div>
-                    <h1 className="font-display text-4xl md:text-6xl font-bold text-foreground mb-6 leading-tight tracking-tight">
-                        Giving back to the <br className="hidden md:block" />
-                        <span className="italic text-gradient-signal">developer community.</span>
-                    </h1>
-                    <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                        Stackryze Domains is our way of empowering builders. Free, open-source, and forever reliable.
+      <main className="flex-1 w-full px-6 md:px-12 lg:px-16 pt-[calc(4.5rem+var(--incident-height,0px))] sm:pt-[calc(5rem+var(--incident-height,0px))] pb-16">
+        <div className="max-w-[1600px] mx-auto border-x border-b border-border bg-background">
+          {/* Concise Architectural Header */}
+          <section className="relative bg-grid px-6 sm:px-12 lg:px-16 py-16 sm:py-20 border-t border-border overflow-hidden">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-24 right-0 w-[440px] h-64 bg-[radial-gradient(ellipse_at_top_right,rgba(124,92,255,0.14),transparent_70%)]"
+            />
+            <div className="relative z-10 max-w-3xl space-y-5">
+              <p className="font-mono text-xs text-muted-foreground">
+                About Stackryze Domains
+              </p>
+              <h1 className="text-3xl sm:text-5xl font-semibold tracking-[-0.04em] leading-[1.08] text-foreground text-balance">
+                A free, open namespace built for developers.
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl">
+                Stackryze provides free subdomains with instant PowerDNS delegation across{" "}
+                <span className="font-mono text-xs text-foreground">
+                  .indevs.in · .sryze.cc · .ryzedns.org · .nx.kg · .ryzn.pro
+                </span>{" "}
+                so builders can ship projects without credit cards or paywalls.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                <Link
+                  to="/register"
+                  className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"
+                >
+                  Register Domain
+                </Link>
+                <a
+                  href="https://github.com/stackryze/FreeDomains"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-border bg-card text-foreground text-sm font-medium hover:bg-secondary transition-colors"
+                >
+                  <Github className="w-4 h-4" aria-hidden="true" />
+                  <span>GitHub</span>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* 4-Column Hairline Principles Strip */}
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-t border-border divide-y sm:divide-y-0 sm:divide-x divide-border">
+            {pillars.map((pillar) => {
+              const IconComp = pillar.icon;
+              return (
+                <div
+                  key={pillar.title}
+                  className="p-6 sm:p-8 flex flex-col justify-between gap-4 bg-background"
+                >
+                  <IconComp className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
+                  <div className="space-y-1">
+                    <h2 className="text-sm font-semibold text-foreground tracking-tight">
+                      {pillar.title}
+                    </h2>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {pillar.description}
                     </p>
+                  </div>
                 </div>
-            </section>
+              );
+            })}
+          </section>
 
-            {/* The Why & Values */}
-            <section className="py-16 px-6 md:px-12 lg:px-16 border-y border-border bg-transparent">
-                <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h2 className="font-display text-3xl font-bold text-foreground mb-6">Why we built this</h2>
-                        <p className="text-base md:text-lg text-muted-foreground mb-6 leading-relaxed">
-                            At <strong className="text-foreground">Stackryze</strong>, we know the struggle of finding a professional domain for a hackathon project, a portfolio, or a quick demo.
-                        </p>
-                        <p className="text-base md:text-lg text-muted-foreground mb-6 leading-relaxed">
-                            We believe that cost shouldn't be a barrier to shipping code. That's why we built this platform—to provide free <code className="text-foreground bg-secondary px-1.5 py-0.5 rounded font-mono text-sm">.indevs.in</code> subdomains to anyone who needs them. No credit cards, no hidden fees.
-                        </p>
-                        <a
-                            href="https://github.com/stackryze/FreeDomains"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-2 font-semibold text-foreground border-b-2 border-foreground hover:text-signal hover:border-signal transition-colors"
-                        >
-                            <Github className="w-4 h-4" />
-                            Check out the code
-                        </a>
-                    </div>
+          {/* Clean Bottom Channels & Links Bar */}
+          <section className="border-t border-border grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-border">
+            <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border">
+              {channels.map((ch) => (
+                <a
+                  key={ch.address}
+                  href={`mailto:${ch.address}`}
+                  className="px-6 py-4 hover:bg-secondary/40 transition-colors flex flex-col gap-0.5"
+                >
+                  <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider">
+                    {ch.label}
+                  </span>
+                  <span className="font-mono text-xs sm:text-sm text-foreground truncate">
+                    {ch.address}
+                  </span>
+                </a>
+              ))}
+            </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div className="bg-card p-6 rounded-2xl border border-border hover:border-foreground/20 transition-all">
-                            <Code className="w-7 h-7 text-[#7C5CFF] mb-4" />
-                            <h3 className="text-base font-semibold text-foreground mb-2">Open Source</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">Transparent infrastructure. Audit, contribute, or fork it.</p>
-                        </div>
-                        <div className="bg-card p-6 rounded-2xl border border-border hover:border-foreground/20 transition-all">
-                            <Users className="w-7 h-7 text-[#7C5CFF] mb-4" />
-                            <h3 className="text-base font-semibold text-foreground mb-2">Community</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">Built by developers, for developers. Maintained by volunteers.</p>
-                        </div>
-                        <div className="bg-card p-6 rounded-2xl border border-border hover:border-foreground/20 transition-all">
-                            <Shield className="w-7 h-7 text-[#7C5CFF] mb-4" />
-                            <h3 className="text-base font-semibold text-foreground mb-2">Secure</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">Zero tolerance for abuse. We keep the namespace clean.</p>
-                        </div>
-                        <div className="bg-card p-6 rounded-2xl border border-border hover:border-foreground/20 transition-all">
-                            <Globe className="w-7 h-7 text-[#7C5CFF] mb-4" />
-                            <h3 className="text-base font-semibold text-foreground mb-2">Accessible</h3>
-                            <p className="text-sm text-muted-foreground leading-relaxed">Democratizing web identities for students and creators.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Contact & Community */}
-            <section className="py-20 px-6 md:px-12 lg:px-16">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">Contact & Community</h2>
-                    <p className="text-base md:text-lg text-muted-foreground mb-10">
-                        Have questions, suggestions, or want to collaborate?
-                    </p>
-                    <div className="flex flex-col md:flex-row justify-center gap-4 mb-16">
-                        <a href="mailto:support@stackryze.com" className="flex items-center justify-center gap-3 text-sm font-medium text-foreground bg-card px-6 py-3.5 border border-border rounded-xl hover:border-foreground/20 transition-all shadow-sm">
-                            <Mail className="w-4 h-4 text-muted-foreground" />
-                            support@stackryze.com
-                        </a>
-                        <a href="mailto:reportabuse@stackryze.com" className="flex items-center justify-center gap-3 text-sm font-medium text-foreground bg-card px-6 py-3.5 border border-border rounded-xl hover:border-foreground/20 transition-all shadow-sm">
-                            <Shield className="w-4 h-4 text-muted-foreground" />
-                            reportabuse@stackryze.com
-                        </a>
-                    </div>
-
-                    <div className="bg-card border border-border rounded-2xl p-8 max-w-xl mx-auto text-center relative overflow-hidden shadow-sm">
-                        <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-6">Official Communication Channels</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left max-w-sm mx-auto mb-6">
-                            <div className="font-mono text-foreground text-xs">support@stackryze.com</div>
-                            <div className="font-mono text-foreground text-xs">reportabuse@stackryze.com</div>
-                            <div className="font-mono text-foreground text-xs">security@stackryze.com</div>
-                            <div className="font-mono text-foreground text-xs">no-reply@stackryze.com</div>
-                        </div>
-                        <p className="text-xs text-muted-foreground italic">
-                            We will never contact you from any other domain or prefix.
-                        </p>
-                    </div>
-
-                    <p className="text-xs text-muted-foreground mt-12">
-                        Maintained by <a href="https://stackryze.com" target="_blank" rel="noreferrer" className="font-medium text-foreground hover:underline">Stackryze</a>
-                    </p>
-                </div>
-            </section>
-
-            <Footer />
+            <div className="lg:col-span-4 grid grid-cols-2 divide-x divide-border">
+              <a
+                href="https://docs.stackryze.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-4 flex items-center justify-between text-xs font-mono text-foreground hover:bg-secondary/40 transition-colors"
+              >
+                <span>Documentation</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground" aria-hidden="true" />
+              </a>
+              <a
+                href="https://discord.gg/wr7s97cfM7"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-4 flex items-center justify-between text-xs font-mono text-foreground hover:bg-secondary/40 transition-colors"
+              >
+                <span>Discord</span>
+                <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground" aria-hidden="true" />
+              </a>
+            </div>
+          </section>
         </div>
-    );
+      </main>
+
+      <Footer />
+    </div>
+  );
 }

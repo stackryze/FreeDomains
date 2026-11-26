@@ -1,50 +1,60 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { subdomainAPI } from "@/lib/api";
+import { DEMO_SUBDOMAINS, IS_LOCAL_DEMO } from "@/lib/demo-data";
 
 const DashboardContext = createContext();
 
 export function DashboardProvider({ children }) {
-    const [subdomains, setSubdomains] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  const [subdomains, setSubdomains] = useState(
+    IS_LOCAL_DEMO ? DEMO_SUBDOMAINS : []
+  );
+  const [loading, setLoading] = useState(!IS_LOCAL_DEMO);
+  const [error, setError] = useState(null);
 
-    // Fetch subdomains from backend
-    const fetchSubdomains = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-            const data = await subdomainAPI.list();
-            setSubdomains(data);
-        } catch (err) {
-            console.error('Failed to fetch subdomains:', err);
-            setError(err.message);
-            // Don't clear subdomains on error, keep previous data
-        } finally {
-            setLoading(false);
-        }
-    };
+  const fetchSubdomains = async () => {
+    if (IS_LOCAL_DEMO) {
+      setSubdomains(DEMO_SUBDOMAINS);
+      setLoading(false);
+      return;
+    }
 
-    // Initial fetch on mount
-    useEffect(() => {
-        fetchSubdomains();
-    }, []);
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await subdomainAPI.list();
+      setSubdomains(data);
+    } catch (err) {
+      console.error("Failed to fetch subdomains:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    // Refresh function that can be called manually
-    const refresh = () => {
-        fetchSubdomains();
-    };
+  useEffect(() => {
+    if (!IS_LOCAL_DEMO) {
+      fetchSubdomains();
+    }
+  }, []);
 
-    return (
-        <DashboardContext.Provider value={{
-            subdomains,
-            setSubdomains,
-            loading,
-            error,
-            refresh
-        }}>
-            {children}
-        </DashboardContext.Provider>
-    );
+  const refresh = () => {
+    fetchSubdomains();
+  };
+
+  return (
+    <DashboardContext.Provider
+      value={{
+        subdomains,
+        setSubdomains,
+        loading,
+        error,
+        refresh,
+      }}
+    >
+      {children}
+    </DashboardContext.Provider>
+  );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useDashboard = () => useContext(DashboardContext);

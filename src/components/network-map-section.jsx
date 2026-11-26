@@ -13,10 +13,10 @@ export function NetworkMapSection() {
       <div className="w-full px-4 sm:px-6 md:px-12 lg:px-16 mb-12 max-w-[1600px] mx-auto relative z-10">
         
         <div className="mb-12 space-y-4 text-center">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-semibold text-foreground tracking-[-0.03em]">
             Globally Distributed Name Servers
           </h2>
-          <p className="max-w-2xl mx-auto text-base md:text-lg text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+          <p className="max-w-2xl mx-auto text-base md:text-lg text-muted-foreground leading-relaxed font-normal">
             Lightning-fast resolution from our authoritative name servers worldwide, ensuring your domain resolves instantly anywhere on the planet.
           </p>
         </div>
@@ -52,8 +52,8 @@ export function NetworkMapSection() {
                       fill="#0f172a"
                       style={{ 
                         fontSize: "1.8px", 
-                        fontWeight: "700", 
-                        fontFamily: "Inter, system-ui, sans-serif",
+                        fontWeight: "600", 
+                        fontFamily: "Geist, ui-sans-serif, system-ui, sans-serif",
                         letterSpacing: "-0.02em"
                       }}
                     >

@@ -1,21 +1,70 @@
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
-@import "@fontsource-variable/bricolage-grotesque";
-@import "@fontsource/instrument-serif";
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Official Vercel Geist 1.9.2 Fonts */
+@font-face {
+  font-family: "Geist";
+  src: url("../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("../node_modules/geist/dist/fonts/geist-sans/Geist-Italic[wght].woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../node_modules/geist/dist/fonts/geist-mono/GeistMono-Italic[wght].woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Serif";
+  src: url("../node_modules/geist/dist/fonts/geist-serif/GeistSerifVF.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Pixel";
+  src: url("../node_modules/geist/dist/fonts/geist-pixel/GeistPixel-Square.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 /*
-  Stackryze FreeDomains — Official Brand Design System
-  Display: Instrument Serif / Bricolage Grotesque · UI: Geist · Data/Mono: Geist Mono
-  Signature Accent: Signal Indigo (#7C5CFF)
+  Stackryze FreeDomains — Design System
+  Typography: Vercel Geist, Geist Mono & Geist Pixel
+  Signature Accent: Signal Indigo (#7C5CFF / #A78BFF)
 */
 
 @theme {
-  --font-display: "Instrument Serif", "Bricolage Grotesque Variable", "Geist Variable", ui-sans-serif, system-ui, serif;
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", monospace;
+  --font-display: "Geist", "Geist Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Geist", "Geist Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-pixel: "Geist Pixel", "Geist Mono", monospace;
+  --font-serif-vercel: "Geist Serif", Georgia, serif;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -45,10 +94,6 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* Global cursor pointer for clickable elements */
 button,
 a,
@@ -66,10 +111,15 @@ a[disabled],
   cursor: not-allowed;
 }
 
-/* Global text selection styling */
+/* Global high-contrast text selection (valid in both light and dark themes) */
 ::selection {
-  background: var(--foreground);
-  color: var(--background);
+  background-color: #7C5CFF;
+  color: #FFFFFF;
+}
+
+.dark ::selection {
+  background-color: #A78BFF;
+  color: #09090B;
 }
 
 @layer base {
@@ -109,32 +159,32 @@ a[disabled],
   }
 
   .dark {
-    --background: 240 10% 6%;
-    --foreground: 240 5% 94%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 93%;
 
-    --card: 240 7% 9%;
-    --card-foreground: 240 5% 94%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 93%;
 
-    --popover: 240 7% 9%;
-    --popover-foreground: 240 5% 94%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 93%;
 
-    --primary: 240 5% 94%;
-    --primary-foreground: 240 10% 6%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 4%;
 
-    --secondary: 240 6% 14%;
-    --secondary-foreground: 240 5% 94%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 93%;
 
-    --muted: 240 6% 14%;
-    --muted-foreground: 228 9% 65%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 63%;
 
-    --accent: 240 6% 18%;
-    --accent-foreground: 240 5% 94%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 84% 64%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 6% 18%;
-    --input: 240 6% 18%;
+    --border: 0 0% 14%;
+    --input: 0 0% 16%;
     --ring: 252 100% 76%;
 
     --signal: #A78BFF;
@@ -147,61 +197,78 @@ a[disabled],
 
   html {
     @apply h-full w-full antialiased bg-background text-foreground overflow-x-hidden;
-    scroll-behavior: smooth;
+    font-family: var(--font-sans);
   }
 
   body {
     @apply min-h-full flex flex-col bg-background text-foreground relative;
-    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--signal);
+    outline-offset: 2px;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-ping-slow,
+  .animate-pulse-dot,
+  .animate-scroll {
+    animation: none !important;
   }
 }
 
 /* ============================================================
-   STACKRYZE CONTINUOUS BACKGROUND LAYERS
+   STACKRYZE ARCHITECTURAL BACKGROUND LAYERS
    ============================================================ */
 
 .bg-aurora {
-  background:
-    radial-gradient(ellipse 70% 50% at 12% 0%, rgba(124, 92, 255, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 40% at 88% 22%, rgba(100, 100, 120, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 45% at 50% 55%, rgba(124, 92, 255, 0.08) 0%, transparent 65%),
-    radial-gradient(ellipse 70% 50% at 20% 85%, rgba(100, 100, 120, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 55% at 90% 100%, rgba(124, 92, 255, 0.14) 0%, transparent 60%);
-  contain: layout style;
+  background: transparent;
 }
 
 .dark .bg-aurora {
-  background:
-    radial-gradient(ellipse 70% 50% at 12% 0%, rgba(167, 139, 255, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 40% at 88% 22%, rgba(200, 200, 220, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 45% at 50% 55%, rgba(167, 139, 255, 0.07) 0%, transparent 65%),
-    radial-gradient(ellipse 70% 50% at 20% 85%, rgba(200, 200, 220, 0.05) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 55% at 90% 100%, rgba(167, 139, 255, 0.10) 0%, transparent 60%);
-  contain: layout style;
+  background: radial-gradient(ellipse 80% 35% at 50% -5%, rgba(167, 139, 255, 0.06) 0%, transparent 70%);
 }
 
 .page-tint {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(124, 92, 255, 0.05) 0%,
-      transparent 12%,
-      transparent 45%,
-      rgba(124, 92, 255, 0.06) 70%,
-      transparent 100%
-    );
+  background: transparent;
 }
 
 .dark .page-tint {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(167, 139, 255, 0.06) 0%,
-      transparent 12%,
-      transparent 45%,
-      rgba(167, 139, 255, 0.07) 70%,
-      transparent 100%
-    );
+  background: transparent;
 }
 
 .bg-glow-signal {
@@ -250,9 +317,16 @@ a[disabled],
 
 .bg-grid {
   background-image:
-    linear-gradient(to right, oklch(1 0 0 / 4%) 1px, transparent 1px),
-    linear-gradient(to bottom, oklch(1 0 0 / 4%) 1px, transparent 1px);
-  background-size: 56px 56px;
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.dark .bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 .bg-dots {
@@ -266,7 +340,7 @@ a[disabled],
 }
 
 .text-fade {
-  background: linear-gradient(180deg, var(--foreground) 34%, color-mix(in oklch, var(--foreground) 52%, transparent) 100%);
+  background: linear-gradient(180deg, hsl(var(--foreground)) 34%, hsl(var(--muted-foreground)) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -274,16 +348,16 @@ a[disabled],
 
 /* Double-bezel architecture */
 .shell {
-  border-radius: 1.5rem;
-  padding: 6px;
-  background: color-mix(in oklch, var(--card) 55%, var(--background));
-  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 5px;
+  background: color-mix(in srgb, hsl(var(--card)) 55%, hsl(var(--background)));
+  border: 1px solid hsl(var(--border));
 }
 
 .core {
-  border-radius: 1.125rem;
-  background: var(--card);
-  border: 1px solid var(--border);
+  border-radius: 0.9375rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
 }
 
 .eyebrow {

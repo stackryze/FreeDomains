@@ -116,8 +116,9 @@ export function HeroSection() {
 
           {/* Left: Text */}
           <div className="space-y-6 lg:pr-8">
-            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white tracking-tight text-balance">
-              A NAME FOR EVERYONE <span className="text-gradient-signal italic">ONLINE.</span>
+            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] text-white tracking-[-0.04em] text-balance">
+              A Name for Everyone{" "}
+              <span className="text-gradient-signal italic">Online.</span>
             </h1>
 
             <p className="text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed">
@@ -226,7 +227,7 @@ export function HeroSection() {
             )}
 
             <div className="pt-4 flex flex-col items-center gap-3 text-center">
-              <p className="text-white text-lg">We're a small team of students with a passion for making the internet more open and accessible. Your support helps us keep this project free and continue improving it for everyone.</p>
+              <p className="text-white/70 text-sm leading-relaxed">Free, open-source, and built for everyone. Your support keeps this project running and improving for the community.</p>
               <Link to="/donate" className="inline-flex items-center gap-2 text-lg font-bold text-rose-400 hover:text-rose-300 transition-colors group">
                 <Heart className="w-5 h-5 fill-rose-400 group-hover:fill-rose-300 transition-all" />
                 Support the project

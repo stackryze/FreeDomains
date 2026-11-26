@@ -1,289 +1,370 @@
-import { Globe, Plus, Settings, Clock, CheckCircle, ArrowRight, Search, History, Shield } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Globe,
+  Plus,
+  Shield,
+  CheckCircle,
+  AlertCircle,
+  Clock,
+  RefreshCw,
+  ArrowUpRight,
+  Activity,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { useDashboard } from "@/context/dashboard-context";
 import { useAuth } from "@/context/auth-context";
-import { Link } from "react-router-dom";
+import { subdomainAPI } from "@/lib/api";
+import { DEMO_ACTIVITIES, IS_LOCAL_DEMO } from "@/lib/demo-data";
+import { useToast } from "@/hooks/use-toast";
+import { ConsoleHeader } from "@/components/dashboard/ConsoleHeader";
+
+const TLD_QUOTAS = [
+  { key: "indevs.in", limitField: "domainLimit" },
+  { key: "sryze.cc", limitField: "sryzeDomainsLimit" },
+  { key: "ryzedns.org", limitField: "ryzeDnsDomainsLimit" },
+  { key: "nx.kg", limitField: "nxKgDomainsLimit" },
+  { key: "ryzn.pro", limitField: "ryznProDomainsLimit" },
+];
 
 export default function Overview() {
-    const { subdomains, loading } = useDashboard();
-    const { user } = useAuth();
+  const { subdomains, loading, refresh } = useDashboard();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [renewingId, setRenewingId] = useState(null);
 
-    const totalCount = subdomains.length;
-    const activeCount = subdomains.filter(d => d.status === "Active").length;
-    const expiringCount = subdomains.filter(d => {
-        if (!d.expiresAt) return false;
-        const days = Math.ceil((new Date(d.expiresAt) - new Date()) / 864e5);
-        return days > 0 && days <= 30;
-    }).length;
-    const expiredCount = subdomains.filter(d => d.status === "Expired").length;
-
-    // Most recently created domains (up to 3)
-    const recentDomains = [...subdomains]
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 3);
-
-    const greeting = () => {
-        const h = new Date().getHours();
-        if (h < 12) return "Good morning";
-        if (h < 17) return "Good afternoon";
-        return "Good evening";
-    };
-
-    if (loading && subdomains.length === 0) {
-        return (
-            <div className="max-w-[1600px] animate-pulse space-y-6">
-                <div className="h-8 bg-muted rounded-lg w-48" />
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[...Array(4)].map((_, i) => <div key={i} className="h-28 bg-muted rounded-2xl" />)}
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-muted rounded-2xl" />)}
-                </div>
-            </div>
-        );
+  useEffect(() => {
+    if (IS_LOCAL_DEMO) {
+      setRecentActivity(DEMO_ACTIVITIES.slice(0, 4));
+      return;
     }
-
-    return (
-        <div className="max-w-[1600px] space-y-6">
-
-            {/* ── Greeting header ── */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-                <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-signal mb-1">Registry Console</p>
-                    <h1 className="text-3xl md:text-4xl font-display font-medium text-foreground leading-tight">
-                        {greeting()}, {user?.name?.split(" ")[0] || "there"}
-                    </h1>
-                    <p className="text-sm text-muted-foreground mt-1">
-                        {totalCount === 0 ? "Register your first free domain to get started." : `You have ${totalCount} registered domain${totalCount > 1 ? "s" : ""} on Stackryze.`}
-                    </p>
-                </div>
-                <Link
-                    to="/register"
-                    className="inline-flex items-center gap-2 self-start sm:self-auto px-5 py-2.5 bg-foreground text-background text-sm font-semibold rounded-xl hover:bg-signal hover:text-signal-foreground transition-all duration-200 shadow-sm"
-                >
-                    <Plus className="w-4 h-4" />
-                    Register Domain
-                </Link>
-            </div>
-
-            {/* ── Stat cards ── */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-                <StatCard
-                    value={totalCount}
-                    label="Total"
-                    sub="domains"
-                    accentClass="text-foreground"
-                    dot="#7C5CFF"
-                    to="/my-domains"
-                />
-                <StatCard
-                    value={activeCount}
-                    label="Active"
-                    sub="running"
-                    accentClass="text-signal"
-                    dot="#7C5CFF"
-                    to="/my-domains"
-                />
-                <StatCard
-                    value={expiringCount}
-                    label="Expiring"
-                    sub="within 30 days"
-                    accentClass={expiringCount > 0 ? "text-amber-500" : "text-foreground"}
-                    dot={expiringCount > 0 ? "#fbbf24" : "var(--muted-foreground)"}
-                    to="/my-domains"
-                    warn={expiringCount > 0}
-                />
-                <StatCard
-                    value={expiredCount}
-                    label="Expired"
-                    sub="domains"
-                    accentClass={expiredCount > 0 ? "text-destructive" : "text-foreground"}
-                    dot={expiredCount > 0 ? "#ef4444" : "var(--muted-foreground)"}
-                    to="/my-domains"
-                />
-            </div>
-
-            {/* ── KYC / GitHub verification status ── */}
-            {user?.githubVerified ? (
-                <div className="flex items-center gap-3 px-4 py-3 bg-signal/10 border border-signal/20 rounded-2xl">
-                    <div className="w-8 h-8 rounded-full bg-signal/20 flex items-center justify-center flex-shrink-0">
-                        <CheckCircle className="w-4 h-4 text-signal" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-foreground">KYC Verified</p>
-                        <p className="text-xs text-muted-foreground">GitHub identity verified — premium extensions (.sryze.cc, .ryzedns.org, .nx.kg, .ryzn.pro) unlocked</p>
-                    </div>
-                    <span className="shrink-0 text-xs font-semibold px-2.5 py-1 bg-signal text-signal-foreground rounded-full">Verified</span>
-                </div>
-            ) : (
-                <a
-                    href={`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/github/kyc/start`}
-                    className="group flex items-center gap-3 px-4 py-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl hover:border-amber-500/40 transition-colors cursor-pointer"
-                >
-                    <div className="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                        <Shield className="w-4 h-4 text-amber-500" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-foreground">KYC Not Verified</p>
-                        <p className="text-xs text-muted-foreground">Complete GitHub verification to unlock domain registration across all extensions (.indevs.in, .sryze.cc, .ryzedns.org, .nx.kg &amp; .ryzn.pro)</p>
-                    </div>
-                    <span className="shrink-0 text-xs font-semibold px-2.5 py-1 border border-amber-500/40 text-amber-500 rounded-full group-hover:bg-amber-500 group-hover:text-background transition-colors">
-                        Verify →
-                    </span>
-                </a>
-            )}
-
-            {/* ── Main grid ── */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                {/* Manage Domains */}
-                <ActionCard
-                    to="/my-domains"
-                    icon={Globe}
-                    iconBg="bg-signal/10"
-                    iconColor="text-signal"
-                    title="Manage Domains"
-                    desc="View, renew, or configure your registered domains"
-                />
-
-                {/* DNS Config */}
-                <ActionCard
-                    to="/dns"
-                    icon={Settings}
-                    iconBg="bg-secondary"
-                    iconColor="text-foreground"
-                    title="DNS Configuration"
-                    desc="Set up NS delegation and manage DNS records"
-                />
-
-                {/* WHOIS Lookup */}
-                <ActionCard
-                    to="/whois"
-                    icon={Search}
-                    iconBg="bg-secondary"
-                    iconColor="text-foreground"
-                    title="WHOIS Lookup"
-                    desc="Look up registration info for any domain"
-                    external={false}
-                />
-
-                {/* History */}
-                <ActionCard
-                    to="/history"
-                    icon={History}
-                    iconBg="bg-secondary"
-                    iconColor="text-foreground"
-                    title="Activity History"
-                    desc="Track changes, renewals, and domain events"
-                />
-            </div>
-
-            {/* ── Recent domains ── */}
-            {recentDomains.length > 0 && (
-                <div>
-                    <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Recent Domains</h2>
-                        <Link to="/my-domains" className="text-xs font-medium text-foreground hover:text-signal flex items-center gap-1 transition-colors">
-                            View all <ArrowRight className="w-3 h-3" />
-                        </Link>
-                    </div>
-                    <div className="space-y-2">
-                        {recentDomains.map(d => (
-                            <Link
-                                key={d._id}
-                                to={`/domains/${d._id}`}
-                                className="flex items-center justify-between px-4 py-3 bg-card/70 backdrop-blur-md border border-border rounded-xl hover:border-foreground/20 transition-all group shadow-sm"
-                            >
-                                <div className="flex items-center gap-3 min-w-0">
-                                    <div className="w-8 h-8 rounded-lg bg-secondary border border-border flex items-center justify-center flex-shrink-0">
-                                        <Globe className="w-4 h-4 text-foreground" />
-                                    </div>
-                                    <span className="font-mono font-medium text-sm text-foreground truncate">
-                                        {d.name}.{d.domain}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-3 flex-shrink-0">
-                                    <StatusPill status={d.status} />
-                                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all" />
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* ── Empty state ── */}
-            {totalCount === 0 && !loading && (
-                <div className="bg-card/80 backdrop-blur-xl rounded-2xl border border-border p-8 md:p-10 text-center shadow-sm">
-                    <div className="w-12 h-12 bg-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 border border-border">
-                        <Globe className="w-6 h-6 text-foreground" />
-                    </div>
-                    <h3 className="text-2xl font-display font-medium text-foreground mb-2">Register your first domain</h3>
-                    <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
-                        Free, instant, and takes under a minute. Claim your personal <strong>.indevs.in</strong>, <strong>.sryze.cc</strong>, <strong>.ryzedns.org</strong>, <strong>.nx.kg</strong>, or <strong>.ryzn.pro</strong> subdomain.
-                    </p>
-                    <Link
-                        to="/register"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background font-semibold text-sm rounded-xl hover:bg-signal hover:text-signal-foreground transition-all duration-200 shadow-sm"
-                    >
-                        <Plus className="w-4 h-4" />
-                        Register Now — It's Free
-                    </Link>
-                </div>
-            )}
-        </div>
-    );
-}
-
-function StatCard({ value, label, sub, accentClass, dot, to, warn }) {
-    return (
-        <Link
-            to={to}
-            className={`bg-card/70 backdrop-blur-xl border border-border rounded-2xl p-4 md:p-5 hover:border-foreground/25 transition-all duration-200 group shadow-sm ${warn ? "border-amber-500/30" : ""}`}
-        >
-            <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dot }} />
-                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
-            </div>
-            <p className={`text-3xl md:text-4xl font-display font-medium leading-none mt-3 ${accentClass}`}>{value}</p>
-            <p className="text-xs text-muted-foreground mt-1.5">{sub}</p>
-        </Link>
-    );
-}
-
-function ActionCard({ to, icon: Icon, iconBg, iconColor, title, desc }) {
-    return (
-        <Link
-            to={to}
-            className="bg-card/70 backdrop-blur-xl border border-border rounded-2xl p-5 flex items-center gap-4 hover:border-foreground/25 transition-all duration-200 group shadow-sm"
-        >
-            <div className={`w-11 h-11 rounded-xl ${iconBg} flex items-center justify-center flex-shrink-0 border border-border`}>
-                <Icon className={`w-5 h-5 ${iconColor}`} />
-            </div>
-            <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm md:text-base text-foreground">{title}</p>
-                <p className="text-xs text-muted-foreground mt-0.5 truncate">{desc}</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all flex-shrink-0" />
-        </Link>
-    );
-}
-
-function StatusPill({ status }) {
-    const map = {
-        Active:          { bg: "bg-signal/10",  text: "text-signal",  dot: "bg-signal" },
-        Expired:         { bg: "bg-destructive/10",    text: "text-destructive",    dot: "bg-destructive" },
-        Suspended:       { bg: "bg-destructive/10",    text: "text-destructive",    dot: "bg-destructive" },
-        "Pending Deletion": { bg: "bg-amber-500/10", text: "text-amber-500", dot: "bg-amber-500" },
-        "Pending DNS":   { bg: "bg-sky-500/10",   text: "text-sky-500",   dot: "bg-sky-500" },
+    let cancelled = false;
+    subdomainAPI
+      .getActivity()
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) {
+          setRecentActivity(data.slice(0, 4));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setRecentActivity([]);
+      });
+    return () => {
+      cancelled = true;
     };
-    const s = map[status] || { bg: "bg-muted", text: "text-muted-foreground", dot: "bg-muted-foreground" };
+  }, []);
+
+  const { activeCount, attentionDomains } = useMemo(() => {
+    const active = subdomains.filter((d) => d.status === "Active").length;
+    const needsAttention = subdomains.filter((d) => {
+      const days = d.expiresAt
+        ? Math.ceil((new Date(d.expiresAt) - new Date()) / 864e5)
+        : null;
+      return d.status !== "Active" || (days !== null && days <= 60);
+    });
+    return { activeCount: active, attentionDomains: needsAttention };
+  }, [subdomains]);
+
+  const handleQuickRenew = async (domain) => {
+    setRenewingId(domain._id);
+    try {
+      const updated = await subdomainAPI.renew(domain._id);
+      const expiryStr = updated?.expiresAt
+        ? new Date(updated.expiresAt).toLocaleDateString("en-GB")
+        : null;
+      toast({
+        title: "Domain Renewed",
+        description: `${domain.name}.${domain.domain || "indevs.in"} extended for 1 year.${expiryStr ? ` New expiry: ${expiryStr}` : ""
+          }`,
+        variant: "success",
+      });
+      await refresh();
+    } catch (err) {
+      toast({
+        title: "Cannot Renew Domain",
+        description: err.message || "Unable to renew domain right now.",
+        variant: "destructive",
+      });
+    } finally {
+      setRenewingId(null);
+    }
+  };
+
+  if (loading && subdomains.length === 0) {
     return (
-        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${s.bg} ${s.text}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
-            {status}
-        </span>
+      <div>
+        <ConsoleHeader
+          eyebrow="Registry Console"
+          title="Overview"
+          description="Loading registry status and quotas…"
+        />
+        <div className="p-6 sm:p-10 space-y-6 animate-pulse">
+          <div className="h-24 bg-muted/60 rounded-lg" />
+          <div className="h-64 bg-muted/60 rounded-lg" />
+        </div>
+      </div>
     );
+  }
+
+  return (
+    <div className="flex flex-col flex-1">
+      <ConsoleHeader
+        eyebrow="Registry Console"
+        title="Overview"
+        description={
+          user?.name
+            ? `Welcome back, ${user.name}. Account status, namespace quotas, and domains requiring attention.`
+            : "Account status, namespace quotas, and domains requiring attention."
+        }
+        badge={
+          user?.githubVerified ? (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+              <CheckCircle className="w-3 h-3" aria-hidden="true" />
+              GitHub Verified
+            </span>
+          ) : null
+        }
+        actions={
+          <Link
+            to="/register"
+            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-foreground text-background text-sm font-medium hover:bg-foreground/90"
+          >
+            <Plus className="w-4 h-4" aria-hidden="true" />
+            <span>Register Domain</span>
+          </Link>
+        }
+      />
+
+      {!user?.githubVerified && (
+        <a
+          href={`${import.meta.env.VITE_API_URL || "http://localhost:5000"}/github/kyc/start`}
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 sm:px-10 py-4 border-b border-border bg-amber-500/10 hover:bg-amber-500/15"
+        >
+          <div className="flex items-center gap-3">
+            <Shield className="w-4 h-4 text-amber-500 shrink-0" aria-hidden="true" />
+            <p className="text-xs sm:text-sm text-foreground">
+              <strong className="font-semibold">GitHub Verification Required:</strong>{" "}
+              <span className="text-muted-foreground">
+                Verify your GitHub account once to unlock domain registration across all five extensions.
+              </span>
+            </p>
+          </div>
+          <span className="self-start sm:self-center shrink-0 px-4 py-1.5 rounded-full bg-amber-500 text-white text-xs font-medium">
+            Verify Account
+          </span>
+        </a>
+      )}
+
+      {/* Band 1: 3-Column Flush Hairline Telemetry Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-border border-b border-border">
+        <div className="bg-background px-6 sm:px-10 py-6 space-y-1">
+          <p className="text-xs font-medium text-muted-foreground">Registered Domains</p>
+          <p className="font-mono text-3xl font-semibold tabular-nums tracking-[-0.03em] text-foreground">
+            {subdomains.length}
+          </p>
+        </div>
+        <div className="bg-background px-6 sm:px-10 py-6 space-y-1">
+          <p className="text-xs font-medium text-muted-foreground">Active &amp; Resolving</p>
+          <p className="font-mono text-3xl font-semibold tabular-nums tracking-[-0.03em] text-emerald-500">
+            {activeCount}
+          </p>
+        </div>
+        <div className="bg-background px-6 sm:px-10 py-6 space-y-1">
+          <p className="text-xs font-medium text-muted-foreground">Needs Attention</p>
+          <p
+            className={`font-mono text-3xl font-semibold tabular-nums tracking-[-0.03em] ${attentionDomains.length > 0 ? "text-amber-500" : "text-foreground"
+              }`}
+          >
+            {attentionDomains.length}
+          </p>
+        </div>
+      </div>
+
+      {/* Band 2: Split Namespace Quotas + Action Queue & Recent Activity */}
+      <div className="flex-1 grid grid-cols-1 xl:grid-cols-12 divide-y xl:divide-y-0 xl:divide-x divide-border">
+        {/* Left: Quotas */}
+        <div className="xl:col-span-4 flex flex-col">
+          <div className="px-6 sm:px-8 py-4 border-b border-border flex items-center justify-between">
+            <h2 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              Namespace Quotas
+            </h2>
+            <Link
+              to="/register"
+              className="font-mono text-xs text-muted-foreground hover:text-foreground"
+            >
+              Claim
+            </Link>
+          </div>
+
+          <div className="divide-y divide-border flex-1">
+            {TLD_QUOTAS.map(({ key, limitField }) => {
+              const count =
+                subdomains?.filter((s) => (s.domain || "indevs.in") === key).length || 0;
+              const limit = user?.[limitField] || 1;
+              return (
+                <div
+                  key={key}
+                  className="px-6 sm:px-8 py-4 flex items-center justify-between gap-4 text-xs sm:text-sm"
+                >
+                  <span className="font-mono text-foreground">.{key}</span>
+                  <span className="font-mono text-muted-foreground tabular-nums">
+                    {count} / {limit}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Right: Action Required + Recent Activity */}
+        <div className="xl:col-span-8 flex flex-col divide-y divide-border">
+          {/* Action Required */}
+          <div className="flex flex-col">
+            <div className="px-6 sm:px-8 py-4 border-b border-border flex items-center justify-between">
+              <h2 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                Action Required
+              </h2>
+              <Link
+                to="/my-domains"
+                className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-foreground"
+              >
+                <span>Open directory</span>
+                <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
+            </div>
+
+            {subdomains.length === 0 ? (
+              <div className="p-10 text-center space-y-3">
+                <Globe className="w-6 h-6 text-muted-foreground mx-auto" aria-hidden="true" />
+                <p className="text-sm font-medium text-foreground">No domains registered yet</p>
+                <p className="text-xs text-muted-foreground">
+                  Register your first free subdomain to configure DNS delegation.
+                </p>
+                <Link
+                  to="/register"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-foreground text-background text-xs font-medium hover:bg-foreground/90"
+                >
+                  <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span>Register Domain</span>
+                </Link>
+              </div>
+            ) : attentionDomains.length > 0 ? (
+              <div className="divide-y divide-border">
+                {attentionDomains.map((d) => {
+                  const fqdn = `${d.name}.${d.domain || "indevs.in"}`;
+                  const days = d.expiresAt
+                    ? Math.ceil((new Date(d.expiresAt) - new Date()) / 864e5)
+                    : null;
+                  const canRenew =
+                    d.status !== "Pending Deletion" &&
+                    d.status !== "Suspended" &&
+                    days !== null &&
+                    days <= 60 &&
+                    days >= -15;
+
+                  return (
+                    <div
+                      key={d._id}
+                      className="px-6 sm:px-8 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-secondary/25"
+                    >
+                      <div className="flex items-start gap-3 min-w-0">
+                        {d.status === "Expired" || d.status === "Suspended" ? (
+                          <AlertCircle className="w-4 h-4 text-destructive shrink-0 mt-0.5" aria-hidden="true" />
+                        ) : (
+                          <Clock className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" aria-hidden="true" />
+                        )}
+                        <div className="min-w-0">
+                          <Link
+                            to={`/domains/${d._id}`}
+                            className="font-mono text-sm font-medium text-foreground hover:underline break-all"
+                          >
+                            {fqdn}
+                          </Link>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {d.status === "Expired"
+                              ? "Expired — inside 15-day renewal grace period"
+                              : d.status !== "Active"
+                                ? `Status: ${d.status}`
+                                : `Expires in ${days} day${days === 1 ? "" : "s"}`}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0 pl-7 sm:pl-0">
+                        {canRenew && (
+                          <button
+                            type="button"
+                            onClick={() => handleQuickRenew(d)}
+                            disabled={renewingId === d._id}
+                            className="inline-flex items-center gap-1.5 h-8 px-4 rounded-full bg-foreground text-background text-xs font-medium hover:bg-foreground/90 disabled:opacity-50"
+                          >
+                            <RefreshCw
+                              className={`w-3 h-3 ${renewingId === d._id ? "animate-spin" : ""}`}
+                              aria-hidden="true"
+                            />
+                            <span>Renew</span>
+                          </button>
+                        )}
+                        <Link
+                          to={`/domains/${d._id}`}
+                          className="inline-flex items-center h-8 px-4 rounded-full border border-border bg-card text-foreground text-xs font-medium hover:bg-secondary"
+                        >
+                          Manage
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="px-6 sm:px-8 py-5 flex items-center justify-between gap-4">
+                <span className="flex items-center gap-2.5 text-xs sm:text-sm text-muted-foreground">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" aria-hidden="true" />
+                  All {subdomains.length} registered domains are active with no renewals due.
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Recent Activity */}
+          {recentActivity.length > 0 && (
+            <div className="flex flex-col flex-1">
+              <div className="px-6 sm:px-8 py-4 border-b border-border flex items-center justify-between">
+                <h2 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                  Recent Activity
+                </h2>
+                <Link
+                  to="/history"
+                  className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-foreground"
+                >
+                  <span>Full audit log</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </Link>
+              </div>
+
+              <div className="divide-y divide-border">
+                {recentActivity.map((item, idx) => (
+                  <div
+                    key={item._id || idx}
+                    className="px-6 sm:px-8 py-3.5 flex items-center justify-between gap-4 text-xs sm:text-sm"
+                  >
+                    <span className="flex items-center gap-2.5 text-foreground min-w-0">
+                      <Activity className="w-3.5 h-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
+                      <span className="truncate">{item.description}</span>
+                    </span>
+                    <span className="font-mono text-xs text-muted-foreground shrink-0 tabular-nums">
+                      {new Date(item.timestamp).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                      })}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -1,676 +1,508 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Settings as SettingsIcon, Trash, RefreshCw, X, ChevronRight, Globe, AlertCircle, Clock, Plus, Info, Shield, KeyRound, Github } from "lucide-react";
+import { useMemo, useState, useEffect } from "react";
 import { useDashboard } from "@/context/dashboard-context";
 import { useAuth } from "@/context/auth-context";
+import { Link } from "react-router-dom";
+import {
+  Globe,
+  RefreshCw,
+  Settings as SettingsIcon,
+  Plus,
+  Shield,
+  Github,
+  Search,
+  Copy,
+  Check,
+  ExternalLink,
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { subdomainAPI } from "@/lib/api";
+import { ConsoleHeader } from "@/components/dashboard/ConsoleHeader";
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const TLD_FILTERS = [
+  "indevs.in",
+  "sryze.cc",
+  "ryzedns.org",
+  "nx.kg",
+  "ryzn.pro",
+];
 
-export default function MyDomains() {
-    const { subdomains, setSubdomains, refresh, loading } = useDashboard();
-    const { user, checkAuth } = useAuth();
-    const { toast } = useToast();
-    const [manageOpen, setManageOpen] = useState(false);
-    const [selectedDomain, setSelectedDomain] = useState(null);
-    const [logInput, setLogInput] = useState("");
-    const [deleteId, setDeleteId] = useState(null);
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [isRenewing, setIsRenewing] = useState(false);
-    const [pendingVerification, setPendingVerification] = useState(null);
+export default function Domains() {
+  const { subdomains, loading, refresh } = useDashboard();
+  const { user, checkAuth } = useAuth();
+  const { toast } = useToast();
+  const [isRenewing, setIsRenewing] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [tldFilter, setTldFilter] = useState("all");
+  const [copiedId, setCopiedId] = useState(null);
 
-    // Fetch pending GitHub verification
-    useEffect(() => {
-        const fetchVerification = async () => {
-            try {
-                const response = await fetch(`${API_BASE}/github/verification-status`, {
-                    credentials: 'include'
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.verification && data.verification.status === 'pending') {
-                        setPendingVerification(data.verification);
-                    }
-                }
-            } catch (error) {
-                // Silent fail - not critical
-                console.error('Failed to fetch verification status:', error);
-            }
-        };
-        fetchVerification();
-    }, []);
+  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-    // Refresh user data on mount to get latest domain limit
-    useEffect(() => {
-        checkAuth();
-    }, []);
-
-    const handleDelete = async () => {
-        if (!deleteId) return;
-
-        setIsDeleting(true);
-        try {
-            await subdomainAPI.delete(deleteId);
-
-            toast({
-                title: "Deletion Request Submitted",
-                description: "Your deletion request will be reviewed by an admin. The domain will remain active until approved.",
-                className: "bg-signal/10 border-signal/30 text-signal-foreground"
-            });
-
-            // Refresh the list from backend
-            await refresh();
-        } catch (error) {
-            toast({
-                title: "Deletion Failed",
-                description: error.message || "Unable to delete domain. Please try again or contact support.",
-                variant: "destructive",
-            });
-        } finally {
-            setIsDeleting(false);
-            setDeleteId(null);
-            setManageOpen(false);
-        }
-    };
-
-    const handleUpdateNameservers = () => {
-        setSubdomains(subdomains.map(s => s.id === selectedDomain.id ? selectedDomain : s));
-        toast({
-            title: "Nameservers Updated",
-            description: "Changes may take up to 24 hours to propagate globally.",
-            className: "bg-signal/10 border-green-200 text-green-900"
+  useEffect(() => {
+    const fetchVerification = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/github/verification-status`, {
+          credentials: "include",
         });
-    };
-
-    const handleRenew = async (domain) => {
-        setIsRenewing(true);
-        try {
-            const updated = await subdomainAPI.renew(domain._id);
-            const newExpiryStr = updated?.expiresAt
-                ? new Date(updated.expiresAt).toLocaleDateString('en-GB')
-                : null;
-
-            toast({
-                title: "Domain Renewed Successfully! 🎉",
-                description: `${domain.name}.${domain.domain || 'indevs.in'} has been extended for another year.${newExpiryStr ? ` New expiry date: ${newExpiryStr}` : ''}`,
-                className: "bg-signal/10 border-green-200 text-green-900"
-            });
-
-            // Refresh the list to get updated data
-            await refresh();
-        } catch (error) {
-            toast({
-                title: "Cannot Renew Domain",
-                description: error.message || "Renewals are only allowed within 60 days of expiry. Check your domain's expiry date and try again later.",
-                variant: "destructive"
-            });
-        } finally {
-            setIsRenewing(false);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.verification && data.verification.status === "pending") {
+            setPendingVerification(data.verification);
+          }
         }
+      } catch (error) {
+        console.error("Failed to fetch verification status:", error);
+      }
     };
+    fetchVerification();
+  }, [API_BASE]);
 
-    const handleAddLog = () => {
-        if (!logInput.trim()) return;
-        const log = { date: new Date().toISOString().split('T')[0], text: logInput };
-        const updated = { ...selectedDomain, logs: [log, ...(selectedDomain.logs || [])] };
-        setSelectedDomain(updated);
-        setSubdomains(subdomains.map(s => s.id === updated.id ? updated : s));
-        setLogInput("");
-        toast({ title: "Log Entry Added" });
+  useEffect(() => {
+    checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const filteredDomains = useMemo(() => {
+    return subdomains.filter((d) => {
+      const root = d.domain || "indevs.in";
+      const fqdn = `${d.name}.${root}`.toLowerCase();
+      const matchesSearch =
+        !searchQuery.trim() || fqdn.includes(searchQuery.trim().toLowerCase());
+      const matchesTld = tldFilter === "all" || root === tldFilter;
+      return matchesSearch && matchesTld;
+    });
+  }, [subdomains, searchQuery, tldFilter]);
+
+  const handleCopyFqdn = (id, fqdn) => {
+    navigator.clipboard.writeText(fqdn);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 1600);
+  };
+
+  const handleRenew = async (domain) => {
+    setIsRenewing(true);
+    try {
+      const updated = await subdomainAPI.renew(domain._id);
+      const newExpiryStr = updated?.expiresAt
+        ? new Date(updated.expiresAt).toLocaleDateString("en-GB")
+        : null;
+
+      toast({
+        title: "Domain Renewed",
+        description: `${domain.name}.${domain.domain || "indevs.in"} extended for 1 year.${newExpiryStr ? ` New expiry date: ${newExpiryStr}` : ""
+          }`,
+        variant: "success",
+      });
+
+      await refresh();
+    } catch (error) {
+      toast({
+        title: "Cannot Renew Domain",
+        description:
+          error.message ||
+          "Renewals are only allowed within 60 days of expiry.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRenewing(false);
+    }
+  };
+
+  const StatusBadge = ({ status }) => {
+    const map = {
+      Active: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+      "Pending Deletion": "bg-amber-500/10 text-amber-500 border-amber-500/20",
+      "Deletion Review": "bg-destructive/10 text-destructive border-destructive/20",
+      Suspended: "bg-destructive/10 text-destructive border-destructive/20",
+      Expired: "bg-destructive/10 text-destructive border-destructive/20",
+      "Pending DNS": "bg-amber-500/10 text-amber-500 border-amber-500/20",
+      Pending: "bg-amber-500/10 text-amber-500 border-amber-500/20",
     };
-
-    const StatusBadge = ({ status }) => {
-        const styles = {
-            "Active": "bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-500/20",
-            "Deletion Review": "bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-500/20",
-            "Pending": "bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/20"
-        };
-        const dotStyles = {
-            "Active": "bg-green-600 dark:bg-green-400",
-            "Deletion Review": "bg-red-600 dark:bg-red-400",
-            "Pending": "bg-amber-600 dark:bg-amber-400"
-        };
-
-        return (
-            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-wider ${styles[status] || styles["Pending"]}`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${dotStyles[status] || dotStyles["Pending"]}`}></span>
-                {status}
-            </span>
-        );
+    const dotStyles = {
+      Active: "bg-emerald-500",
+      "Pending Deletion": "bg-amber-500",
+      "Deletion Review": "bg-destructive",
+      Suspended: "bg-destructive",
+      Expired: "bg-destructive",
+      "Pending DNS": "bg-amber-500",
+      Pending: "bg-amber-500",
     };
 
     return (
-        <div className="max-w-5xl">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-5 gap-4">
-                <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-orange-500 dark:text-orange-400 mb-1">Account</p>
-                    <h1 className="font-display text-2xl md:text-3xl font-medium text-foreground leading-tight">My Domains</h1>
-                    <p className="text-sm text-foreground mt-1">Manage your active domains and configurations.</p>
-                </div>
-                <button
-                    onClick={refresh}
-                    disabled={loading}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-secondary dark:bg-accent/60 border border-border dark:border-border text-foreground font-semibold text-sm rounded-lg hover:text-foreground dark:hover:text-white hover:-translate-y-0.5 transform transition-all duration-200 hover:shadow-md disabled:opacity-50 self-start sm:self-auto cursor-pointer"
-                >
-                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                    {loading ? 'Refreshing…' : 'Refresh'}
-                </button>
-            </div>
-
-            {/* Pending GitHub Verification Banner */}
-            {pendingVerification && (
-                <div className="mb-5 border-[1px] rounded-xl p-4 bg-amber-50 border-amber-200">
-                    <div className="flex items-start gap-3">
-                        <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                        <div className="flex-1">
-                            <h3 className="text-sm font-medium text-amber-600 dark:text-amber-400 mb-1">
-                                GitHub Verification Pending
-                            </h3>
-                            <p className="text-sm text-yellow-800 mb-3">
-                                Your GitHub verification for <strong>{pendingVerification.requestedDomain}.sryze.cc</strong> is being reviewed by our team.
-                            </p>
-                            <div className="bg-white/50 rounded-lg p-3 text-xs space-y-1">
-                                <div className="flex items-center gap-2">
-                                    <Clock className="w-4 h-4 text-yellow-600" />
-                                    <span className="font-semibold text-yellow-900">Status:</span>
-                                    <span className="text-yellow-800">Awaiting Admin Approval</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Globe className="w-4 h-4 text-yellow-600" />
-                                    <span className="font-semibold text-yellow-900">Domain:</span>
-                                    <span className="font-mono text-yellow-800">{pendingVerification.requestedDomain}.sryze.cc (Reserved)</span>
-                                </div>
-                            </div>
-                            <p className="text-xs text-yellow-700 mt-3">
-                                Once approved, your domain will be automatically created and appear here!
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Domain Usage Indicator */}
-            {(() => {
-                const indevsCount = subdomains?.filter(s => s.domain === 'indevs.in').length || 0;
-                const indevsLimit = user?.githubVerified ? (user?.domainLimit || 1) : 1;
-                const indevsPercent = Math.min((indevsCount / indevsLimit) * 100, 100);
-
-                return (
-                    <div className="mb-5 rounded-xl p-4 bg-card/70 backdrop-blur-md border border-border">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
-                            <div className="flex flex-wrap items-center gap-3">
-                                <div className="flex items-center gap-2">
-                                    <Info className="w-4 h-4 text-foreground" />
-                                    <span className="font-semibold text-sm text-foreground">
-                                        Domain Limits
-                                    </span>
-                                </div>
-                            </div>
-                            <Link to="/register" className="self-start sm:self-auto">
-                                <button className="inline-flex items-center gap-1.5 px-4 py-2 bg-foreground text-background text-sm hover:bg-foreground/90 dark:hover:bg-accent transition-all duration-200 shadow-sm cursor-pointer font-semibold rounded-lg">
-                                    <Plus className="w-4 h-4" />
-                                    Register New
-                                </button>
-                            </Link>
-                        </div>
-
-                        {/* Usage Bars Container */}
-                        <div className="relative">
-                            {!user?.githubVerified && (
-                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/20 dark:bg-[#111]/40 rounded-lg">
-                                    <div className="bg-white/80 dark:bg-black/60 backdrop-blur-md border border-border p-5 rounded-xl text-center shadow-sm max-w-sm w-full mx-4">
-                                        <Shield className="w-8 h-8 text-amber-500 mx-auto mb-2" />
-                                        <p className="text-sm font-bold text-foreground mb-2">GitHub Verification Required</p>
-                                        <p className="text-xs text-foreground mb-5">
-                                            We require all users to verify their GitHub to prevent abuse. Verify your account to view limits and register domains.
-                                        </p>
-                                        <div className="flex justify-center gap-2">
-                                            <a
-                                                href="https://github.com/stackryze/FreeDomains"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1.5 bg-amber-400 text-foreground px-3 py-2 rounded-md font-bold text-xs hover:bg-amber-500 transition-all shadow-sm"
-                                            >⭐ Star Repo</a>
-                                            <a
-                                                href={`${API_BASE}/github/kyc/start?domain=&root=indevs.in`}
-                                                className="inline-flex items-center gap-1.5 bg-foreground text-background px-3 py-2 rounded-md font-bold text-xs hover:bg-foreground/90 dark:hover:bg-accent transition-all shadow-sm"
-                                            >
-                                                <Github className="w-4 h-4" /> Verify Now
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className={`transition-all duration-300 ${!user?.githubVerified ? "opacity-30 blur-sm pointer-events-none select-none" : ""}`}>
-                                {/* Indevs.in Usage */}
-                                <div className="mb-4">
-                            <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs font-semibold text-foreground">indevs.in Domains</span>
-                                <span className="text-xs text-foreground">{indevsCount} / {indevsLimit}</span>
-                            </div>
-                            <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
-                                <div
-                                    className={`h-2 rounded-full transition-all ${
-                                        indevsPercent >= 100 ? 'bg-red-600'
-                                        : indevsPercent >= 80 ? 'bg-amber-500'
-                                        : 'bg-signal'
-                                    }`}
-                                    style={{ width: `${indevsPercent}%` }}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Sryze.cc Usage */}
-                        <div className="mb-4">
-                            <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs font-semibold text-foreground">sryze.cc Domains</span>
-                                <span className="text-xs text-foreground">
-                                    {subdomains?.filter(s => s.domain === 'sryze.cc').length || 0} / {user?.sryzeDomainsLimit || 1}
-                                </span>
-                            </div>
-                            <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
-                                <div
-                                    className={`h-2 rounded-full transition-all ${((subdomains?.filter(s => s.domain === 'sryze.cc').length || 0) / (user?.sryzeDomainsLimit || 1) * 100) >= 100
-                                            ? 'bg-red-600'
-                                            : ((subdomains?.filter(s => s.domain === 'sryze.cc').length || 0) / (user?.sryzeDomainsLimit || 1) * 100) >= 80
-                                                ? 'bg-amber-500'
-                                                : 'bg-signal'
-                                        }`}
-                                    style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'sryze.cc').length || 0) / (user?.sryzeDomainsLimit || 1) * 100), 100)}%` }}
-                                ></div>
-                            </div>
-                        </div>
-
-                        {/* RyzeDNS.org Usage */}
-                        <div className="mb-4">
-                            <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs font-semibold text-foreground">ryzedns.org Domains</span>
-                                <span className="text-xs text-foreground">
-                                    {subdomains?.filter(s => s.domain === 'ryzedns.org').length || 0} / {user?.ryzeDnsDomainsLimit || 1}
-                                </span>
-                            </div>
-                            <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
-                                <div
-                                    className={`h-2 rounded-full transition-all ${((subdomains?.filter(s => s.domain === 'ryzedns.org').length || 0) / (user?.ryzeDnsDomainsLimit || 1) * 100) >= 100
-                                            ? 'bg-red-600'
-                                            : ((subdomains?.filter(s => s.domain === 'ryzedns.org').length || 0) / (user?.ryzeDnsDomainsLimit || 1) * 100) >= 80
-                                                ? 'bg-amber-500'
-                                                : 'bg-teal-600'
-                                        }`}
-                                    style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'ryzedns.org').length || 0) / (user?.ryzeDnsDomainsLimit || 1) * 100), 100)}%` }}
-                                ></div>
-                            </div>
-                        </div>
-
-                        {/* nx.kg Usage */}
-                        <div className="mb-4">
-                            <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs font-semibold text-foreground">nx.kg Domains</span>
-                                <span className="text-xs text-foreground">
-                                    {subdomains?.filter(s => s.domain === 'nx.kg').length || 0} / {user?.nxKgDomainsLimit || 1}
-                                </span>
-                            </div>
-                            <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
-                                <div
-                                    className={`h-2 rounded-full transition-all ${((subdomains?.filter(s => s.domain === 'nx.kg').length || 0) / (user?.nxKgDomainsLimit || 1) * 100) >= 100
-                                            ? 'bg-red-600'
-                                            : ((subdomains?.filter(s => s.domain === 'nx.kg').length || 0) / (user?.nxKgDomainsLimit || 1) * 100) >= 80
-                                                ? 'bg-amber-500'
-                                                : 'bg-signal'
-                                        }`}
-                                    style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'nx.kg').length || 0) / (user?.nxKgDomainsLimit || 1) * 100), 100)}%` }}
-                                ></div>
-                            </div>
-                        </div>
-
-                        {/* ryzn.pro Usage */}
-                        <div className="mb-2">
-                            <div className="flex items-center justify-between mb-1">
-                                <span className="text-xs font-semibold text-foreground">ryzn.pro Domains</span>
-                                <span className="text-xs text-foreground">
-                                    {subdomains?.filter(s => s.domain === 'ryzn.pro').length || 0} / {user?.ryznProDomainsLimit || 1}
-                                </span>
-                            </div>
-                            <div className="w-full bg-muted dark:bg-secondary rounded-full h-2">
-                                <div
-                                    className={`h-2 rounded-full transition-all ${((subdomains?.filter(s => s.domain === 'ryzn.pro').length || 0) / (user?.ryznProDomainsLimit || 1) * 100) >= 100
-                                            ? 'bg-red-600'
-                                            : ((subdomains?.filter(s => s.domain === 'ryzn.pro').length || 0) / (user?.ryznProDomainsLimit || 1) * 100) >= 80
-                                                ? 'bg-amber-500'
-                                                : 'bg-emerald-600'
-                                        }`}
-                                    style={{ width: `${Math.min(((subdomains?.filter(s => s.domain === 'ryzn.pro').length || 0) / (user?.ryznProDomainsLimit || 1) * 100), 100)}%` }}
-                                ></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    })()}
-
-
-            <div className="bg-card/70 backdrop-blur-md border border-border rounded-xl overflow-hidden">
-                <table className="w-full text-left border-collapse">
-                    <thead className="bg-muted/50 dark:bg-accent/60 border-b border-border">
-                        <tr>
-                            <th className="p-3 md:p-4 text-xs font-bold text-foreground uppercase tracking-wider w-full md:w-5/12">Domain Information</th>
-                            <th className="p-3 md:p-4 text-xs font-bold text-foreground uppercase tracking-wider hidden md:table-cell md:w-3/12">Nameservers</th>
-                            <th className="p-3 md:p-4 text-xs font-bold text-foreground uppercase tracking-wider hidden md:table-cell md:w-2/12">Status / Expiry</th>
-                            <th className="p-3 md:p-4 text-right w-auto md:w-2/12"></th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border dark:divide-border">
-                        {loading && subdomains.length === 0 ? (
-                            <tr>
-                                <td colSpan={4} className="p-10 text-center text-foreground">
-                                    <RefreshCw className="w-6 h-6 mx-auto mb-2 animate-spin" />
-                                    <p>Loading subdomains...</p>
-                                </td>
-                            </tr>
-                        ) : subdomains.map((domain) => (
-                            <tr key={domain._id} className="group hover:bg-muted/50 dark:hover:bg-accent/60 transition-colors">
-                                <td className="p-3 md:p-4 overflow-hidden">
-                                    <div className="flex flex-col min-w-0">
-                                        <div className="font-bold text-foreground text-sm sm:text-base flex items-center gap-1.5 max-w-full">
-                                            <Globe className="w-3.5 h-3.5 flex-shrink-0" />
-                                            <span className="break-words">
-                                                {domain.name}.{domain.domain || 'indevs.in'}
-                                            </span>
-                                        </div>
-                                        <span className="text-xs text-foreground font-mono mt-1 truncate max-w-full block" title={`ID: ${domain._id}`}>ID: {domain._id}</span>
-
-                                        {/* Mobile Status View */}
-                                        <div className="md:hidden mt-2 space-y-2">
-                                            <StatusBadge status={domain.status} />
-                                        </div>
-
-                                        {/* Expiry warning */}
-                                        {domain.expiresAt && (() => {
-                                            const daysUntilExpiry = Math.ceil((new Date(domain.expiresAt) - new Date()) / (1000 * 60 * 60 * 24));
-                                            if (daysUntilExpiry > 0 && daysUntilExpiry <= 60) {
-                                                return (
-                                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-500 mt-2">
-                                                        <AlertCircle className="w-3 h-3" />
-                                                        Expires in {daysUntilExpiry} day{daysUntilExpiry !== 1 ? 's' : ''}
-                                                    </span>
-                                                );
-                                            }
-                                            if (daysUntilExpiry <= 0 && daysUntilExpiry >= -15) {
-                                                return (
-                                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-red-600 dark:text-red-400 mt-2">
-                                                        <AlertCircle className="w-3 h-3" />
-                                                        Expired (grace period)
-                                                    </span>
-                                                );
-                                            }
-                                            return null;
-                                        })()}
-                                    </div>
-                                </td>
-                                <td className="p-3 md:p-4 hidden md:table-cell overflow-hidden">
-                                    <div className="flex flex-col gap-1">
-                                        {domain.recordType === 'NS' && domain.recordValue ? (
-                                            domain.recordValue.split(',').map((ns, idx) => (
-                                                <span key={idx} className="text-foreground font-mono text-xs block truncate" title={ns.trim()}>
-                                                    {ns.trim()}
-                                                </span>
-                                            ))
-                                        ) : domain.nameservers && domain.nameservers.length > 0 ? (
-                                            domain.nameservers.map((ns, idx) => (
-                                                <span key={idx} className="text-foreground font-mono text-xs block truncate" title={ns}>
-                                                    {ns}
-                                                </span>
-                                            ))
-                                        ) : (
-                                            <span className="text-foreground dark:text-background italic text-xs">Not configured</span>
-                                        )}
-                                    </div>
-                                </td>
-                                <td className="p-3 md:p-4 whitespace-nowrap hidden md:table-cell">
-                                    <div className="space-y-1.5">
-                                        <StatusBadge status={domain.status} />
-                                        <div className="flex items-center gap-1.5 text-[11px] text-foreground font-medium">
-                                            <Clock className="w-3.5 h-3.5" />
-                                            Expires: <span className="font-mono">{domain.expiresAt ? new Date(domain.expiresAt).toLocaleDateString('en-GB') : 'N/A'}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="p-2 sm:p-3 md:p-4 text-right align-middle">
-                                    {(() => {
-                                        const daysUntilExpiry = domain.expiresAt
-                                            ? Math.ceil((new Date(domain.expiresAt) - new Date()) / (1000 * 60 * 60 * 24))
-                                            : null;
-                                        const isLockedStatus = domain.status === 'Pending Deletion' || domain.status === 'Suspended';
-                                        const outsideWindow = daysUntilExpiry !== null && (daysUntilExpiry > 60 || daysUntilExpiry < -15);
-                                        const renewTitle = domain.status === 'Pending Deletion'
-                                            ? 'Cannot renew - deletion pending'
-                                            : domain.status === 'Suspended'
-                                                ? 'Cannot renew - domain suspended'
-                                                : (daysUntilExpiry !== null && daysUntilExpiry > 60)
-                                                    ? `Renewal opens in ${daysUntilExpiry - 60} day${daysUntilExpiry - 60 === 1 ? '' : 's'}`
-                                                    : (daysUntilExpiry !== null && daysUntilExpiry < -15)
-                                                        ? 'Expired beyond 15-day grace period'
-                                                        : 'Renew Domain';
-                                        return (
-                                            <div className="flex justify-end items-center gap-1.5 flex-wrap">
-                                                <button
-                                                    onClick={() => handleRenew(domain)}
-                                                    disabled={isRenewing || loading || isLockedStatus || outsideWindow}
-                                                    className="inline-flex items-center justify-center h-7 md:h-8 px-2.5 font-bold border border-border hover:border-border dark:hover:border-foreground/25 bg-card/70 text-foreground hover:text-foreground dark:hover:text-white shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-[10px] md:text-xs whitespace-nowrap cursor-pointer rounded"
-                                                    title={renewTitle}
-                                                >
-                                                    <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                                                    Renew
-                                                </button>
-                                                <Link
-                                                    to={`/domains/${domain._id}`}
-                                                    className="inline-flex items-center justify-center h-7 md:h-8 px-2.5 font-bold border border-border hover:border-border dark:hover:border-foreground/25 bg-card/70 text-foreground hover:text-foreground dark:hover:text-white shadow-sm transition-all duration-200 text-[10px] md:text-xs whitespace-nowrap cursor-pointer rounded"
-                                                >
-                                                    <SettingsIcon className="w-3 h-3 md:w-3.5 md:h-3.5 mr-1.5" />
-                                                    Manage
-                                                </Link>
-                                            </div>
-                                        );
-                                    })()}
-                                </td>
-                            </tr>
-                        ))}
-                        {!loading && subdomains.length === 0 && (
-                            <tr>
-                                <td colSpan={4} className="p-16">
-                                    <div className="text-center">
-                                        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
-                                            <Globe className="w-10 h-10 text-orange-500 dark:text-orange-400" />
-                                        </div>
-                                        <h3 className="font-display text-2xl font-medium text-foreground mb-3">No Domains Yet</h3>
-                                        <p className="text-foreground mb-6 max-w-md mx-auto">
-                                            You haven't registered any domains yet. Get started by claiming your first domain!
-                                        </p>
-                                        <Button
-                                            asChild
-                                            className="bg-foreground text-background hover:bg-foreground/90 dark:hover:bg-accent font-bold"
-                                        >
-                                            <a href="/register">
-                                                <Plus className="w-4 h-4 mr-2" />
-                                                Register Your First Domain
-                                            </a>
-                                        </Button>
-                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div >
-
-            <Dialog open={manageOpen} onOpenChange={setManageOpen}>
-                <DialogContent className="bg-card/90 backdrop-blur-xl border border-border max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                            <Globe className="w-6 h-6" />
-                            Manage {selectedDomain?.name}.{selectedDomain?.domain || 'indevs.in'}
-                        </DialogTitle>
-                        <DialogDescription>Configure DNS records, security, and usage log.</DialogDescription>
-                    </DialogHeader>
-
-                    <div className="py-4 space-y-8">
-                        {/* Status Overview */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-card/70 border border-border rounded-lg p-4">
-                                <h5 className="font-bold text-foreground text-sm mb-1">HTTPS Security</h5>
-                                <div className="flex items-center gap-2 text-xs font-medium text-green-600 dark:text-green-400">
-                                    <div className="w-2 h-2 rounded-full bg-green-600 dark:bg-green-400 animate-pulse"></div>
-                                    Active (Let's Encrypt)
-                                </div>
-                            </div>
-                            <div className="bg-card/70 border border-border rounded-lg p-4">
-                                <h5 className="font-bold text-foreground text-sm mb-1">Expiration</h5>
-                                <div className="flex items-center gap-2 text-xs font-medium text-amber-600 dark:text-amber-500">
-                                    <Clock className="w-3 h-3" />
-                                    {selectedDomain?.expiresAt ? new Date(selectedDomain.expiresAt).toLocaleDateString('en-GB') : 'N/A'}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Nameserver Configuration */}
-                        <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <h4 className="font-bold text-foreground flex items-center gap-2">
-                                    <SettingsIcon className="w-4 h-4" /> Nameserver Configuration
-                                </h4>
-                                <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-gray-100 rounded text-gray-500">Advanced</span>
-                            </div>
-
-                            <div className="border border-border rounded-xl p-5 space-y-4 bg-card/70 hover:shadow-sm transition-all focus-within:border-foreground dark:focus-within:border-foreground">
-                                <p className="text-sm text-foreground">
-                                    Custom nameservers allow you to manage your DNS records via external providers.
-                                    Leave blank to use default <b>Stackryze</b> nameservers.
-                                </p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label className="text-xs uppercase font-bold text-foreground">Primary Nameserver (NS1)</Label>
-                                        <Input
-                                            value={selectedDomain?.nameservers?.[0] || ""}
-                                            onChange={(e) => {
-                                                const newNs = [...(selectedDomain.nameservers || [])];
-                                                newNs[0] = e.target.value;
-                                                setSelectedDomain({ ...selectedDomain, nameservers: newNs });
-                                            }}
-                                            placeholder="ns1.topdns.com"
-                                            className="font-mono text-sm bg-muted dark:bg-accent/60 border-border placeholder:text-foreground placeholder:opacity-75"
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label className="text-xs uppercase font-bold text-foreground">Secondary Nameserver (NS2)</Label>
-                                        <Input
-                                            value={selectedDomain?.nameservers?.[1] || ""}
-                                            onChange={(e) => {
-                                                const newNs = [...(selectedDomain.nameservers || [])];
-                                                newNs[1] = e.target.value;
-                                                setSelectedDomain({ ...selectedDomain, nameservers: newNs });
-                                            }}
-                                            placeholder="ns2.topdns.com"
-                                            className="font-mono text-sm bg-muted dark:bg-accent/60 border-border placeholder:text-foreground placeholder:opacity-75"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="flex justify-end pt-2">
-                                    <button onClick={handleUpdateNameservers} className="px-4 py-2 bg-foreground text-background hover:bg-foreground/90 dark:hover:bg-accent text-sm font-extrabold shadow-sm transition duration-200 cursor-pointer rounded-lg">Save Nameservers</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Usage Log */}
-                        <div>
-                            <h4 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                                <RefreshCw className="w-4 h-4" /> Usage Logs
-                            </h4>
-                            <div className="bg-card/70 border border-border rounded-lg overflow-hidden">
-                                <div className="p-3 bg-muted/50 dark:bg-accent/60 border-b border-border">
-                                    <div className="flex gap-2">
-                                        <Input
-                                            value={logInput}
-                                            onChange={(e) => setLogInput(e.target.value)}
-                                            placeholder="Add a new usage reason or changelog entry..."
-                                            className="h-8 text-xs bg-card border-border"
-                                            onKeyDown={(e) => e.key === 'Enter' && handleAddLog()}
-                                        />
-                                        <button
-                                            className="h-8 text-xs font-extrabold uppercase tracking-wider px-4 border border-border bg-card hover:bg-muted dark:hover:bg-secondary text-foreground shadow-sm transition duration-200 cursor-pointer rounded"
-                                            onClick={handleAddLog}
-                                        >
-                                            Add
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="max-h-40 overflow-y-auto">
-                                    <table className="w-full text-sm">
-                                        <tbody className="divide-y divide-border dark:divide-border">
-                                            {selectedDomain?.logs?.map((log, i) => (
-                                                <tr key={i}>
-                                                    <td className="p-3 text-foreground font-mono whitespace-nowrap align-top text-xs w-24 border-r border-dashed border-border">{log.date}</td>
-                                                    <td className="p-3 text-foreground">{log.text}</td>
-                                                </tr>
-                                            ))}
-                                            {(!selectedDomain?.logs || selectedDomain.logs.length === 0) && (
-                                                <tr><td colSpan={2} className="p-4 text-center text-foreground italic text-xs">No logs recorded.</td></tr>
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Danger Zone */}
-                        <div className="pt-6 mt-6 border-t font-mono">
-                            <h4 className="text-red-600 font-bold mb-4 text-sm uppercase tracking-wider">Danger Zone</h4>
-                            <div className="flex items-center justify-between p-4 border border-red-200 bg-red-50 rounded-lg">
-                                <div>
-                                    <p className="font-bold text-red-900">Delete Domain</p>
-                                    <p className="text-xs text-red-700">Submit a deletion request for admin review (7-day cooling-off after approval).</p>
-                                </div>
-                                <button
-                                    onClick={() => setDeleteId(selectedDomain.id)}
-                                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm shadow-sm transition duration-200 cursor-pointer rounded-lg font-bold"
-                                >
-                                    Delete Domain
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
-
-            <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
-                <AlertDialogContent className="bg-card/90 backdrop-blur-xl border border-border">
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This action cannot be undone. Your deletion request for
-                            <strong className="font-bold"> {selectedDomain?.name}.{selectedDomain?.domain || 'indevs.in'}</strong> will be submitted for admin review.
-                            The domain will remain active until approved.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel className="font-bold">Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleDelete}
-                            disabled={isDeleting}
-                            className="bg-red-600 text-white font-bold hover:bg-red-700"
-                        >
-                            {isDeleting ? 'Deleting...' : 'Delete'}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-        </div >
+      <span
+        className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-medium ${map[status] || "bg-secondary border-border text-muted-foreground"
+          }`}
+      >
+        <span
+          className={`w-1.5 h-1.5 rounded-full ${dotStyles[status] || dotStyles.Pending}`}
+          aria-hidden="true"
+        />
+        {status}
+      </span>
     );
+  };
+
+  return (
+    <TooltipProvider delayDuration={150}>
+      <div className="space-y-6 w-full">
+        <ConsoleHeader
+          title="Domains"
+          description="Search, filter, renew, and configure nameservers for your registered subdomains."
+          actions={
+            <>
+              <button
+                type="button"
+                onClick={refresh}
+                disabled={loading}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-md border border-border bg-card text-foreground text-sm font-medium hover:bg-secondary disabled:opacity-50"
+              >
+                <RefreshCw
+                  className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+                  aria-hidden="true"
+                />
+                <span>{loading ? "Refreshing…" : "Refresh"}</span>
+              </button>
+              <Link
+                to="/register"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-foreground text-background text-sm font-medium hover:bg-foreground/90"
+              >
+                <Plus className="w-4 h-4" aria-hidden="true" />
+                <span>Add Domain</span>
+              </Link>
+            </>
+          }
+        />
+
+        {pendingVerification && (
+          <div className="px-4 py-3.5 rounded-lg border border-amber-500/30 bg-amber-500/10 flex items-start gap-3">
+            <Shield className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" aria-hidden="true" />
+            <p className="text-xs sm:text-sm text-foreground">
+              <strong className="font-medium">GitHub Verification Pending:</strong>{" "}
+              <span className="font-mono">{pendingVerification.requestedDomain}.sryze.cc</span> is awaiting review.
+            </p>
+          </div>
+        )}
+
+        {!user?.githubVerified && (
+          <div className="px-5 py-4 rounded-lg border border-border bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              Verify your GitHub account to unlock registration across all five namespaces.
+            </p>
+            <div className="flex items-center gap-2 shrink-0">
+              <a
+                href="https://github.com/stackryze/FreeDomains"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md border border-border bg-card text-foreground text-xs font-medium hover:bg-secondary"
+              >
+                Star Repo
+              </a>
+              <a
+                href={`${API_BASE}/github/kyc/start?domain=&root=indevs.in`}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-foreground text-background text-xs font-medium hover:bg-foreground/90"
+              >
+                <Github className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Verify Now</span>
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* Search + Filter Pills */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+          <div className="relative flex-1 max-w-sm">
+            <Search
+              className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+              aria-hidden="true"
+            />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search domains…"
+              aria-label="Search registered domains"
+              className="w-full h-9 pl-9 pr-3 rounded-md border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground/40"
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1 p-1 rounded-md bg-card border border-border">
+            <button
+              type="button"
+              onClick={() => setTldFilter("all")}
+              className={`px-3 py-1.5 rounded text-xs ${tldFilter === "all"
+                ? "bg-foreground text-background font-medium"
+                : "text-muted-foreground hover:text-foreground"
+                }`}
+            >
+              All ({subdomains.length})
+            </button>
+
+            {TLD_FILTERS.map((key) => {
+              const active = tldFilter === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setTldFilter(key)}
+                  className={`px-3 py-1.5 rounded text-xs font-mono ${
+                    active
+                      ? "bg-foreground text-background font-medium"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  .{key}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Crisp Single-Line Vercel Domains Table */}
+        <div className="rounded-lg border border-border bg-card overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead className="border-b border-border bg-secondary/25">
+                <tr>
+                  <th className="px-5 py-3 text-xs font-medium text-muted-foreground">
+                    Domain
+                  </th>
+                  <th className="px-5 py-3 text-xs font-medium text-muted-foreground hidden md:table-cell">
+                    Nameservers
+                  </th>
+                  <th className="px-5 py-3 text-xs font-medium text-muted-foreground hidden sm:table-cell">
+                    Status
+                  </th>
+                  <th className="px-5 py-3 text-xs font-medium text-muted-foreground hidden lg:table-cell">
+                    Expires
+                  </th>
+                  <th className="px-5 py-3 text-right text-xs font-medium text-muted-foreground">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {loading && subdomains.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-12 text-center text-muted-foreground">
+                      <RefreshCw className="w-5 h-5 mx-auto mb-2 animate-spin" aria-hidden="true" />
+                      <p className="text-sm">Loading domains…</p>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredDomains.map((domain) => {
+                    const root = domain.domain || "indevs.in";
+                    const fqdn = `${domain.name}.${root}`;
+                    const nsList =
+                      domain.recordType === "NS" && domain.recordValue
+                        ? domain.recordValue.split(",").map((n) => n.trim()).filter(Boolean)
+                        : domain.nameservers || [];
+                    const effectiveNs =
+                      nsList.length > 0 ? nsList : ["ns1.stackryze.com", "ns2.stackryze.com", "ns3.stackryze.com"];
+                    const isStackNS = effectiveNs.some((n) =>
+                      n.toLowerCase().endsWith("stackryze.com")
+                    );
+
+                    const daysUntilExpiry = domain.expiresAt
+                      ? Math.ceil(
+                        (new Date(domain.expiresAt) - new Date()) / (1000 * 60 * 60 * 24)
+                      )
+                      : null;
+                    const isLockedStatus =
+                      domain.status === "Pending Deletion" || domain.status === "Suspended";
+                    const outsideWindow =
+                      daysUntilExpiry !== null &&
+                      (daysUntilExpiry > 60 || daysUntilExpiry < -15);
+                    const canRenew = !isLockedStatus && !outsideWindow;
+                    const isExpiringSoon =
+                      daysUntilExpiry !== null && daysUntilExpiry > 0 && daysUntilExpiry <= 60;
+                    const isGracePeriod =
+                      daysUntilExpiry !== null && daysUntilExpiry <= 0 && daysUntilExpiry >= -15;
+
+                    const renewTitle =
+                      domain.status === "Pending Deletion"
+                        ? "Cannot renew — deletion pending"
+                        : domain.status === "Suspended"
+                          ? "Cannot renew — domain suspended"
+                          : daysUntilExpiry !== null && daysUntilExpiry > 60
+                            ? `Renewal opens in ${daysUntilExpiry - 60} day${daysUntilExpiry - 60 === 1 ? "" : "s"
+                            }`
+                            : daysUntilExpiry !== null && daysUntilExpiry < -15
+                              ? "Expired beyond 15-day grace period"
+                              : "Extend for 1 free year";
+
+                    return (
+                      <tr
+                        key={domain._id}
+                        className="group hover:bg-secondary/35"
+                      >
+                        <td className="px-5 py-3.5 align-middle">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Globe className="w-3.5 h-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
+                            <Link
+                              to={`/domains/${domain._id}`}
+                              className="font-mono text-sm hover:underline truncate"
+                            >
+                              <span className="text-foreground font-medium">{domain.name}</span>
+                              <span className="text-muted-foreground">.{root}</span>
+                            </Link>
+                            <div className="flex items-center gap-0.5 sm:opacity-0 sm:group-hover:opacity-100 focus-within:opacity-100">
+                              <button
+                                type="button"
+                                onClick={() => handleCopyFqdn(domain._id, fqdn)}
+                                aria-label={`Copy ${fqdn}`}
+                                className="p-1 rounded text-muted-foreground hover:text-foreground hover:bg-secondary"
+                              >
+                                {copiedId === domain._id ? (
+                                  <Check className="w-3 h-3 text-emerald-500" aria-hidden="true" />
+                                ) : (
+                                  <Copy className="w-3 h-3" aria-hidden="true" />
+                                )}
+                              </button>
+                              <a
+                                href={`https://${fqdn}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`Open ${fqdn} in new tab`}
+                                className="p-1 rounded text-muted-foreground hover:text-foreground hover:bg-secondary"
+                              >
+                                <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                              </a>
+                            </div>
+                          </div>
+                          <div className="sm:hidden mt-1.5 flex items-center gap-2">
+                            <StatusBadge status={domain.status} />
+                            {domain.expiresAt && (
+                              <span className="text-[11px] font-mono text-muted-foreground tabular-nums">
+                                {new Date(domain.expiresAt).toLocaleDateString("en-GB")}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-3.5 hidden md:table-cell align-middle">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="inline-flex items-center gap-2 font-mono text-xs max-w-[260px] cursor-default">
+                                <span className="px-1.5 py-0.5 rounded bg-secondary border border-border text-[10px] uppercase tracking-wider text-foreground shrink-0">
+                                  {isStackNS ? "StackNS" : "External"}
+                                </span>
+                                <span className="text-muted-foreground truncate">
+                                  {effectiveNs[0]}
+                                </span>
+                                {effectiveNs.length > 1 && (
+                                  <span className="text-[11px] text-muted-foreground/75 shrink-0">
+                                    +{effectiveNs.length - 1}
+                                  </span>
+                                )}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent className="bg-card text-foreground border border-border text-xs font-mono space-y-0.5 p-2.5">
+                              {effectiveNs.map((ns) => (
+                                <div key={ns}>{ns}</div>
+                              ))}
+                            </TooltipContent>
+                          </Tooltip>
+                        </td>
+
+                        <td className="px-5 py-3.5 hidden sm:table-cell align-middle whitespace-nowrap">
+                          <StatusBadge status={domain.status} />
+                        </td>
+
+                        <td className="px-5 py-3.5 hidden lg:table-cell align-middle whitespace-nowrap">
+                          <div className="flex items-center gap-2 font-mono text-xs tabular-nums">
+                            <span className="text-foreground">
+                              {domain.expiresAt
+                                ? new Date(domain.expiresAt).toLocaleDateString("en-GB")
+                                : "N/A"}
+                            </span>
+                            {isExpiringSoon && (
+                              <span className="text-amber-500">
+                                ({daysUntilExpiry}d left)
+                              </span>
+                            )}
+                            {isGracePeriod && (
+                              <span className="text-destructive">
+                                (Grace period)
+                              </span>
+                            )}
+                          </div>
+                        </td>
+
+                        <td className="px-5 py-3.5 text-right align-middle whitespace-nowrap">
+                          <div className="inline-flex items-center justify-end gap-2">
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="inline-flex">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRenew(domain)}
+                                    disabled={isRenewing || loading || !canRenew}
+                                    className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-xs font-medium ${canRenew
+                                      ? "bg-foreground text-background hover:bg-foreground/90"
+                                      : "border border-border/50 text-muted-foreground/45 cursor-not-allowed"
+                                      }`}
+                                  >
+                                    <RefreshCw className="w-3 h-3" aria-hidden="true" />
+                                    <span>Renew</span>
+                                  </button>
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent className="bg-card text-foreground border border-border text-xs font-sans">
+                                {renewTitle}
+                              </TooltipContent>
+                            </Tooltip>
+
+                            <Link
+                              to={`/domains/${domain._id}`}
+                              className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md border border-border bg-secondary text-foreground text-xs font-medium hover:bg-accent"
+                            >
+                              <SettingsIcon className="w-3 h-3" aria-hidden="true" />
+                              <span>Manage</span>
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+
+                {!loading && filteredDomains.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="p-14 text-center space-y-3">
+                      <Globe className="w-8 h-8 text-muted-foreground mx-auto" aria-hidden="true" />
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-foreground">
+                          {subdomains.length === 0 ? "No domains registered" : "No matching domains"}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {subdomains.length === 0
+                            ? "Claim your first free subdomain to configure DNS."
+                            : "Clear or adjust your search filter."}
+                        </p>
+                      </div>
+                      {subdomains.length === 0 && (
+                        <Link
+                          to="/register"
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-foreground text-background text-xs font-medium hover:bg-foreground/90"
+                        >
+                          <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+                          <span>Register Domain</span>
+                        </Link>
+                      )}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </TooltipProvider>
+  );
 }
